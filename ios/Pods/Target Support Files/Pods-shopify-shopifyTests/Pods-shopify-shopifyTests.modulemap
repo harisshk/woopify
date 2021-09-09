@@ -1,0 +1,6 @@
+module Pods_shopify_shopifyTests {
+  umbrella header "Pods-shopify-shopifyTests-umbrella.h"
+
+  export *
+  module * { export * }
+}

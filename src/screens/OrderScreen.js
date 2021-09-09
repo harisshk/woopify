@@ -1,0 +1,238 @@
+import { useIsFocused } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react'
+import { FlatList, SafeAreaView, StyleSheet, ScrollView, Text, TouchableOpacity, View, Image, Linking } from 'react-native'
+import normalize from 'react-native-normalize';
+import SubHeading from '../components/SubHeading';
+import { client, customerId } from '../services';
+import { getAllOrders } from '../services/orders';
+import { theme } from '../utils/theme';
+import { Button, Menu, Divider, Provider, List } from 'react-native-paper';
+
+
+function OrderScreen({ navigation }) {
+    const [orders, setOrders] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [status, setStatus] = useState("any")
+    const [statusMenu, setStatusMenu] = useState(false);
+    const isFocussed = useIsFocused();
+    useEffect(async () => {
+        setIsLoading(true);
+        let data = await getAllOrders(customerId, status);
+        setOrders(data.orders);
+        console.log(data.orders)
+        setIsLoading(false);
+    }, [isFocussed, status]);
+
+    return (
+        <SafeAreaView
+            style={{
+                flex: 1,
+                backgroundColor: theme.colors.background
+            }}
+        >
+            <View
+                style={{
+                    padding: normalize(15),
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between"
+
+                }}>
+                <Text
+                    style={{
+                        fontWeight: theme.fontWeight.medium,
+                        fontSize: theme.fontSize.title,
+                    }}
+                >
+                    My Orders
+                </Text>
+                <Menu
+                    visible={statusMenu}
+                    onDismiss={() => {
+                        setStatusMenu(false);
+                    }}
+                    anchor={
+                        <Button onPress={() => {
+                            setStatusMenu(true);
+                        }}
+                            style={{ alignSelf: "center" }}
+                        >
+                            {status === "any" ? "All Orders" : status === "open" ? "Processing" : status === "closed" ? "Completed" : "Cancelled"}
+
+                        </Button>
+                    }>
+                    <Menu.Item
+                        onPress={() => {
+                            setStatus("any");
+                            setStatusMenu(false);
+                        }}
+                        title="All Orders"
+                    />
+                    <Divider />
+                    <Menu.Item onPress={() => {
+                        setStatus("open");
+                        setStatusMenu(false);
+                    }}
+                        title="Processing" />
+                    <Divider />
+                    <Menu.Item onPress={() => {
+                        setStatus("closed");
+                        setStatusMenu(false);
+                    }}
+                        title="Completed" />
+                    <Divider />
+                    <Menu.Item onPress={() => {
+                        setStatus("cancelled");
+                        setStatusMenu(false);
+                    }} title="Cancelled" />
+                </Menu>
+            </View>
+            {isLoading === false && orders.length === 0 &&
+                <View
+                    style={{
+                        alignSelf: "center",
+                        height: normalize(150),
+                        justifyContent: "center"
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: theme.fontSize.medium,
+                            textAlign: "center",
+                            alignSelf: "center"
+                        }}
+                    >
+                        Oops Nothing found !
+                    </Text>
+                </View>
+            }
+            <FlatList
+                data={orders}
+                style={{
+                    padding: normalize(15),
+                    flex: 1
+                }}
+                renderItem={({ item }) => {
+                    return (
+                        item?.shipping_address && <View
+                            style={{
+                                // backgroundColor: "#bbbbfa",
+                                backgroundColor: "#f7f2fc",
+                                padding: normalize(10),
+                                borderRadius: normalize(10),
+                                elevation: 3,
+                                marginVertical: normalize(5),
+                                flexDirection: "row",
+                                flex: 1,
+                                borderWidth : 2,
+                                borderColor: "#e8e8e8"
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => {
+                                    // Linking.openURL(item.order_status_url)
+                                    navigation.navigate('OrderTracking', { uri: item.order_status_url });
+                                }}
+                                style={{
+                                    flex: .75
+                                }}
+                            >
+                                <SubHeading
+                                    style={{
+                                        marginBottom: 0,
+                                        marginTop: normalize(5)
+                                    }}
+                                >
+                                    Order No {item.name}
+                                </SubHeading>
+                                {/* {item.line_items.map(item => {
+    return (
+        <View key={item.id}
+            style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginVertical: normalize(5)
+            }}
+        >
+            <Text
+                style={{
+                    fontSize: theme.fontSize.paragraph,
+                    flex: .7
+                }}
+            >{item.name}
+
+                <Text
+                    style={{
+                        fontWeight: theme.fontWeight.bold,
+
+                        fontSize: normalize(13)
+                    }}
+                >  ({item.quantity} item)</Text></Text>
+            <Text
+                style={{
+                    flex: .2,
+                    fontSize: theme.fontSize.paragraph,
+                    textAlign: "right",
+                    fontWeight: theme.fontWeight.medium
+                }}
+            >${item.price}</Text>
+        </View>
+    )
+})} */}
+                                <View>
+                                    {item?.shipping_address &&
+                                        <Text
+                                            style={{
+                                                fontSize: theme.fontSize.paragraph,
+                                                marginTop: normalize(15)
+                                            }}
+                                        >
+                                            <SubHeading>Delivery  </SubHeading>
+                                            {item?.shipping_address?.zip}, {item?.shipping_address?.address1}, {item?.shipping_address?.address2}, {item?.shipping_address?.city}, {item?.shipping_address?.province}
+                                        </Text>
+                                    }
+                                </View>
+
+
+                            </TouchableOpacity>
+                            <View
+                                style={{
+                                    flex: .21,
+                                    justifyContent: "space-around"
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.paragraph,
+                                        fontWeight: theme.fontWeight.bold,
+                                        alignSelf: "center",
+                                        marginBottom: normalize(15)
+                                    }}
+                                >
+                                    ${item.current_total_price}
+                                </Text>
+                                <Image
+                                    // source={{uri : "https://www.vhv.rs/dpng/d/356-3568543_check-icon-green-tick-hd-png-download.png"}}
+                                    // source={{uri : "https://toppng.com/uploads/preview/red-cross-mark-download-png-red-cross-check-mark-11562934675swbmqcbecx.png"}}
+                                    source={{ uri: item.fulfillment_status === "fulfilled" ? "https://user-images.githubusercontent.com/54505967/132626961-91e73bed-8e1e-4f76-a1c4-0a2f2b86d7c4.png" : item.fulfillment_status === "cancelled" ? "https://toppng.com/uploads/preview/red-cross-mark-download-png-red-cross-check-mark-11562934675swbmqcbecx.png" : "https://user-images.githubusercontent.com/54505967/132627173-60d5b342-fb1d-4e81-8bf1-e10ff32e7ebb.png" }}
+                                    style={{
+                                        width: item.fulfillment_status === "fulfilled" ? normalize(60) : normalize(34),
+                                        height: item.fulfillment_status === "fulfilled" ? normalize(60) : normalize(34),
+                                        alignSelf: "flex-end",
+                                        // marginLeft: item.fulfillment_status === "fulfilled" ? -16: 0
+                                    }}
+                                    resizeMode="center"
+                                />
+
+                            </View>
+                        </View>
+
+                    )
+                }}
+                keyExtractor={item => item.id}
+            />
+        </SafeAreaView>
+    )
+}
+
+export default OrderScreen;
