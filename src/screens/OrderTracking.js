@@ -1,12 +1,32 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, SafeAreaView, View } from 'react-native'
 import normalize from 'react-native-normalize';
 import WebView from 'react-native-webview'
+import { getOrdersByOrderId } from '../services/orders';
 import { theme } from '../utils/theme'
 
 function OrderTracking({ navigation, route }) {
-    const { uri } = route.params;
+    const { fetchFromId , orderId } = route.params;
     const [isLoading, setIsLoading] = useState(true);
+    const [isOrderFetched,setIsOrderFetched] = useState(fetchFromId ? true : false);
+    const [uri,setUri] = useState(route.params?.uri)
+    useEffect(async()=>{
+        if(fetchFromId === true){
+            try{
+                let response = await getOrdersByOrderId(orderId);
+                console.log(response)
+                let {order} = response;
+                setUri(order?.order_status_url);
+
+                setIsOrderFetched(false);
+            }catch(error){
+                setIsOrderFetched(false);
+                console.log(error);
+                console.log('-----------------------OrderTracking Line 23------------------------');
+            }
+            
+        }
+    },[])
     return (
         <SafeAreaView
             style={{
@@ -14,7 +34,7 @@ function OrderTracking({ navigation, route }) {
                 backgroundColor: theme.colors.background
             }}
         >
-            {isLoading === true &&
+            {isOrderFetched === true || isLoading === true ?
                 <View
                     style={{
                         height: normalize(300),
@@ -27,23 +47,27 @@ function OrderTracking({ navigation, route }) {
                         size={24}
                     />
                 </View>
+            :
+                <></>
             }
-            <WebView
-                onLoad={() => {
-                    setIsLoading(true)
-                }}
-                onLoadStart={() => {
-                    setIsLoading(true)
-                }}
-                onLoadEnd={() => {
-                    setIsLoading(false)
-                }}
-                style={{
-                    flex: 1,
-                }}
-                originWhitelist={['*']}
-                source={{ uri: uri }}
-            />
+            {isOrderFetched === false && 
+                <WebView
+                    onLoad={() => {
+                        setIsLoading(true)
+                    }}
+                    onLoadStart={() => {
+                        setIsLoading(true)
+                    }}
+                    onLoadEnd={() => {
+                        setIsLoading(false)
+                    }}
+                    style={{
+                        flex: 1,
+                    }}
+                    originWhitelist={['*']}
+                    source={{ uri: uri }}
+                />
+            }
         </SafeAreaView>
     )
 }

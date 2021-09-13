@@ -15,7 +15,6 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
 
                 //     // url.substring(56);
                 //     let input = item.id+"";
-                //     console.log(input)
                 //     let str = input.replace(/=+$/, '');
                 //     let output = '';
 
@@ -30,7 +29,6 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                 //     ) {
                 //         buffer = chars.indexOf(buffer);
                 //     }
-                //     console.log(output)
                 //     navigation.navigate('ProductScreen', { product: {id : output.substring(56)} });
 
                 // }

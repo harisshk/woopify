@@ -19,7 +19,6 @@ function OrderScreen({ navigation }) {
         setIsLoading(true);
         let data = await getAllOrders(customerId, status);
         setOrders(data.orders);
-        console.log(data.orders)
         setIsLoading(false);
     }, [isFocussed, status]);
 
@@ -131,7 +130,7 @@ function OrderScreen({ navigation }) {
                             <TouchableOpacity
                                 onPress={() => {
                                     // Linking.openURL(item.order_status_url)
-                                    navigation.navigate('OrderTracking', { uri: item.order_status_url });
+                                    navigation.navigate('OrderTracking', { uri: item.order_status_url , fetchFromId : false});
                                 }}
                                 style={{
                                     flex: .75

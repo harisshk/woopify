@@ -118,7 +118,6 @@ function ProductScreen({ navigation, route, navigator }) {
                 if (currColor < 0) {
                     setCurrColor(0);
                 }
-                console.log('-----Helpeing')
                 matchString = product.options[0].values[currColor < 0 ? 0 : currColor] + " / " + product.options[option].values[index];
 
                 // matchString = product.options[0].values[currColor < 0 ? 0 : currColor].value + " / " + product.options[option].values[index].value

@@ -12,7 +12,6 @@ import SubHeading from '../components/SubHeading';
 
 function CartScreen({ navigation }) {
     const [cartItem, setCartItem] = useState({});
-    const [lineItems, setLineItems] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editItem, setEditItem] = useState(null);
     const isFocussed = useIsFocused();
@@ -27,18 +26,25 @@ function CartScreen({ navigation }) {
         { label: "4", value: "4" },
         { label: "5", value: "5" },
     ]);
+
     const updateQuantity = async () => {
         if (checkoutId !== null) {
-            const lineItemsToUpdate = [
-                { id: editItem.id, quantity: parseInt(selectedStock) }
-            ];
-            setEditCartLoading(true);
-            let checkout = await client.checkout.updateLineItems(JSON.parse(checkoutId), lineItemsToUpdate)
-            let data = Object.assign({}, { checkout: checkout })
-            setCartItem({ ...data.checkout });
-            setEditCartLoading(false);
+            try {
+                const lineItemsToUpdate = [
+                    { id: editItem.id, quantity: parseInt(selectedStock) }
+                ];
+                setEditCartLoading(true);
+                let checkout = await client.checkout.updateLineItems(checkoutId, lineItemsToUpdate)
+                let data = Object.assign({}, { checkout: checkout })
+                setCartItem({ ...data.checkout });
+                setEditCartLoading(false);
+            } catch (error) {
+                setEditCartLoading(false);
+                console.log(error);
+                console.log('-------------------------------------CartScreen Line No 44-----------------------------------------------');
+            }
+
         }
-        // Update the line item on the checkout (change the quantity or variant);  
     };
 
     const removeItemFromCart = async (item) => {
@@ -127,8 +133,8 @@ function CartScreen({ navigation }) {
                     </Picker>
                     <TouchableOpacity
                         onPress={() => {
-                            editActionRef.current?.setModalVisible(false);
                             updateQuantity(parseInt(selectedStock));
+                            editActionRef.current?.setModalVisible(false);
                         }}
                         style={{
                             backgroundColor: theme.colors.primary,
