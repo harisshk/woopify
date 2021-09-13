@@ -8,8 +8,8 @@ import {
 import { createBottomTabNavigator, BottomTabBar } from "@react-navigation/bottom-tabs"
 import HomeScreen from '../screens/HomeScreen';
 import { theme } from '../utils/theme';
-import Profile from '../screens/Profile';
-import OrderScreen from '../screens/OrderScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import OrdersScreen from '../screens/OrdersScreen';
 import normalize from 'react-native-normalize';
 const Tab = createBottomTabNavigator();
 
@@ -86,9 +86,9 @@ const BottomTab = () => {
             
             
             <Tab.Screen
-                name="OrderScreen"
+                name="OrdersScreen"
 
-                component={OrderScreen}
+                component={OrdersScreen}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <Image
@@ -140,7 +140,7 @@ const BottomTab = () => {
             <Tab.Screen
                 name="ProfileScreen"
 
-                component={Profile}
+                component={ProfileScreen}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         <Image

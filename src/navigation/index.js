@@ -2,11 +2,11 @@ import React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
 import BottomTab from './BottomTab'
 import SplashScreen from '../screens/SplashScreen';
-import CategoriesProduct from '../screens/CategoriesProduct';
+import CategoriesProductScreen from '../screens/CategoriesProductScreen';
 import ProductScreen from '../screens/ProductScreen';
 import CartScreen from '../screens/CartScreen';
 import CheckoutScreen from '../screens/CheckoutScreen';
-import OrderTracking from '../screens/OrderTracking';
+import OrderTrackingScreen from '../screens/OrderTrackingScreen';
 
 const MainNavigator = createStackNavigator();
 
@@ -31,7 +31,7 @@ const HomeNavigator = () => {
                     headerBackTitleVisible: false
                 })} 
                 name="CategoriesProductScreen" 
-                component={CategoriesProduct} 
+                component={CategoriesProductScreen} 
             />
             <MainNavigator.Screen 
                 options={({ route }) => ({
@@ -69,8 +69,8 @@ const HomeNavigator = () => {
                     // headerShown :false
                     // headerBackTitleVisible: false
                 })} 
-                name="OrderTracking" 
-                component={OrderTracking} 
+                name="OrderTrackingScreen" 
+                component={OrderTrackingScreen} 
             />
         </MainNavigator.Navigator>
     )
