@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ACCESS_PASSWORD, API_URL } from ".";
+import { ACCESS_PASSWORD, API_ENDPOINT, API_URL } from ".";
 
 export const getCustomerById = async (customerId) => {
     try{
@@ -14,5 +14,16 @@ export const getCustomerById = async (customerId) => {
       
     }catch(error){
         console.log(error)
+    }
+}
+
+export const verifyEmail = async(body) => {
+    try{
+        let response = await axios.post(`${API_ENDPOINT}/api/customer/verify/email`,body);
+        return response;
+    }catch(error){
+        console.log(error);
+        console.log('-------------------customer Line 25------------------------');
+        return error?.response || null ;
     }
 }

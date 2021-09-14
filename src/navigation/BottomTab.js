@@ -81,7 +81,7 @@ const BottomTab = () => {
                     props={props}
                 />
             )}
-
+            initialRouteName="HomeScreen"
         >
             
             

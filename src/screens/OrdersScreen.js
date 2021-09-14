@@ -51,14 +51,27 @@ function OrderScreen({ navigation }) {
                         setStatusMenu(false);
                     }}
                     anchor={
-                        <Button onPress={() => {
+                        <TouchableOpacity onPress={() => {
                             setStatusMenu(true);
                         }}
-                            style={{ alignSelf: "center" }}
+                            style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}
                         >
-                            {status === "any" ? "All Orders" : status === "open" ? "Processing" : status === "closed" ? "Completed" : "Cancelled"}
+                            <Image source={require('../assets/images/expand-arrow.png')} style={{
+                                height: normalize(15),
+                                width: normalize(15), marginRight: normalize(10)
 
-                        </Button>
+                            }}
+                                resizeMode="contain"
+                            />
+                            <Text
+                                style={{
+                                    color: theme.colors.primary,
+                                    textTransform: "uppercase",
+                                    fontSize: theme.fontSize.paragraph,
+                                }}
+                            >{status === "any" ? "All Orders" : status === "open" ? "Processing" : status === "closed" ? "Completed" : "Cancelled"}</Text>
+
+                        </TouchableOpacity>
                     }>
                     <Menu.Item
                         onPress={() => {
@@ -123,14 +136,14 @@ function OrderScreen({ navigation }) {
                                 marginVertical: normalize(5),
                                 flexDirection: "row",
                                 flex: 1,
-                                borderWidth : 2,
+                                borderWidth: 2,
                                 borderColor: "#e8e8e8"
                             }}
                         >
                             <TouchableOpacity
                                 onPress={() => {
                                     // Linking.openURL(item.order_status_url)
-                                    navigation.navigate('OrderTracking', { uri: item.order_status_url , fetchFromId : false});
+                                    navigation.navigate('OrderTrackingScreen', { uri: item.order_status_url, fetchFromId: false });
                                 }}
                                 style={{
                                     flex: .75
@@ -139,10 +152,11 @@ function OrderScreen({ navigation }) {
                                 <SubHeading
                                     style={{
                                         marginBottom: 0,
-                                        marginTop: normalize(5)
+                                        marginTop: normalize(5),
+                                        fontSize: theme.fontSize.medium
                                     }}
                                 >
-                                    Order No {item.name}
+                                    Order {item.name}
                                 </SubHeading>
                                 {/* {item.line_items.map(item => {
     return (
@@ -187,7 +201,7 @@ function OrderScreen({ navigation }) {
                                             }}
                                         >
                                             <SubHeading>Delivery  </SubHeading>
-                                            {item?.shipping_address?.zip}, {item?.shipping_address?.address1}, {item?.shipping_address?.address2}, {item?.shipping_address?.city}, {item?.shipping_address?.province}
+                                            {item?.shipping_address?.address1}, {item?.shipping_address?.address2}, {item?.shipping_address?.city}, {item?.shipping_address?.province}, Zip Code {item?.shipping_address?.zip}.
                                         </Text>
                                     }
                                 </View>

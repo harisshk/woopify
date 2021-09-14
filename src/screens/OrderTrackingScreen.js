@@ -5,7 +5,7 @@ import WebView from 'react-native-webview'
 import { getOrdersByOrderId } from '../services/orders';
 import { theme } from '../utils/theme'
 
-function OrderTracking({ navigation, route }) {
+function OrderTrackingScreen({ navigation, route }) {
     const { fetchFromId , orderId } = route.params;
     const [isLoading, setIsLoading] = useState(true);
     const [isOrderFetched,setIsOrderFetched] = useState(fetchFromId ? true : false);
@@ -72,4 +72,4 @@ function OrderTracking({ navigation, route }) {
     )
 }
 
-export default OrderTracking;
+export default OrderTrackingScreen;

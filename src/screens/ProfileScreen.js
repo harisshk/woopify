@@ -1,18 +1,20 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import normalize from 'react-native-normalize';
 import { Subheading } from 'react-native-paper';
+import { connect } from 'react-redux';
+import Footer from '../components/Footer';
 import { customerId } from '../services';
 import { getCustomerById } from '../services/customer';
 import { theme } from '../utils/theme';
 
 
 
-const Profile = ({ navigation }) => {
-  const [customer, setCustomer] = useState(null);
+const Profile = ({ navigation, customer }) => {
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    getCustomerInfo();
+    // getCustomerInfo();
   }, []);
 
   let getGreetingsText = () => {
@@ -34,6 +36,11 @@ const Profile = ({ navigation }) => {
     setCustomer({ ...data.customer });
     console.log('working',data.customer)
     setIsLoading(false);
+  }
+
+  const logoutHandler = async() => {
+    await AsyncStorage.removeItem('user');
+    navigation.navigate('SplashScreen');
   }
 
   return (
@@ -151,7 +158,7 @@ const Profile = ({ navigation }) => {
               </Text>
               <TouchableOpacity
                 onPress={()=>{
-                  navigation.navigate('OrderTracking',{ fetchFromId: true, orderId : customer.last_order_id });
+                  navigation.navigate('OrderTrackingScreen',{ fetchFromId: true, orderId : customer.last_order_id });
                 }}
               >
                 <Text
@@ -234,11 +241,9 @@ const Profile = ({ navigation }) => {
         </View>
       
           <View
-          style={{
-            // width: '95%',
-            // alignSelf: "center",
-            padding: normalize(10)
-          }}
+            style={{
+              padding: normalize(10)
+            }}
           >
             <TouchableOpacity
               style={{
@@ -248,7 +253,7 @@ const Profile = ({ navigation }) => {
                 paddingBottom: normalize(10)
               }}
               onPress={()=>{
-                navigation.navigate('OrderScreen');
+                navigation.navigate('OrdersScreen');
               }}
             >
               <Text
@@ -267,6 +272,7 @@ const Profile = ({ navigation }) => {
                 borderBottomColor: "#e3e3e3",
                 paddingBottom: normalize(10)
               }}
+              onPress={logoutHandler}
             >
               <Text
                 style={{
@@ -278,17 +284,18 @@ const Profile = ({ navigation }) => {
               </Text>
             </TouchableOpacity>
           </View>
-          <Text
-          style={{
-            textAlign: "center",
-            fontSize: theme.fontSize.paragraph,
-            marginVertical: normalize(8),
-            color: "#9e9e9e"
-          }}
-          >© Audy Global Enterprise 2021</Text>
+          <Footer />
       </View>
     </SafeAreaView>
   )
 }
 
-export default Profile;
+const mapStateToProps = (state) => ({
+  customer: state.customer,
+});
+
+// const mapDispatchToProps = (dispatch) => ({
+//   setCustomer: (user) => dispatch(setCustomer(user)),
+// });
+
+export default connect(mapStateToProps,null)(Profile);

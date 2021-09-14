@@ -279,8 +279,18 @@ function CartScreen({ navigation }) {
                                                     setEditItem(item);
                                                     editActionRef.current?.setModalVisible(true);
                                                 }}
+                                                style={{
+                                                    alignItems: "center",
+                                                }}
+                                                disabled={editCartLoading}
                                             >
-                                                {editCartLoading ? <ActivityIndicator color={theme.colors.primary} /> :
+                                                {editCartLoading ?
+                                                    <ActivityIndicator
+                                                        color={theme.colors.primary}
+                                                        style={{
+                                                            marginLeft: normalize(12),
+                                                        }}
+                                                    /> :
                                                     <Text
                                                         style={{
                                                             fontWeight: theme.fontWeight.thin,
@@ -297,8 +307,10 @@ function CartScreen({ navigation }) {
                                                 onPress={() => {
                                                     removeItemFromCart(item);
                                                 }}
+
+                                                disabled={editCartLoading}
                                             >
-                                                {editCartLoading ? <ActivityIndicator color={theme.colors.primary} /> :
+                                                {editCartLoading === false &&
                                                     <Text
                                                         style={{
                                                             fontWeight: theme.fontWeight.thin,
@@ -322,7 +334,6 @@ function CartScreen({ navigation }) {
                             )
                         }}
                         keyExtractor={item => item.id}
-
                     />
                 </View>
 
@@ -384,7 +395,6 @@ function CartScreen({ navigation }) {
                     </View>
                 }
             </View>
-
         </SafeAreaView>
     )
 }

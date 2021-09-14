@@ -7,13 +7,16 @@ import ProductScreen from '../screens/ProductScreen';
 import CartScreen from '../screens/CartScreen';
 import CheckoutScreen from '../screens/CheckoutScreen';
 import OrderTrackingScreen from '../screens/OrderTrackingScreen';
+import LoginScreen from '../screens/LoginScreen';
+import OTPScreen from '../screens/OTPScreen';
 
 const MainNavigator = createStackNavigator();
 
 const HomeNavigator = () => {
     return (
         <MainNavigator.Navigator
-            initialRouteName={"BottomTab"}
+            // initialRouteName={"BottomTab"}
+            initialRouteName={"SplashScreen"}
         >
             <MainNavigator.Screen 
                 options={{ headerShown: false }} 
@@ -71,6 +74,20 @@ const HomeNavigator = () => {
                 })} 
                 name="OrderTrackingScreen" 
                 component={OrderTrackingScreen} 
+            />
+            <MainNavigator.Screen 
+                options={({ route }) => ({
+                    headerShown :false
+                })} 
+                name="LoginScreen" 
+                component={LoginScreen} 
+            />
+            <MainNavigator.Screen 
+                options={({ route }) => ({
+                    headerShown :false
+                })} 
+                name="OTPScreen" 
+                component={OTPScreen} 
             />
         </MainNavigator.Navigator>
     )
