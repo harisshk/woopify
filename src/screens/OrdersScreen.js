@@ -3,13 +3,14 @@ import React, { useEffect, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet, ScrollView, Text, TouchableOpacity, View, Image, Linking } from 'react-native'
 import normalize from 'react-native-normalize';
 import SubHeading from '../components/SubHeading';
-import { client, customerId } from '../services';
+import { client } from '../services';
 import { getAllOrders } from '../services/orders';
 import { theme } from '../utils/theme';
 import { Button, Menu, Divider, Provider, List } from 'react-native-paper';
+import { connect } from 'react-redux';
 
 
-function OrderScreen({ navigation }) {
+function OrderScreen({ navigation, customer }) {
     const [orders, setOrders] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [status, setStatus] = useState("any")
@@ -17,7 +18,7 @@ function OrderScreen({ navigation }) {
     const isFocussed = useIsFocused();
     useEffect(async () => {
         setIsLoading(true);
-        let data = await getAllOrders(customerId, status);
+        let data = await getAllOrders(customer?.id, status);
         setOrders(data.orders);
         setIsLoading(false);
     }, [isFocussed, status]);
@@ -247,5 +248,7 @@ function OrderScreen({ navigation }) {
         </SafeAreaView>
     )
 }
-
-export default OrderScreen;
+const mapStateToProps = state => ({
+    customer: state.customer
+})
+export default connect(mapStateToProps,null)(OrderScreen);

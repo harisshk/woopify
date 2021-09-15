@@ -19,6 +19,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import { getCustomerById } from '../services/customer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
+import { setCustomer } from '../redux/action/customer';
 
 
 function OTPScreen({ navigation, route, setCustomer }) {
@@ -183,15 +184,6 @@ function OTPScreen({ navigation, route, setCustomer }) {
                         placeholderTextColor={theme.colors.primary}
                         placeholderCharacter={"-"}
                         keyboardType="default"
-                    // onCodeFilled={(code => {
-                    //     setInput({
-                    //         ...input,
-                    //         otp: {
-                    //             value: code,
-                    //             error: ''
-                    //         }
-                    //     });
-                    // })}
                     />
                     <Text
                         style={{

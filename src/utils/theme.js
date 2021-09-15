@@ -11,7 +11,8 @@ export const theme = {
         unfocused: "gray",
         white: "#ffffff",
         black: "#000000",
-        imageBackground : "#F8F8F8"
+        imageBackground: "#F8F8F8",
+        disabledButton: "#8171ab"
     },
     fontSize: {
         medium: normalize(18),

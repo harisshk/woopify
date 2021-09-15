@@ -9,6 +9,8 @@ import CheckoutScreen from '../screens/CheckoutScreen';
 import OrderTrackingScreen from '../screens/OrderTrackingScreen';
 import LoginScreen from '../screens/LoginScreen';
 import OTPScreen from '../screens/OTPScreen';
+import RegisterScreen from '../screens/RegisterScreen';
+import AddAddressScreen from '../screens/AddAddressScreen';
 
 const MainNavigator = createStackNavigator();
 
@@ -89,6 +91,21 @@ const HomeNavigator = () => {
                 name="OTPScreen" 
                 component={OTPScreen} 
             />
+            <MainNavigator.Screen 
+                options={({ route }) => ({
+                    headerShown :false
+                })} 
+                name="RegisterScreen" 
+                component={RegisterScreen} 
+            />
+             <MainNavigator.Screen 
+                options={({ route }) => ({
+                    headerShown :false
+                })} 
+                name="AddAddressScreen" 
+                component={AddAddressScreen} 
+            />
+            
         </MainNavigator.Navigator>
     )
 }

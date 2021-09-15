@@ -16,6 +16,7 @@ import { verifyEmail } from '../services/customer';
 import { theme } from '../utils/theme';
 import { isValidEmail } from '../utils/validation/email';
 import Toast from 'react-native-simple-toast';
+import SubHeading from '../components/SubHeading';
 
 
 function LoginScreen({navigation}) {
@@ -183,7 +184,7 @@ function LoginScreen({navigation}) {
                     <TouchableOpacity
                         style={[
                             isLoading === true ? {
-                                backgroundColor: "#8171ab"
+                                backgroundColor: theme.colors.disabledButton
                             } : {
                                 backgroundColor: theme.colors.primary,
                             }, {
@@ -232,7 +233,26 @@ function LoginScreen({navigation}) {
                             </Text>
                         }
                     </TouchableOpacity>
-
+                    <TouchableOpacity
+                        onPress={()=>{
+                            navigation.navigate('RegisterScreen')
+                        }}
+                        disabled={isLoading}
+                    >
+                        <SubHeading
+                            style={
+                                
+                                isLoading === true ? {
+                                    color: "grey",
+                                    textAlign: "center"
+                                }:{
+                                    textAlign: "center"
+                                }
+                            }
+                        >
+                            Create an account!
+                        </SubHeading>
+                    </TouchableOpacity>
                     <Footer />
                 </ScrollView>
 
