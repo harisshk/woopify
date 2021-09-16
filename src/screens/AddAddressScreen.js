@@ -2,58 +2,22 @@ import React, { useState } from 'react'
 import { KeyboardAvoidingView, SafeAreaView, ScrollView, Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
 import normalize from 'react-native-normalize'
 import { Checkbox, List } from 'react-native-paper'
-import { addNewAddress, updateAddress } from '../services/customer'
+import { addNewAddress, getCustomerById, updateAddress, updateCustomerProfile } from '../services/customer'
 import { theme } from '../utils/theme';
 import Toast from 'react-native-simple-toast'
 import { connect } from 'react-redux'
 import { setCustomer } from '../redux/action/customer';
 import SubHeading from '../components/SubHeading';
 import { TextInput } from 'react-native-paper'
+import { CustomHeader } from '../components/CustomHeader'
 
-const CustomHeader = ({ navigation, title }) => {
-    return (
-        <View
-            style={{
-                padding: normalize(5),
-                flexDirection: "row",
-                alignItems: "center",
-            }}
-        >
-            <View
-                style={{
-                    padding: normalize(13),
-                    alignSelf: "flex-end"
-                }}
-            >
-                <Image
-                    source={require('../assets/images/left-arrow.png')}
-                    resizeMode="contain"
-                    style={{
-                        width: normalize(25),
-                        height: normalize(25),
-                        alignSelf: "flex-end"
-                    }}
-                />
-            </View>
-            <Text
-                style={{
-                    fontSize: theme.fontSize.medium,
-                    fontWeight: theme.fontWeight.medium,
-                    lineHeight: theme.lineHeight.medium,
-                    marginLeft: normalize(10)
-                }}
-            >
-                {title}
-            </Text>
-        </View>
-    )
-}
 
 function AddAddressScreen({ navigation, customer, setCustomer, route }) {
     const { toUpdateAddress, address } = route.params;
     const [input, setInput] = useState({
         phone: { value: toUpdateAddress ? address.phone : "", error: "" },
-        name: { value: toUpdateAddress ? address.name : "", error: "" },
+        firstName: { value: toUpdateAddress ? address.first_name : "", error: "" },
+        lastName: { value: toUpdateAddress ? address.last_name : "", error: "" },
         address1: { value: toUpdateAddress ? address.address1 : "", error: "" },
         address2: { value: toUpdateAddress ? address.address2 : "", error: "" },
         city: { value: toUpdateAddress ? address.city : "", error: "" },
@@ -85,14 +49,72 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
             const city = input.city.value.trim();
             const province = input.province.value.trim();
             const phone = input.phone.value.trim();
-            const name = input.phone.value.trim();
-            const zip = input.phone.value.trim();
-            if (!address1 || !address2 || !city || !province || !phone || !name || !zip) {
+            const first_name = input.firstName.value.trim();
+            const last_name = input.lastName.value.trim();
+            const zip = input.zip.value.trim();
+            const country = input.country.value.trim();
+            if (!address1) {
                 setInput({
                     ...input,
                     isLoading: false,
                 });
-                Toast.show('All Fields are required');
+                Toast.show('Address Line 1 Missing');
+                return;
+            }
+            if (!city) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('City Field is Missing');
+                return;
+            }
+            if (!province) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('Province Field is Missing');
+                return;
+            }
+            if (!phone) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('Phone Number Field is Missing');
+                return;
+            }
+            if (!zip) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('Zip Code Field is Missing');
+                return;
+            }
+            if (!country) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('Country Field is Missing');
+                return;
+            }
+            if (!last_name) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('Last Name Field is Missing');
+                return;
+            }
+            if (!first_name) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('First Name Field is Missing');
                 return;
             }
             const body = {
@@ -102,12 +124,45 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                     city: city,
                     province: province,
                     phone: phone,
-                    name: name,
-                    zip: zip
+                    last_name: last_name,
+                    first_name: first_name,
+                    zip: zip,
+                    country: country,
+                    default: input.default
                 }
             };
-            const response = await addNewAddress(customer._id, body);
+            const response = await addNewAddress(customer.id, body);
             console.log(response, '---------Line 84---------');
+            if (response?.errors) {
+                const { errors } = response;
+                for (const field in errors) {
+                    console.log(`${field} ${errors[field]}`);
+                    Toast.show(`${field} ${errors[field]}`);
+                    setInput({
+                        ...input,
+                        [field]: {
+                            ...input[field],
+                            error: `${field} ${errors[field]}`
+                        },
+                        isLoading: false
+                    });
+                    return;
+                }
+            }else{
+                setInput({
+                    ...input,
+                    isLoading: false
+                });
+                const body = {
+                    customer:{
+                        address
+                    }
+                }
+                const response = await updateCustomerProfile(customer.id, body);
+                const data = await getCustomerById(customer.id);
+                setCustomer({ ...data });
+                navigation.goBack();
+            }
 
         } catch (error) {
             console.log(error);
@@ -130,29 +185,116 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
             const city = input.city.value.trim();
             const province = input.province.value.trim();
             const phone = input.phone.value.trim();
-            const name = input.phone.value.trim();
-            const zip = input.phone.value.trim();
-            if (!address1 || !address2 || !city || !province || !phone || !name || !zip) {
+            const first_name = input.firstName.value.trim();
+            const last_name = input.lastName.value.trim();
+            const zip = inp.value.trim();
+            const country = input.country.value.trim();
+            if (!address1) {
                 setInput({
                     ...input,
                     isLoading: false,
                 });
-                Toast.show('All Fields are required');
+                Toast.show('Address Line 1 Missing');
+                return;
+            }
+            if (!city) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('City Field is Missing');
+                return;
+            }
+            if (!province) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('Province Field is Missing');
+                return;
+            }
+            if (!phone) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('Phone Number Field is Missing');
+                return;
+            }
+            if (!zip) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('Zip Code Field is Missing');
+                return;
+            }
+            if (!country) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('Country Field is Missing');
+                return;
+            }
+            if (!last_name) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('Last Name Field is Missing');
+                return;
+            }
+            if (!first_name) {
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                Toast.show('First Name Field is Missing');
                 return;
             }
             const body = {
                 address: {
+                    id: address.id,
                     address1: address1,
                     address2: address2,
                     city: city,
                     province: province,
                     phone: phone,
-                    name: name,
-                    zip: zip
+                    first_name: first_name,
+                    last_name:last_name,
+                    zip: zip,
+                    country: country,
+                    default: input.default
                 }
             };
-            const response = await updateAddress(customer._id, address.id, body);
+            const response = await updateAddress(customer.id, address.id, body);
+            
             console.log(response, '---------Line 129---------');
+            if (response?.errors) {
+                const { errors } = response;
+                for (const field in errors) {
+                    console.log(`${field} ${errors[field]}`);
+                    Toast.show(`${field} ${errors[field]}`);
+                    setInput({
+                        ...input,
+                        [field]: {
+                            ...input[field],
+                            error: `${field} ${errors[field]}`
+                        },
+                        isLoading: false
+                    });
+                    return;
+                }
+            }else{
+                setInput({
+                    ...input,
+                    isLoading: false
+                });
+                const data = await getCustomerById(customer.id);
+                setCustomer({ ...data });
+                navigation.goBack();
+            }
 
         } catch (error) {
             console.log(error);
@@ -171,7 +313,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                 backgroundColor: theme.colors.background
             }}
         >
-            <CustomHeader navigation={navigation} title={"Add New Address"} />
+            <CustomHeader navigation={navigation} title={toUpdateAddress === true ? "Update Address" : "Add New Address"} />
             <KeyboardAvoidingView
                 style={{
                     paddingBottom: normalize(15),
@@ -187,7 +329,15 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                     contentContainerStyle={{
                         flexGrow: 1
                     }}
+                    showsVerticalScrollIndicator={false}
                 >
+                    <View
+                        style={{
+                            padding: normalize(15),
+                            backgroundColor: "#e6e6e6",
+                            borderRadius: normalize(5)
+                        }}
+                    >
                     <Text
                         style={{
                             marginBottom: normalize(15),
@@ -198,22 +348,59 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                         Customer Info
                     </Text>
                     <TextInput
-                        value={input.name.value}
+                        value={input.firstName.value}
                         onChangeText={(text) => {
-                            changeText('name', text);
+                            changeText('firstName', text);
                         }}
-                        error={input.name.error}
+                        error={input.firstName.error}
                         keyboardType="default"
                         autoCapitalize="words"
                         autoCorrect={true}
                         autoCompleteType="username"
-                        label="Name"
+                        label="First Name"
                         style={{
                             backgroundColor: "#fafafa",
                             borderRadius: normalize(12)
                         }}
+                        maxLength={35}
                     />
-                    <Text>{input.name.error}</Text>
+                    <Text
+                        style={{
+                            color: "red",
+                            textTransform: "capitalize",
+                            marginLeft: normalize(6),
+                            marginVertical: normalize(10)
+                        }}
+                    >
+                        {input.firstName.error}
+                    </Text>
+                    <TextInput
+                        value={input.lastName.value}
+                        onChangeText={(text) => {
+                            changeText('lastName', text);
+                        }}
+                        error={input.lastName.error}
+                        keyboardType="default"
+                        autoCapitalize="words"
+                        autoCorrect={true}
+                        autoCompleteType="username"
+                        label="Last Name"
+                        style={{
+                            backgroundColor: "#fafafa",
+                            borderRadius: normalize(12)
+                        }}
+                        maxLength={35}
+                    />
+                    <Text
+                        style={{
+                            color: "red",
+                            textTransform: "capitalize",
+                            marginLeft: normalize(6),
+                            marginVertical: normalize(10)
+                        }}
+                    >
+                        {input.lastName.error}
+                    </Text>
                     <TextInput
                         value={input.phone.value}
                         onChangeText={(text) => {
@@ -226,8 +413,19 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                             backgroundColor: "#fafafa",
                             borderRadius: normalize(12)
                         }}
+                        maxLength={10}
                     />
-                    <Text>{input.phone.error}</Text>
+                    <Text
+                        style={{
+                            color: "red",
+                            textTransform: "capitalize",
+                            marginLeft: normalize(6),
+                            marginVertical: normalize(10)
+                        }}
+                    >
+                        {input.phone.error}
+                    </Text>
+                    </View>
                     <View
                         style={{
                             height: normalize(2),
@@ -237,6 +435,13 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                     >
 
                     </View>
+                    <View
+                        style={{
+                            padding: normalize(15),
+                            backgroundColor: "#e6e6e6",
+                            borderRadius: normalize(5)
+                        }}
+                    >
                     <Text
                         style={{
                             marginBottom: normalize(15),
@@ -258,8 +463,18 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                             backgroundColor: "#fafafa",
                             borderRadius: normalize(12)
                         }}
+                        maxLength={60}
                     />
-                    <Text>{input.address1.error}</Text>
+                    <Text
+                        style={{
+                            color: "red",
+                            textTransform: "capitalize",
+                            marginLeft: normalize(6),
+                            marginVertical: normalize(10)
+                        }}
+                    >
+                        {input.address1.error}
+                    </Text>
                     <TextInput
                         value={input.address2.value}
                         onChangeText={(text) => {
@@ -272,8 +487,19 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                             backgroundColor: "#fafafa",
                             borderRadius: normalize(12)
                         }}
+                        maxLength={60}
                     />
-                    <Text>{input.address2.error}</Text>
+                    
+                    <Text
+                        style={{
+                            color: "red",
+                            textTransform: "capitalize",
+                            marginLeft: normalize(6),
+                            marginVertical: normalize(10)
+                        }}
+                    >
+                        {input.address2.error}
+                    </Text>
                     <TextInput
                         value={input.city.value}
                         onChangeText={(text) => {
@@ -287,7 +513,16 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                             borderRadius: normalize(12)
                         }}
                     />
-                    <Text>{input.city.error}</Text>
+                    <Text
+                        style={{
+                            color: "red",
+                            textTransform: "capitalize",
+                            marginLeft: normalize(6),
+                            marginVertical: normalize(10)
+                        }}
+                    >
+                        {input.phone.error}
+                    </Text>
                     <View
                         style={{
                             flexDirection: "row"
@@ -311,8 +546,18 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                                     borderRadius: normalize(12),
                                     marginHorizontal: normalize(5)
                                 }}
+                                maxLength={25}
                             />
-                            <Text>{input.province.error}</Text>
+                            <Text
+                                style={{
+                                    color: "red",
+                                    textTransform: "capitalize",
+                                    marginLeft: normalize(6),
+                                    marginVertical: normalize(10)
+                                }}
+                            >
+                                {input.province.error}
+                            </Text>
                         </View>
                         <View
                             style={{
@@ -333,26 +578,100 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                                     borderRadius: normalize(12),
                                     marginHorizontal: normalize(5)
                                 }}
+                                maxLength={6}
                             />
-                            <Text>{input.zip.error}</Text>
+                            
+                            <Text
+                                style={{
+                                    color: "red",
+                                    textTransform: "capitalize",
+                                    marginLeft: normalize(6),
+                                    marginVertical: normalize(10)
+                                }}
+                            >
+                                {input.zip.error}
+                            </Text>
                         </View>
 
                     </View>
-                    <View
-                        style={{ marginVertical: normalize(10), alignItems: "center" }}
+                    <TextInput
+                        value={input.country.value}
+                        onChangeText={(text) => {
+                            changeText('country', text);
+                        }}
+                        error={input.phone.error}
+                        keyboardType="default"
+                        label="Country"
+                        style={{
+                            backgroundColor: "#fafafa",
+                            borderRadius: normalize(12)
+                        }}
+                    />
+                    
+                    <Text
+                        style={{
+                            color: "red",
+                            textTransform: "capitalize",
+                            marginLeft: normalize(6),
+                            marginVertical: normalize(10)
+                        }}
                     >
-                        <Checkbox
-                            status={input.default ? 'checked' : 'unchecked'}
+                            {input.country.error}
+                    </Text>
+                    </View>
+                    
+                </ScrollView>
+                {customer.default_address.id !== address?.id && 
+                        <TouchableOpacity
+                            style={{
+                                marginVertical: normalize(15),
+                                alignItems: "center",
+                                flexDirection: "row",
+                            }}
+                            disabled={input.isLoading}
                             onPress={() => {
                                 setInput({
                                     ...input,
                                     default: !input.default
                                 })
                             }}
-                        />
-                        <Text>Set as default Address</Text>
-                    </View>
-                    <TouchableOpacity
+                        >
+                            <View
+                                style={{
+                                    borderRadius: normalize(10),
+                                    borderColor: theme.colors.primary,
+                                    borderWidth: 1,
+                                }}
+                            >
+                                <Checkbox
+                                    status={input.default ? 'checked' : 'unchecked'}
+                                    onPress={() => {
+                                        setInput({
+                                            ...input,
+                                            default: !input.default
+                                        })
+                                    }}
+                                    style={{
+                                        backgroundColor: "red"
+                                    }}
+                                    color={theme.colors.primary}
+                                />
+                            </View>
+                            <Text
+                                style={{
+                                    marginLeft: normalize(10),
+                                    fontSize: theme.fontSize.paragraph,
+                                    fontWeight: theme.fontWeight.normal
+                                }}
+                            >
+                                Set as default Address
+                            </Text>
+                        </TouchableOpacity>
+                    }
+                    
+                <TouchableOpacity
+                        disabled={input.isLoading}
+                        onPress={toUpdateAddress === false ? addAddressHandler : updateAddressHandler}
                         style={[
                             input.isLoading === true ? {
                                 backgroundColor: theme.colors.disabledButton,
@@ -382,7 +701,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                                         marginRight: normalize(12)
                                     }}
                                 >
-                                    Adding
+                                    {toUpdateAddress === true ? "Updating" : "Adding"}
                                 </Text>
                                 <ActivityIndicator color={theme.colors.white} />
                             </View> :
@@ -393,11 +712,11 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                                     fontWeight: theme.fontWeight.medium
                                 }}
                             >
-                                Add New Address
+                                {toUpdateAddress === true ? "Update Address" : "Add New Address"}
+                            
                             </Text>
                         }
                     </TouchableOpacity>
-                </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
     )
@@ -411,4 +730,4 @@ const mapDispatchToProps = (dispatch) => ({
     setCustomer: (user) => dispatch(setCustomer(user)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddAddressScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(AddAddressScreen);

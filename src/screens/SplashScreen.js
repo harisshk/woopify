@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { View , Text, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import { setCustomer } from '../redux/action/customer';
+import { getCustomerById } from '../services/customer';
 import { theme } from '../utils/theme';
 
 const SplashScreen = ({navigation, setCustomer}) => {
@@ -10,11 +11,9 @@ const SplashScreen = ({navigation, setCustomer}) => {
       try {
         const user = await AsyncStorage.getItem('user');
         if (user !== null) {
-          let parsedUser = JSON.parse(user);
-          let customer = {
-            customer: parsedUser
-          };
-          setCustomer(customer);
+          const parsedUser = JSON.parse(user);
+          const data = await getCustomerById(parsedUser.id);
+          setCustomer({...data});
           navigation.reset({
             index: 0,
             routes: [{ name: 'BottomTab' }],

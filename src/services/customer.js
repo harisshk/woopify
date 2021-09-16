@@ -111,3 +111,21 @@ export const updateAddress = async(customerId, addressId, body) => {
         return error;
     }
 }
+
+export const updateCustomerProfile = async() => {
+    try {
+        const response = await fetch(`${API_URL}/customers/${customerId}.json`, {
+            method: 'PUT', // *GET, POST, PUT, DELETE, etc.
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Shopify-Access-Token': ACCESS_PASSWORD
+            },
+            body: JSON.stringify(body)
+        });
+        return response.json();
+
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}

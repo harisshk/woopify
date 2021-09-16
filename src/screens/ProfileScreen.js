@@ -6,19 +6,23 @@ import { Subheading } from 'react-native-paper';
 import { connect } from 'react-redux';
 import Footer from '../components/Footer';
 import { customerId } from '../services';
-import { getCustomerById } from '../services/customer';
+import { deleteAddress, getCustomerById } from '../services/customer';
 import { theme } from '../utils/theme';
 
 
 
 const Profile = ({ navigation, customer }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    // getCustomerInfo();
-  }, []);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  const deleteAddressHandler = async() => {
+    setIsLoading(true);
+    const response = await deleteAddress(customer.id, customer?.default_address.id);
+    setIsLoading(false);
+    console.log(response,'-------Line 19-------');
+  }
 
-  let getGreetingsText = () => {
-    let date = new Date();
+  const getGreetingsText = () => {
+    const date = new Date();
     const hour = date.getHours();
     if (hour >= 5 && hour < 12) {
       return "Good morning";
@@ -28,14 +32,6 @@ const Profile = ({ navigation, customer }) => {
       return "Good evening";
 
     }
-  }
-
-  let getCustomerInfo = async () => {
-    setIsLoading(true);
-    let data = await getCustomerById(customerId);
-    setCustomer({ ...data.customer });
-    console.log('working', data.customer)
-    setIsLoading(false);
   }
 
   const logoutHandler = async () => {
@@ -208,81 +204,137 @@ const Profile = ({ navigation, customer }) => {
           }}
 
         >
-          <View
-            style={{
-              flexDirection: "row"
-            }}
-          >
-            <Text
+          {customer?.default_address &&
+            <View
               style={{
-                fontWeight: theme.fontWeight.bold,
-                lineHeight: theme.lineHeight.medium,
-                fontSize: theme.fontSize.paragraph
-              }}
-            >
-              Default Address
-            </Text>
-            <TouchableOpacity
-              style={{
-                backgroundColor: theme.colors.primary,
-                padding: normalize(5),
-                marginLeft: normalize(7),
-                borderRadius: normalize(5)
-              }}
-              onPress={() => {
-                navigation.navigate('AddAddressScreen', { toUpdateAddress: false });
+                flexDirection: "row",
+                marginBottom: normalize(10)
               }}
             >
               <Text
                 style={{
-                  color: theme.colors.white,
-                  fontWeight: theme.fontWeight.medium
+                  fontWeight: theme.fontWeight.bold,
+                  lineHeight: theme.lineHeight.medium,
+                  fontSize: theme.fontSize.paragraph
                 }}
-              >Add / Edit Address</Text>
-
-            </TouchableOpacity>
-          </View>
-          {customer?.default_address ? <>
-            <Text style={{
-              fontSize: normalize(15),
-              lineHeight: theme.lineHeight.paragraph
-            }}>
-              {customer?.default_address?.address1},
-              {customer?.default_address?.address2}
-            </Text>
-
-            <Text style={{
-              fontSize: normalize(15),
-              lineHeight: theme.lineHeight.paragraph,
-              marginVertical: normalize(5)
-            }}>
-              {customer?.default_address?.city}, {customer?.default_address?.zip}
-            </Text>
-            <Text style={{
-              fontSize: normalize(15),
-              lineHeight: theme.lineHeight.paragraph
-            }}>
-              {customer?.default_address?.province}.
-            </Text>
-          </> : <View
-
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              marginVertical: normalize(15),
-            }}
-          >
-            <Text
-              style={{
-
-                fontSize: theme.fontSize.paragraph,
-                color: "grey"
-              }}
-            >Not Available
-            </Text>
-          </View>}
+              >
+                Default Address
+              </Text>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: theme.colors.primary,
+                  padding: normalize(5),
+                  marginLeft: normalize(7),
+                  borderRadius: normalize(5),
+                  justifyContent: "center"
+                }}
+                onPress={() => {
+                  navigation.navigate('AddressesScreen');
+                }}
+              >
+                <Text
+                  style={{
+                    color: theme.colors.white,
+                    fontWeight: theme.fontWeight.medium,
+                    fontSize: 11
+                  }}
+                >
+                  View All
+                </Text>
+              </TouchableOpacity>
+            </View>
+          }
+          {customer?.default_address ? 
+            <>
+              <Text 
+                style={{
+                  fontSize: normalize(15),
+                  lineHeight: theme.lineHeight.paragraph
+                }}
+              >
+                {customer?.default_address?.address1},
+                {customer?.default_address?.address2}
+              </Text>
+              <Text 
+                style={{
+                  fontSize: normalize(15),
+                  lineHeight: theme.lineHeight.paragraph,
+                  marginVertical: normalize(5)
+                }}
+              >
+                {customer?.default_address?.city}, {customer?.default_address?.zip}
+              </Text>
+              <Text 
+                style={{
+                  fontSize: normalize(15),
+                  lineHeight: theme.lineHeight.paragraph
+                }}
+              >
+                {customer?.default_address?.province}.
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginVertical: normalize(10)
+                }}
+              >
+              {/* <TouchableOpacity
+                onPress={()=>{
+                  navigation.navigate('AddAddressScreen',{address:customer?.default_address, toUpdateAddress:true})
+                }}
+                style={{
+                  padding: normalize(2),
+                }}
+              >
+                <Text
+                  style={{
+                    color: theme.colors.primary,
+                    fontSize: theme.fontSize.paragraph,
+                    marginRight: normalize(10)
+                  }}
+                >
+                  Edit Address
+                </Text>
+              </TouchableOpacity> */}
+              {/* <TouchableOpacity
+                style={{
+                  padding: normalize(2),
+                }}
+                onPress={deleteAddressHandler}
+                disabled={isLoading}
+              >
+              <Text
+                  style={{
+                    color: "red",
+                    fontSize: theme.fontSize.paragraph,
+                    marginRight: normalize(10)
+                  }}
+                >
+                  Delete
+                </Text>
+              </TouchableOpacity> */}
+            </View>
+          </> 
+          : 
+            // <View
+            //   style={{
+            //     alignItems: "center",
+            //     justifyContent: "center",
+            //     marginVertical: normalize(15),
+            //   }}
+            // >
+            //   <Text
+            //     style={{
+            //       fontSize: theme.fontSize.paragraph,
+            //       color: "grey"
+            //     }}
+            //   >
+            //     Not Available
+            //   </Text>
+            // </View>
+            <></>
+          }
         </View>
-
         <View
           style={{
             padding: normalize(10)
@@ -308,6 +360,47 @@ const Profile = ({ navigation, customer }) => {
               My Orders
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              marginVertical: normalize(10),
+              borderBottomWidth: 2,
+              borderBottomColor: "#e3e3e3",
+              paddingBottom: normalize(10)
+            }}
+            onPress={() => {
+              navigation.navigate('AddAddressScreen', { toUpdateAddress: false });
+
+            }}
+          >
+            <Text
+              style={{
+                fontSize: theme.fontSize.paragraph,
+                color: theme.colors.primary
+              }}
+            >
+              Add Address
+            </Text>
+          </TouchableOpacity>
+          {/* <TouchableOpacity
+            style={{
+              marginVertical: normalize(10),
+              borderBottomWidth: 2,
+              borderBottomColor: "#e3e3e3",
+              paddingBottom: normalize(10)
+            }}
+            onPress={() => {
+              navigation.navigate('OrdersScreen');
+            }}
+          >
+            <Text
+              style={{
+                fontSize: theme.fontSize.paragraph,
+                color: theme.colors.primary
+              }}
+            >
+              View All Saved Address
+            </Text>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={{
               marginVertical: normalize(10),
