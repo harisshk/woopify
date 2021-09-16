@@ -24,8 +24,10 @@ function AddressView({ navigation, address, canEdit, customer, setCustomer }) {
             isLoading={isLoading}
             layout={[
                 {
-                    key: address.id, width: '100%', height: normalize(120),
+                    width: '100%',
+                    height: normalize(120),
                     marginVertical: normalize(5),
+                    key: address.id
                 },
             ]}
         >
@@ -87,9 +89,10 @@ function AddressView({ navigation, address, canEdit, customer, setCustomer }) {
                         <Text
                             style={{
                                 fontSize: theme.fontSize.paragraph,
-                                fontWeight: theme.fontWeight.normal,
+                                fontWeight: theme.fontWeight.medium,
                                 lineHeight: theme.lineHeight.paragraph,
-                                marginTop: normalize(5)
+                                marginTop: normalize(5),
+                                color: theme.colors.primary
                             }}
                         >
                             {address.default === true && "(Default Address)"}

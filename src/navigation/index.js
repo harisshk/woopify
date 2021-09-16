@@ -12,6 +12,7 @@ import OTPScreen from '../screens/OTPScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import AddAddressScreen from '../screens/AddAddressScreen';
 import AddressesScreen from '../screens/AddressesScreen';
+import EditProfileScreen from '../screens/EditProfileScreen';
 
 const MainNavigator = createStackNavigator();
 
@@ -112,6 +113,13 @@ const HomeNavigator = () => {
                 })} 
                 name="AddressesScreen" 
                 component={AddressesScreen} 
+            />
+            <MainNavigator.Screen 
+                options={({ route }) => ({
+                    headerShown :false
+                })} 
+                name="EditProfileScreen" 
+                component={EditProfileScreen} 
             />
             
         </MainNavigator.Navigator>

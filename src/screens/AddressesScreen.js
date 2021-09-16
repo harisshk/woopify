@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, SafeAreaView, View } from 'react-native';
+import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import normalize from 'react-native-normalize';
 import { connect } from 'react-redux';
 import AddressView from '../components/AddressView'
@@ -9,7 +9,7 @@ import { theme } from '../utils/theme';
 
 
 function AddressesScreen({ navigation, customer, setCustomer }) {
-    
+
     return (
         <SafeAreaView
             style={{
@@ -18,26 +18,62 @@ function AddressesScreen({ navigation, customer, setCustomer }) {
             }}
         >
             <CustomHeader navigation={navigation} title={"Saved Address"} />
-            <View
-                style={{
-                    flex: 1,
-                    padding: normalize(15)
-                }}
-            >
-                <FlatList
-                    data={customer.addresses}
-                    renderItem={({ item }) => {
-                        return <AddressView address={item} customer={customer} key={item.id} setCustomer={setCustomer} navigation={navigation} canEdit={false} />
-                    }}
-                    keyExtractor={item => item.id}
+            {customer.addresses.length > 0 ?
+                <View
                     style={{
-                        width: '100%',
                         flex: 1,
-                        alignSelf: "center"
+                        padding: normalize(15)
                     }}
-                    showsVerticalScrollIndicator={false}
-                />
-            </View>
+                >
+                    <FlatList
+                        data={customer.addresses}
+                        renderItem={({ item }) => {
+                            return <AddressView address={item} customer={customer} key={item.id} setCustomer={setCustomer} navigation={navigation} canEdit={false} />
+                        }}
+                        keyExtractor={item => item.id}
+                        style={{
+                            width: '100%',
+                            flex: 1,
+                            alignSelf: "center"
+                        }}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </View> :
+                <View
+                    style={{
+                        height: normalize(400),
+                        alignItems: "center",
+                        justifyContent: "center"
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontSize: theme.fontSize.heading,
+                            fontWeight: theme.fontWeight.normal
+                        }}
+                    >
+                        No Address Found :( 
+                    </Text>
+                    <TouchableOpacity
+                        style={{
+                            marginVertical: normalize(50)
+                        }}
+                        onPress={()=>{
+                            navigation.navigate('AddAddressScreen',{toUpdateAddress: false});
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: theme.colors.primary,
+                                fontSize: theme.fontSize.medium,
+                                textDecorationLine:"underline"
+                            }}
+                        >
+                            Add Address
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            }
         </SafeAreaView>
     )
 }

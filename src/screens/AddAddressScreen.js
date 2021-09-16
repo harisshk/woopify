@@ -22,7 +22,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
         address2: { value: toUpdateAddress ? address.address2 : "", error: "" },
         city: { value: toUpdateAddress ? address.city : "", error: "" },
         province: { value: toUpdateAddress ? address.province : "", error: "" },
-        country: { value: toUpdateAddress ? address.country : "", error: "" },
+        country: { value: toUpdateAddress ? address.country : "United States", error: "" },
         zip: { value: toUpdateAddress ? address.zip : "", error: "" },
         default: toUpdateAddress ? address.default : true,
         isLoading: false
@@ -161,7 +161,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                 const response = await updateCustomerProfile(customer.id, body);
                 const data = await getCustomerById(customer.id);
                 setCustomer({ ...data });
-                navigation.goBack();
+                navigation.replace('AddressesScreen');
             }
 
         } catch (error) {
@@ -187,7 +187,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
             const phone = input.phone.value.trim();
             const first_name = input.firstName.value.trim();
             const last_name = input.lastName.value.trim();
-            const zip = inp.value.trim();
+            const zip = input.zip.value.trim();
             const country = input.country.value.trim();
             if (!address1) {
                 setInput({

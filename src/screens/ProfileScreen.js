@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import normalize from 'react-native-normalize';
-import { Subheading } from 'react-native-paper';
+import { List, Subheading } from 'react-native-paper';
 import { connect } from 'react-redux';
 import Footer from '../components/Footer';
 import { customerId } from '../services';
@@ -13,12 +13,12 @@ import { theme } from '../utils/theme';
 
 const Profile = ({ navigation, customer }) => {
   const [isLoading, setIsLoading] = useState(false);
-  
-  const deleteAddressHandler = async() => {
+
+  const deleteAddressHandler = async () => {
     setIsLoading(true);
     const response = await deleteAddress(customer.id, customer?.default_address.id);
     setIsLoading(false);
-    console.log(response,'-------Line 19-------');
+    console.log(response, '-------Line 19-------');
   }
 
   const getGreetingsText = () => {
@@ -86,6 +86,7 @@ const Profile = ({ navigation, customer }) => {
             marginVertical: normalize(20),
           }}
         >
+
           <View
             style={{
               backgroundColor: theme.colors.primary,
@@ -100,23 +101,43 @@ const Profile = ({ navigation, customer }) => {
               left: '45%'
             }}
           >
+
             <Text
               style={{
                 fontSize: theme.fontSize.heading,
                 color: theme.colors.white
               }}
             >
-              {customer?.first_name.charAt(0)}{customer?.last_name.charAt(0)}
+              {customer?.first_name?.charAt(0)}{customer?.last_name?.charAt(0)}
             </Text>
+
           </View>
           <View>
-            <Text
+            <View
               style={{
-                fontSize: theme.fontSize.heading,
-                textAlign: "center"
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center"
               }}
-            >{customer?.first_name} {customer?.last_name}
-            </Text>
+            >
+              <Text
+                style={{
+                  fontSize: theme.fontSize.heading,
+                  textAlign: "center"
+                }}
+              >
+                {customer?.first_name} {customer?.last_name}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate('EditProfileScreen')
+                }}
+
+              >
+                <List.Icon icon="circle-edit-outline" color={theme.colors.primary} />
+              </TouchableOpacity>
+            </View>
+
             <Text
               style={{
                 fontSize: theme.fontSize.medium,
@@ -244,9 +265,9 @@ const Profile = ({ navigation, customer }) => {
               </TouchableOpacity>
             </View>
           }
-          {customer?.default_address ? 
+          {customer?.default_address ?
             <>
-              <Text 
+              <Text
                 style={{
                   fontSize: normalize(15),
                   lineHeight: theme.lineHeight.paragraph
@@ -255,7 +276,7 @@ const Profile = ({ navigation, customer }) => {
                 {customer?.default_address?.address1},
                 {customer?.default_address?.address2}
               </Text>
-              <Text 
+              <Text
                 style={{
                   fontSize: normalize(15),
                   lineHeight: theme.lineHeight.paragraph,
@@ -264,7 +285,7 @@ const Profile = ({ navigation, customer }) => {
               >
                 {customer?.default_address?.city}, {customer?.default_address?.zip}
               </Text>
-              <Text 
+              <Text
                 style={{
                   fontSize: normalize(15),
                   lineHeight: theme.lineHeight.paragraph
@@ -278,7 +299,7 @@ const Profile = ({ navigation, customer }) => {
                   marginVertical: normalize(10)
                 }}
               >
-              {/* <TouchableOpacity
+                {/* <TouchableOpacity
                 onPress={()=>{
                   navigation.navigate('AddAddressScreen',{address:customer?.default_address, toUpdateAddress:true})
                 }}
@@ -296,7 +317,7 @@ const Profile = ({ navigation, customer }) => {
                   Edit Address
                 </Text>
               </TouchableOpacity> */}
-              {/* <TouchableOpacity
+                {/* <TouchableOpacity
                 style={{
                   padding: normalize(2),
                 }}
@@ -313,9 +334,9 @@ const Profile = ({ navigation, customer }) => {
                   Delete
                 </Text>
               </TouchableOpacity> */}
-            </View>
-          </> 
-          : 
+              </View>
+            </>
+            :
             // <View
             //   style={{
             //     alignItems: "center",

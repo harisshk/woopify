@@ -112,7 +112,7 @@ export const updateAddress = async(customerId, addressId, body) => {
     }
 }
 
-export const updateCustomerProfile = async() => {
+export const updateCustomerProfile = async(customerId, body) => {
     try {
         const response = await fetch(`${API_URL}/customers/${customerId}.json`, {
             method: 'PUT', // *GET, POST, PUT, DELETE, etc.
