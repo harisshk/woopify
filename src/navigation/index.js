@@ -43,7 +43,8 @@ const HomeNavigator = () => {
             <MainNavigator.Screen 
                 options={({ route }) => ({
                     title: '',
-                    headerBackTitle:"Back"
+                    headerShown: false
+                    // headerBackTitle:"Back"
                     // headerBackTitleVisible: false
                 })} 
                 name="ProductScreen" 

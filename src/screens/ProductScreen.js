@@ -10,6 +10,7 @@ import { theme } from '../utils/theme';
 import { Picker } from '@react-native-picker/picker';
 import { getProductInfo } from '../services/products';
 import base64 from 'react-native-base64'
+import { CustomHeader } from '../components/CustomHeader';
 
 
 function ProductScreen({ navigation, route, navigator }) {
@@ -33,7 +34,8 @@ function ProductScreen({ navigation, route, navigator }) {
     useEffect(() => {
         getProductInfoHelper();
     }, []);
-    let getProductInfoHelper = async () => {
+    
+    const getProductInfoHelper = async () => {
         setIsLoading(true);
         // client.product.fetch(product.id).then((product) => {
         //     let data = Object.assign({}, { product: product })
@@ -42,24 +44,22 @@ function ProductScreen({ navigation, route, navigator }) {
         //     // loadingImages(0, 0);
         //     setIsLoading(false);
         // });
-        let data = await getProductInfo(product.id);
+        const data = await getProductInfo(product.id);
         setProduct(data.product);
         console.log(data.product)
-        // loadingImages(0, 0);
         setIsLoading(false);
     }
 
-    let addToCartListener = async (quantity) => {
+    const addToCartListener = async (quantity) => {
         setCartIsLoading(true);
-        let checkoutExists = await AsyncStorage.getItem('checkoutId');
+        const checkoutExists = await AsyncStorage.getItem('checkoutId');
         if (checkoutExists === null) {
             client.checkout.create().then(async (checkout) => {
-                // Do something with the checkout
                 await AsyncStorage.setItem('checkoutId', JSON.stringify(checkout.id));
                 /**
                  * Rest API Id to StoreFront API ID
                  */
-                let variantId =  base64.encode(product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].admin_graphql_api_id+"");
+                const variantId =  base64.encode(product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].admin_graphql_api_id+"");
                 const lineItemsToAdd = [
                     {
                         variantId: variantId,
@@ -76,11 +76,11 @@ function ProductScreen({ navigation, route, navigator }) {
             });
         }
         checkoutExists = await AsyncStorage.getItem('checkoutId');
-        let checkoutId = JSON.parse(checkoutExists);
+        const checkoutId = JSON.parse(checkoutExists);
         /**
          * Rest API Id to StoreFront API ID
          */
-        let variantId =  base64.encode(product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].admin_graphql_api_id+"");
+        const variantId =  base64.encode(product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].admin_graphql_api_id+"");
         const lineItemsToAdd = [{
                 variantId: variantId,
                 //variantId: product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].id,
@@ -98,7 +98,8 @@ function ProductScreen({ navigation, route, navigator }) {
         });
 
     }
-    let loadingImages = async (option, index) => {
+
+    const loadingImages = async (option, index) => {
         Array.prototype.insert = function (i, ...rest) {
             return this.slice(0, i).concat(rest, this.slice(i));
         }
@@ -153,6 +154,11 @@ function ProductScreen({ navigation, route, navigator }) {
                 backgroundColor: theme.colors.background,
             }}
         >
+            <CustomHeader navigation={navigation} title={'Product Details'} />
+            
+            {/**
+             * ActionSheet for Selecting Count
+             */}
             <ActionSheet
                 ref={addToCartRef}
                 drawUnderStatusBar={true}
@@ -355,15 +361,18 @@ function ProductScreen({ navigation, route, navigator }) {
 
                         }}
                     >
-                        {cartIsLoading ? <ActivityIndicator color={theme.colors.white} /> :
-
-                            <Text
-                                style={{
-                                    color: theme.colors.white,
-                                    fontSize: theme.fontSize.medium,
-                                    fontWeight: theme.fontWeight.medium
-                                }}
-                            >Add to Cart</Text>
+                        {cartIsLoading ? 
+                                <ActivityIndicator color={theme.colors.white} /> 
+                            :
+                                <Text
+                                    style={{
+                                        color: theme.colors.white,
+                                        fontSize: theme.fontSize.medium,
+                                        fontWeight: theme.fontWeight.medium
+                                    }}
+                                >
+                                    Add to Cart
+                                </Text>
                         }
                     </TouchableOpacity>
                 </ScrollView>

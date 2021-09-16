@@ -159,7 +159,8 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
             />
             <View
                 style={{
-                    padding: normalize(15)
+                    padding: normalize(15),
+                    flex:1
                 }}
             >
                 <TouchableOpacity
@@ -196,7 +197,7 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 >
                     {customer.first_name} {customer.last_name}
                 </Text>
-                <View
+                {/* <View
                     style={{
                         width: '75%',
                         height: normalize(27),
@@ -204,7 +205,13 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                         borderBottomWidth: 2,
                         marginBottom: normalize(20)
                     }}
-                />
+                /> */}
+                <View
+                    style={{
+                        flex:.7,
+                        justifyContent :"center",
+                    }}
+                >
                 <TextInput
                     value={input.first_name.value}
                     label={"First Name"}
@@ -297,6 +304,7 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                         </Text>
                     }
                 </TouchableOpacity>
+                </View>
             </View>
             <View
                 style={{
