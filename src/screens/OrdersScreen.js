@@ -1,13 +1,13 @@
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet, ScrollView, Text, TouchableOpacity, View, Image, Linking } from 'react-native'
+import { FlatList, SafeAreaView, Text, TouchableOpacity, View, Image } from 'react-native'
 import normalize from 'react-native-normalize';
 import SubHeading from '../components/SubHeading';
-import { client } from '../services';
 import { getAllOrders } from '../services/orders';
 import { theme } from '../utils/theme';
-import { Button, Menu, Divider, Provider, List } from 'react-native-paper';
+import { Menu, Divider } from 'react-native-paper';
 import { connect } from 'react-redux';
+import SkeletonContent from 'react-native-skeleton-content-nonexpo';
 
 
 function OrderScreen({ navigation, customer }) {
@@ -18,7 +18,7 @@ function OrderScreen({ navigation, customer }) {
     const isFocussed = useIsFocused();
     useEffect(async () => {
         setIsLoading(true);
-        let data = await getAllOrders(customer?.id, status);
+        const data = await getAllOrders(customer?.id, status);
         setOrders(data.orders);
         setIsLoading(false);
     }, [isFocussed, status]);
@@ -100,6 +100,47 @@ function OrderScreen({ navigation, customer }) {
                     }} title="Cancelled" />
                 </Menu>
             </View>
+            <SkeletonContent
+                containerStyle={{ width: '100%' }}
+                isLoading={isLoading}
+                layout={[
+                    {
+                        width: '90%',
+                        height: normalize(120),
+                        marginVertical: normalize(5),
+                        key: 'OrderScreen1',
+                        alignSelf: "center"
+                    },
+                    {
+                        width: '90%',
+                        height: normalize(120),
+                        marginVertical: normalize(5),
+                        key: 'OrderScreen1',
+                        alignSelf: "center"
+                    },
+                    {
+                        width: '90%',
+                        height: normalize(120),
+                        marginVertical: normalize(5),
+                        key: 'OrderScreen1',
+                        alignSelf: "center"
+                    },
+                    {
+                        width: '90%',
+                        height: normalize(120),
+                        marginVertical: normalize(5),
+                        key: 'OrderScreen1',
+                        alignSelf: "center"
+                    },
+                    {
+                        width: '90%',
+                        height: normalize(120),
+                        marginVertical: normalize(5),
+                        key: 'OrderScreen1',
+                        alignSelf: "center"
+                    },
+                ]}
+            />
             {isLoading === false && orders.length === 0 &&
                 <View
                     style={{

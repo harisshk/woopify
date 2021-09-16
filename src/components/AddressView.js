@@ -12,8 +12,7 @@ function AddressView({ navigation, address, canEdit, customer, setCustomer }) {
     const [isLoading, setIsLoading] = useState(false);
     const deleteAddressHandler = async () => {
         setIsLoading(true);
-        const response = await deleteAddress(customer.id, address.id);
-
+        await deleteAddress(customer.id, address.id);
         const data = await getCustomerById(customer.id);
         setCustomer({ ...data });
         setIsLoading(false);
