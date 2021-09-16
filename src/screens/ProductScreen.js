@@ -4,16 +4,12 @@ import { ActivityIndicator, Alert, FlatList, SafeAreaView, ScrollView, Text, Tou
 import normalize from 'react-native-normalize';
 import { Gallery } from 'react-native-gallery-view';
 import ActionSheet from "react-native-actions-sheet";
-// import Buffer from 'buffer'
 import SubHeading from '../components/SubHeading';
 import { client } from '../services';
 import { theme } from '../utils/theme';
 import { Picker } from '@react-native-picker/picker';
-import { setProducts } from '../redux/action/products';
 import { getProductInfo } from '../services/products';
 import base64 from 'react-native-base64'
-
-
 
 
 function ProductScreen({ navigation, route, navigator }) {
@@ -145,7 +141,6 @@ function ProductScreen({ navigation, route, navigator }) {
             } else if (image.variant_ids.length === 0) {
                 newImages.push(image);
             }
-            // return false;
         });
         setImages([...newImages]);
         setIsLoading(false);
