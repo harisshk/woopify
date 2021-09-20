@@ -2,36 +2,24 @@ import React from 'react'
 import { Dimensions, TouchableOpacity, Image, Text } from 'react-native';
 import normalize from 'react-native-normalize';
 import { out } from 'react-native/Libraries/Animated/Easing';
+import { getProductInfo } from '../services/products';
 import { theme } from '../utils/theme';
-
+import Toast from 'react-native-simple-toast';
 const { width } = Dimensions.get('screen');
 
 function ProductView01({ item, navigation, isFromCategory = false }) {
     return (
         <TouchableOpacity
-            onPress={() => {
-                // if (true === isFromCategory) {
-                //     // let url = atob();
-
-                //     // url.substring(56);
-                //     let input = item.id+"";
-                //     let str = input.replace(/=+$/, '');
-                //     let output = '';
-
-                //     if (str.length % 4 == 1) {
-                //         throw new Error("'atob' failed: The string to be decoded is not correctly encoded.");
-                //     }
-                //     for (let bc = 0, bs = 0, buffer, i = 0;
-                //         buffer = str.charAt(i++);
-
-                //         ~buffer && (bs = bc % 4 ? bs * 64 + buffer : buffer,
-                //             bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0
-                //     ) {
-                //         buffer = chars.indexOf(buffer);
-                //     }
-                //     navigation.navigate('ProductScreen', { product: {id : output.substring(56)} });
-
-                // }
+            onPress={async() => {
+                if (true === isFromCategory) {
+                    try{
+                        const data = await getProductInfo(item.id);
+                        navigation.navigate('ProductScreen', { product: data?.product });
+                    }catch(error){
+                        Toast.show('Something went wrong');
+                    }
+                    return;
+                }
                 navigation.navigate('ProductScreen', { product: item });
             }}
             style={{

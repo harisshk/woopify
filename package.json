@@ -20,6 +20,7 @@
     "axios": "^0.21.4",
     "react": "17.0.2",
     "react-native": "0.65.1",
+    "react-native-action-button": "^2.8.5",
     "react-native-actions-sheet": "^0.5.4",
     "react-native-base64": "^0.2.1",
     "react-native-gallery-view": "^0.0.2",

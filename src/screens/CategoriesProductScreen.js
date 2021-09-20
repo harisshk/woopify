@@ -66,7 +66,7 @@ function CategoriesProduct({ navigation, route }) {
                 >
                     {products.map((product) =>
                         <ProductView01
-                            // isFromCategory={true}
+                            isFromCategory={true}
                             key={product.id}
                             item={product}
                             navigation={navigation}

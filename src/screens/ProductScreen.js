@@ -1,6 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { createRef, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, FlatList, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import React, { createRef, useEffect, useState } from 'react';
+import { 
+    ActivityIndicator, 
+    Alert, 
+    Dimensions, 
+    SafeAreaView, 
+    ScrollView, 
+    Text, 
+    TouchableOpacity, 
+    View,
+    Image
+} from 'react-native';
 import normalize from 'react-native-normalize';
 import { Gallery } from 'react-native-gallery-view';
 import ActionSheet from "react-native-actions-sheet";
@@ -9,18 +19,30 @@ import { client } from '../services';
 import { theme } from '../utils/theme';
 import { Picker } from '@react-native-picker/picker';
 import { getProductInfo } from '../services/products';
-import base64 from 'react-native-base64'
+import base64 from 'react-native-base64';
 import { CustomHeader } from '../components/CustomHeader';
+import SkeletonContent from 'react-native-skeleton-content-nonexpo';
+import Toast from 'react-native-simple-toast';
+import ActionButton from 'react-native-action-button';
+import { List } from 'react-native-paper';
+import { FlatList } from 'react-native-gesture-handler';
 
 
+Array.prototype.insert = function (i, ...rest) {
+    return this.slice(0, i).concat(rest, this.slice(i));
+}
 function ProductScreen({ navigation, route, navigator }) {
+    
+    const { height } = Dimensions.get('screen');
+    const addToCartRef = createRef();
+    const colorsVariantRef = createRef();
+    
     const [isLoading, setIsLoading] = useState(true);
     const [currColor, setCurrColor] = useState(-1);
     const [currSize, setCurrSize] = useState(-1);
-    const [product, setProduct] = useState(route.params.product);
+    const [product, setProduct] = useState(route.params?.product);
     const [currVariantIndex, setCurrentVariantIndex] = useState(-1);
-    const addToCartRef = createRef();
-    const [images, setImages] = useState([...product.images]);
+    // const [images, setImages] = useState([...product.images]);
     const [cartIsLoading, setCartIsLoading] = useState(false);
     const [selectedStock, setSelectedStock] = useState(1);
     const [totalStock, setTotalStock] = useState([
@@ -31,35 +53,156 @@ function ProductScreen({ navigation, route, navigator }) {
         { label: "5", value: "5" },
     ]);
 
+
+    const[variantChosen, setVariantChosen]= useState(0);
+    const[optionsType, setOptionsType] = useState(null);
+    const[variantIsLoading, setVariantIsLoading] = useState(true);
+    const[variantImages, setVariantsImages] = useState([]); 
+
     useEffect(() => {
         getProductInfoHelper();
     }, []);
-    
+
     const getProductInfoHelper = async () => {
         setIsLoading(true);
-        // client.product.fetch(product.id).then((product) => {
-        //     let data = Object.assign({}, { product: product })
-        //     setProduct(data.product);
-        //     setCurrentVariantIndex(-1);
-        //     // loadingImages(0, 0);
-        //     setIsLoading(false);
+        // client.product.fetch("Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzcwMTA4MzI2NzkwNzk=").then((product) => {
+        //     // setProduct(data.product);
+        //     console.log('-------new---', product)
+        //     // admin_graphql_api_id
+        //     // setCurrentVariantIndex(-1);
+        //     // // loadingImages(0, 0);
+        //     // setIsLoading(false);
         // });
         const data = await getProductInfo(product.id);
-        setProduct(data.product);
-        console.log(data.product)
+        if(data?.errors){
+            Toast.show('Something went wrong');
+            console.log(data);
+            console.log('---------------------Product Screen Line 68-------------------------------');
+            setIsLoading(false);
+            return;
+        }
+        const productInfo = data?.product;
+        setProduct({...productInfo});
+        calculateVariantStock();
         setIsLoading(false);
+    }
+
+    const calculateVariantStock = async () => {
+        console.log(product);
+        const noOfOptionsAvailable = product?.options?.length;
+        async function trySwitch(){
+            switch(noOfOptionsAvailable){
+                case 1:{
+                    setOptionsType("single");
+                    setVariantChosen(0);
+                    const allImages = product.images;
+                    const currVariant = product.variants[0];
+                    let newVariantImages =[];
+                     await allImages.map(item => {
+                        
+                        if (item.variant_ids.includes(currVariant.id)) {
+                            newVariantImages = newVariantImages.insert(0, item);
+            
+                        } else if (item.variant_ids.length === 0) {
+                            newVariantImages.push(item);
+                        }
+                    });
+                    let newStockCount = [] ;
+
+                    for(let i = 0 ; i < product?.variants[0].inventory_quantity; i++){
+                        newStockCount.push({
+                            value: (i+1)+"",
+                            label: (i+1)+"",
+                        });
+                    }
+                    setTotalStock([...newStockCount]);
+                    setVariantsImages([...newVariantImages]);
+                    console.log('----------------Line 92 Current Variant Id-----------------');
+                    console.log(newVariantImages);
+                    console.log('----------------Line 94 Variant Images-----------------');
+                    setVariantIsLoading(false);
+                    break;
+                }
+                case 2:{
+                    setOptionsType("double");
+                    break;
+                }
+                case 3:{
+                    setOptionsType("triple");
+                    break;
+                }
+                default:{
+                    setOptionsType("multi");
+                }
+            }
+        };
+
+        trySwitch();
+        
+    }
+
+    const onClickVariantHandler = async(variantIndex) => {
+        async function trySwitch(){
+            switch(optionsType){
+                case "single":{
+                    
+                    setVariantChosen(variantIndex);
+                    const currVariant = product.variants[variantIndex];
+                    const allImages = product.images;
+                    let newVariantImages = [];
+                    await allImages.map(item => {
+                        
+                        if (item.variant_ids.includes(currVariant.id)) {
+                            newVariantImages = newVariantImages.insert(0, item);
+            
+                        } else if (item.variant_ids.length === 0) {
+                            newVariantImages.push(item);
+                        }
+                    });
+                    let newStockCount = [] ;
+
+                    for(let i = 0 ; i < product.variants[variantIndex].inventory_quantity; i++){
+                        newStockCount.push({
+                            value: (i+1)+"",
+                            label: (i+1)+"",
+                        });
+                    }
+                    setTotalStock([...newStockCount]);
+                    console.log(newVariantImages);
+                    console.log('----------------Line 144 Variant Images-----------------');
+                    setVariantsImages([...newVariantImages]);
+                    break;
+                }
+                case "double":{
+
+                    break;
+                }
+                case "triple":{
+
+                    break;
+                }
+                case "multi":{
+
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        }
+        trySwitch();
     }
 
     const addToCartListener = async (quantity) => {
         setCartIsLoading(true);
-        const checkoutExists = await AsyncStorage.getItem('checkoutId');
+        let checkoutExists = await AsyncStorage.getItem('checkoutId');
         if (checkoutExists === null) {
             client.checkout.create().then(async (checkout) => {
                 await AsyncStorage.setItem('checkoutId', JSON.stringify(checkout.id));
                 /**
                  * Rest API Id to StoreFront API ID
                  */
-                const variantId =  base64.encode(product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].admin_graphql_api_id+"");
+                const variantId = base64.encode(product.variants[variantChosen < 0 ? 0 : variantChosen].admin_graphql_api_id + "");
                 const lineItemsToAdd = [
                     {
                         variantId: variantId,
@@ -80,18 +223,18 @@ function ProductScreen({ navigation, route, navigator }) {
         /**
          * Rest API Id to StoreFront API ID
          */
-        const variantId =  base64.encode(product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].admin_graphql_api_id+"");
+        const variantId = base64.encode(product.variants[variantChosen < 0 ? 0 : variantChosen].admin_graphql_api_id + "");
         const lineItemsToAdd = [{
-                variantId: variantId,
-                //variantId: product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].id,
-                quantity: quantity,
-            }
-        ];        
+            variantId: variantId,
+            //variantId: product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].id,
+            quantity: quantity,
+        }
+        ];
         client.checkout.addLineItems(checkoutId, lineItemsToAdd).then((checkout) => {
             Alert.alert('Success', 'Added to Cart');
             setCartIsLoading(false);
-        }).catch(error =>{
-            Alert.alert('Error','Something went wrong');
+        }).catch(error => {
+            Alert.alert('Error', 'Something went wrong');
             setCartIsLoading(false);
             console.log('----------------Line 114-----------------');
             console.log(error);
@@ -100,9 +243,7 @@ function ProductScreen({ navigation, route, navigator }) {
     }
 
     const loadingImages = async (option, index) => {
-        Array.prototype.insert = function (i, ...rest) {
-            return this.slice(0, i).concat(rest, this.slice(i));
-        }
+        
 
         setIsLoading(true);
         let variantId = "";
@@ -155,6 +296,62 @@ function ProductScreen({ navigation, route, navigator }) {
             }}
         >
             <CustomHeader navigation={navigation} title={'Product Details'} />
+                
+            {/* <ActionButton 
+                style={{
+                    // position: "absolute",
+                    // bottom: normalize(90),
+                    zIndex: 1,
+                    height: '100%'
+                }} 
+                buttonColor={theme.colors.disabledButton}
+                hideShadow={false}
+                size={normalize(40)}
+               
+            >
+                {product.variants.map((item,index) => {
+                    return(
+                        <ActionButton.Item 
+                            buttonColor='#9b59b6' 
+                            title={item.title} 
+                            style={{
+                                alignItems: "center",
+                                justifyContent: "center",
+                                width: 10
+                            }}
+                            onPress={() => {
+                                if(index === variantChosen){
+                                    return;
+                                }
+                                onClickVariantHandler(index);
+                            }}
+                            
+                        >
+                            {index === variantChosen ?
+                                <Image 
+                                    source={require('../assets/images/selected.png')}
+                                    style={{
+                                        padding: normalize(2),
+                                        height: normalize(25),
+                                        width: normalize(25),
+                                        alignSelf :'center'
+                                    }}
+                                    resizeMode="contain"
+                                />
+                            :
+                                <Text
+                                    style={{
+                                        fontWeight: "bold",
+                                    }}
+                                >
+                                </Text>
+                            }
+                        </ActionButton.Item>
+                    )
+                })}
+            
+            </ActionButton> */}
+            
             
             {/**
              * ActionSheet for Selecting Count
@@ -228,30 +425,223 @@ function ProductScreen({ navigation, route, navigator }) {
                     </TouchableOpacity>
                 </View>
             </ActionSheet>
+            
+            <ActionSheet
+                ref={colorsVariantRef}
+                drawUnderStatusBar={true}
+                containerStyle={{
+                    height: height/3,
+                }}
+            >
+                <View
+                    style={{
+                        width: '100%',
+                        justifyContent: "space-between",
+                        padding: normalize(10)
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: theme.colors.primary,
+                            fontWeight: theme.fontWeight.medium,
+                            fontSize: theme.fontSize.subheading,
+                            marginBottom: normalize(15),
+                        }}
+                    >
+                        Choose {product.options[0].name} thats suits you
+                    </Text>
+                    <FlatList
+                        data={product.variants}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({item,index}) => {
+                            return(
+                                <TouchableOpacity
+                                    style={[variantChosen === index && {
+                                        borderWidth: 2,
+                                        borderColor: theme.colors.primary,
+                                
+                                    }, {
+                                        margin: normalize(10),
+                                        backgroundColor: "#f3f3f3",
+                                        borderRadius: normalize(12),
+                                        elevation: 2
+                                   }]}
+                                   onPress={()=>{
+                                    colorsVariantRef.current?.setModalVisible(false);
+                                        onClickVariantHandler(index);
+                                   }}
+                                >
+                                    <Image
+                                        style={{
+                                            padding: normalize(2),
+                                            height: normalize(150),
+                                            width: normalize(150),
+                                            padding: normalize(2),
+                                            borderRadius: normalize(12),
+                                            elevation: 2
+                                 
+                                        }}
+                                        source={{uri: product.images.filter(image => image.id === item.image_id)[0]?.src}}
+                                        resizeMode={"contain"}
+                                 />
+                                </TouchableOpacity>
+                            )
+                        }}
+                        keyExtractor={(item) => item.id}
+                    />
+                    <View
+                        style={{
+                            height: normalize(15)
+                        }}
+                    >
 
-            {isLoading === false ?
+                    </View>
+                </View>
+            </ActionSheet>
+            
+            <SkeletonContent
+                containerStyle={{ width: '100%' }}
+                isLoading={isLoading}
+                layout={[
+                    {  
+                        margin: normalize(15),
+                        width: '87%',
+                        height: height/2.6,
+                        key: 'imageLoader',
+                        borderRadius: normalize(12),
+                        alignSelf: "center"
+                    },
+                    {  
+                        marginHorizontal: normalize(15),
+                        width: '87%',
+                        height: normalize(90),
+                        key: 'imageThumbnailLoader',
+                        borderRadius: normalize(12),
+                        alignSelf: "center",
+                        marginBottom: normalize(10)
+                    },
+                    {  
+                        marginHorizontal: normalize(24),
+                        width: '80%',
+                        height: normalize(40),
+                        key: 'productNameLoader',
+                        borderRadius: normalize(12),
+                        marginBottom: normalize(10)
+                    },
+                    {  
+                        marginHorizontal: normalize(24),
+                        width: '57%',
+                        height: normalize(40),
+                        key: 'productPriceLoader',
+                        borderRadius: normalize(12),
+                        marginBottom: normalize(10)
+                    },
+                    {  
+                        marginHorizontal: normalize(24),
+                        width: '71%',
+                        height: normalize(40),
+                        key: 'productDescriptionHeaderLoader',
+                        borderRadius: normalize(12),
+                    }
+                ]}
+            />
+            {isLoading === false &&
                 <ScrollView
                     style={{
                         flex: 1,
                         padding: normalize(15)
                     }}
-                >
-                    <Gallery
-                        // images={currVariantIndex >= 0 ? [product.variants[currVariantIndex].image] : product.images}
-                        images={images}
-                        activeIndex={0}
-                        navigator={navigator}
-                        borderColor={theme.colors.primary}
-                    />
+                    showsVerticalScrollIndicator={false}
+            >
+                    {
+                        variantIsLoading === false && 
+                        <Gallery
+                            // images={currVariantIndex >= 0 ? [product.variants[currVariantIndex].image] : product.images}
+                            // images={images}
+                            images={variantImages}
+                            activeIndex={0}
+                            navigator={navigator}
+                            borderColor={theme.colors.primary}
+                        />
+                    }
+                    <View
+                        style={{
+                            flexDirection:"row",
+                            justifyContent: "space-around",
+                            alignItems: "center"
+                        }}
+                    >
                     <Text
                         style={{
                             fontSize: theme.fontSize.heading,
-                            lineHeight: theme.lineHeight.heading
+                            lineHeight: theme.lineHeight.heading,
+                            flex:product?.options[0]?.name !== "Title" ? .85 : 1,
+                            textTransform: "capitalize"
                         }}
                     >
                         {product?.title}
                     </Text>
-                    <Text
+                   {/**
+                    * Variants and Option for Color
+                    */}
+                    {product?.options[0]?.name !== "Title" &&
+                    <TouchableOpacity
+                        style={{
+                            flex:.2,
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                        onPress={()=>{
+                            colorsVariantRef.current?.setModalVisible(true);
+                        }}
+                        disabled={variantIsLoading}
+                    >
+                       <View
+                        style={{
+                            borderRadius: normalize(35),
+                            borderBottomColor:theme.colors.notification,
+
+                            borderTopColor:"#e35e12",
+
+                            borderRightColor:theme.colors.primary,
+
+                            borderLeftColor:"#090861",
+                            borderWidth: 2,
+                            padding:normalize(5),
+                            width: normalize(35),
+                            height: normalize(35),
+                            justifyContent: "center",
+                            alignItems: "center"
+                        }}
+                       >
+                           <Text
+                            style={{
+                                fontWeight: theme.fontWeight.medium,
+                            }}
+                           >
+                               +{ product?.options[0]?.values?.length }
+                            </Text>
+                        </View> 
+                       <Text
+                        style={{
+                            color:theme.colors.placeholder,
+                            fontWeight: theme.fontWeight.bold,
+                            fontSize: normalize(12.1),
+                            textAlign: "center",
+                            marginTop :normalize(10),
+                            textTransform: "uppercase"
+                        }}
+                       >
+                           {product.options[0].name}
+                       </Text>
+                    </TouchableOpacity>
+}
+                
+                    </View>
+                    
+                    
+                    {/* <Text
                         style={{
                             marginTop: normalize(15),
                             fontSize: theme.fontSize.subheading,
@@ -299,8 +689,8 @@ function ProductScreen({ navigation, route, navigator }) {
                             )
                         }}
                         keyExtractor={item => item?.value || item}
-                    />
-                    {product?.options.length > 1 &&
+                    /> */}
+                    {/* {product?.options.length > 1 &&
                         <FlatList
                             horizontal
                             style={{
@@ -339,47 +729,130 @@ function ProductScreen({ navigation, route, navigator }) {
                             }}
                             keyExtractor={item => item?.value || item}
                         />
-                    }
-                    <TouchableOpacity
-                        disabled={cartIsLoading}
+                    } */}
+    
+                    <Text
                         style={{
-                            height: normalize(55),
-                            width: '100%',
-                            alignSelf: "center",
-                            backgroundColor: theme.colors.primary,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            marginVertical: normalize(20),
-                            borderRadius: normalize(12)
-                        }}
-                        onPress={() => {
-                            if (currVariantIndex === -1) {
-                                Alert.alert('Note', 'Choose any variant to continue');
-                                return;
-                            };
-                            addToCartRef.current?.setModalVisible();
-
+                            fontSize: theme.fontSize.heading,
+                            lineHeight: theme.lineHeight.subheading,
+                            marginTop: normalize(10)
                         }}
                     >
-                        {cartIsLoading ? 
-                                <ActivityIndicator color={theme.colors.white} /> 
-                            :
-                                <Text
-                                    style={{
-                                        color: theme.colors.white,
-                                        fontSize: theme.fontSize.medium,
-                                        fontWeight: theme.fontWeight.medium
-                                    }}
-                                >
-                                    Add to Cart
-                                </Text>
-                        }
-                    </TouchableOpacity>
-                </ScrollView>
-                :
-                <></>
+                      $ {product.variants[variantChosen].price}
+                    </Text>
 
+                    <View
+                        style={{
+                            width: '98%',
+                            alignSelf: "center"
+                        }}
+                    >
+                        <SubHeading
+                            style={{
+                                fontSize: theme.fontSize.medium,
+                                fontWeight: theme.fontWeight.medium,
+                                lineHeight: theme.lineHeight.heading
+                            }}
+                        >
+                            About the Product
+                        </SubHeading>
+                        {product.body_html.replace(/<\/?[^>]+(>|$)/g, "").split(/\r?\n/).map((item, index) => {
+                            if (item.length > 0) {
+                                return (
+                                    <View
+                                        style={{
+                                            padding: normalize(2)
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontSize: theme.fontSize.medium,
+                                                fontWeight: theme.fontWeight.normal,
+                                                lineHeight: theme.lineHeight.heading
+                                            }}
+                                        >
+                                            {'\u2022'} {item}
+                                        </Text>
+                                    </View>
+                                )
+                            }
+                        })}
+                    </View>
+
+                    
+
+                    <View
+                        style={{
+                            height: normalize(20)
+                        }}
+                    />
+                </ScrollView>
             }
+            {product?.variants[variantChosen]?.inventory_quantity < 1 ? <TouchableOpacity
+                disabled={true}
+                style={{
+                    height: normalize(55),
+                    width: '85%',
+                    alignSelf: "center",
+                    backgroundColor: theme.colors.white,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: normalize(12),
+                    marginTop: normalize(15)
+
+                }}
+               
+            >
+                {cartIsLoading ?
+                    <ActivityIndicator color={theme.colors.white} />
+                    :
+                    <Text
+                        style={{
+                            color: theme.colors.notification,
+                            fontSize: theme.fontSize.medium,
+                            fontWeight: theme.fontWeight.medium
+                        }}
+                    >
+                        OUT OF STOCK
+                    </Text>
+                }
+            </TouchableOpacity>  :
+            <TouchableOpacity
+                disabled={cartIsLoading}
+                style={{
+                    height: normalize(55),
+                    width: '85%',
+                    alignSelf: "center",
+                    backgroundColor: theme.colors.primary,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: normalize(12),
+                    marginTop: normalize(15)
+
+                }}
+                onPress={() => {
+                    // if (currVariantIndex === -1) {
+                    //     Alert.alert('Note', 'Choose any variant to continue');
+                    //     return;
+                    // };
+                    addToCartRef.current?.setModalVisible();
+
+                }}
+            >
+                {cartIsLoading ?
+                    <ActivityIndicator color={theme.colors.white} />
+                    :
+                    <Text
+                        style={{
+                            color: theme.colors.white,
+                            fontSize: theme.fontSize.medium,
+                            fontWeight: theme.fontWeight.medium
+                        }}
+                    >
+                        Add to Cart
+                    </Text>
+                }
+            </TouchableOpacity>}
 
         </SafeAreaView>
     )
