@@ -24,7 +24,7 @@ import { CustomHeader } from '../components/CustomHeader';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
 import Toast from 'react-native-simple-toast';
 import ActionButton from 'react-native-action-button';
-import { List } from 'react-native-paper';
+import { Divider, List, Menu } from 'react-native-paper';
 import { FlatList } from 'react-native-gesture-handler';
 
 
@@ -36,7 +36,7 @@ function ProductScreen({ navigation, route, navigator }) {
     const { height } = Dimensions.get('screen');
     const addToCartRef = createRef();
     const colorsVariantRef = createRef();
-    
+
     const [isLoading, setIsLoading] = useState(true);
     const [currColor, setCurrColor] = useState(-1);
     const [currSize, setCurrSize] = useState(-1);
@@ -58,6 +58,9 @@ function ProductScreen({ navigation, route, navigator }) {
     const[optionsType, setOptionsType] = useState(null);
     const[variantIsLoading, setVariantIsLoading] = useState(true);
     const[variantImages, setVariantsImages] = useState([]); 
+    const[isColorVariantPresent, setIsColorVariantPresent] = useState(false);
+    const[isSizeVariantPresent, setIsSizeVariantPresent] = useState(false);
+    const[sizesMenuState, setSizesMenuState] = useState(false);  
 
     useEffect(() => {
         getProductInfoHelper();
@@ -82,13 +85,22 @@ function ProductScreen({ navigation, route, navigator }) {
             return;
         }
         const productInfo = data?.product;
+        const { options } = productInfo;
+        const colors = await options.filter(option => option?.name?.toLowerCase() === "color");
+        const sizes = await options.filter(option => option?.name?.toLowerCase() === "size");
+        if(colors.length > 0){
+            setIsColorVariantPresent(true);
+        }
+        if(sizes.length > 0){
+            setIsSizeVariantPresent(true);
+        }
+        
         setProduct({...productInfo});
         calculateVariantStock();
         setIsLoading(false);
     }
 
     const calculateVariantStock = async () => {
-        console.log(product);
         const noOfOptionsAvailable = product?.options?.length;
         async function trySwitch(){
             switch(noOfOptionsAvailable){
@@ -98,8 +110,7 @@ function ProductScreen({ navigation, route, navigator }) {
                     const allImages = product.images;
                     const currVariant = product.variants[0];
                     let newVariantImages =[];
-                     await allImages.map(item => {
-                        
+                    await allImages.map(item => {         
                         if (item.variant_ids.includes(currVariant.id)) {
                             newVariantImages = newVariantImages.insert(0, item);
             
@@ -108,7 +119,6 @@ function ProductScreen({ navigation, route, navigator }) {
                         }
                     });
                     let newStockCount = [] ;
-
                     for(let i = 0 ; i < product?.variants[0].inventory_quantity; i++){
                         newStockCount.push({
                             value: (i+1)+"",
@@ -117,14 +127,12 @@ function ProductScreen({ navigation, route, navigator }) {
                     }
                     setTotalStock([...newStockCount]);
                     setVariantsImages([...newVariantImages]);
-                    console.log('----------------Line 92 Current Variant Id-----------------');
-                    console.log(newVariantImages);
-                    console.log('----------------Line 94 Variant Images-----------------');
                     setVariantIsLoading(false);
                     break;
                 }
                 case 2:{
                     setOptionsType("double");
+                    // setVariantIsLoading(false);
                     break;
                 }
                 case 3:{
@@ -138,29 +146,31 @@ function ProductScreen({ navigation, route, navigator }) {
         };
 
         trySwitch();
-        
     }
 
-    const onClickVariantHandler = async(variantIndex) => {
+    const onClickVariantHandler = async(title) => {
         async function trySwitch(){
             switch(optionsType){
                 case "single":{
-                    
+                    setVariantIsLoading(true);
+                    let variantIndex = 0;
+                    await product?.variants?.forEach((variant, index) => {
+                        if( variant?.option1 === title || variant?.option2 === title || variant?.option3 === title ){
+                            variantIndex = index; 
+                        }
+                    })
                     setVariantChosen(variantIndex);
                     const currVariant = product.variants[variantIndex];
                     const allImages = product.images;
                     let newVariantImages = [];
                     await allImages.map(item => {
-                        
                         if (item.variant_ids.includes(currVariant.id)) {
                             newVariantImages = newVariantImages.insert(0, item);
-            
                         } else if (item.variant_ids.length === 0) {
                             newVariantImages.push(item);
                         }
                     });
                     let newStockCount = [] ;
-
                     for(let i = 0 ; i < product.variants[variantIndex].inventory_quantity; i++){
                         newStockCount.push({
                             value: (i+1)+"",
@@ -168,13 +178,14 @@ function ProductScreen({ navigation, route, navigator }) {
                         });
                     }
                     setTotalStock([...newStockCount]);
-                    console.log(newVariantImages);
-                    console.log('----------------Line 144 Variant Images-----------------');
                     setVariantsImages([...newVariantImages]);
+                    setVariantIsLoading(false);
                     break;
                 }
                 case "double":{
-
+                    setVariantIsLoading(true);
+                    
+                    setVariantIsLoading(false);
                     break;
                 }
                 case "triple":{
@@ -307,7 +318,6 @@ function ProductScreen({ navigation, route, navigator }) {
                 buttonColor={theme.colors.disabledButton}
                 hideShadow={false}
                 size={normalize(40)}
-               
             >
                 {product.variants.map((item,index) => {
                     return(
@@ -426,6 +436,9 @@ function ProductScreen({ navigation, route, navigator }) {
                 </View>
             </ActionSheet>
             
+            {/**
+             * ActionSheet for Color Options
+             */}
             <ActionSheet
                 ref={colorsVariantRef}
                 drawUnderStatusBar={true}
@@ -448,7 +461,7 @@ function ProductScreen({ navigation, route, navigator }) {
                             marginBottom: normalize(15),
                         }}
                     >
-                        Choose {product.options[0].name} thats suits you
+                        Choose Color thats suits you
                     </Text>
                     <FlatList
                         data={product.variants}
@@ -460,17 +473,16 @@ function ProductScreen({ navigation, route, navigator }) {
                                     style={[variantChosen === index && {
                                         borderWidth: 2,
                                         borderColor: theme.colors.primary,
-                                
                                     }, {
-                                        margin: normalize(10),
-                                        backgroundColor: "#f3f3f3",
-                                        borderRadius: normalize(12),
-                                        elevation: 2
-                                   }]}
-                                   onPress={()=>{
-                                    colorsVariantRef.current?.setModalVisible(false);
-                                        onClickVariantHandler(index);
-                                   }}
+                                            margin: normalize(10),
+                                            backgroundColor: "#f3f3f3",
+                                            borderRadius: normalize(12),
+                                            elevation: 2
+                                        }]}
+                                    onPress={() => {
+                                        colorsVariantRef.current?.setModalVisible(false);
+                                        onClickVariantHandler(item.title);
+                                    }}
                                 >
                                     <Image
                                         style={{
@@ -479,12 +491,10 @@ function ProductScreen({ navigation, route, navigator }) {
                                             width: normalize(150),
                                             padding: normalize(2),
                                             borderRadius: normalize(12),
-                                            elevation: 2
-                                 
                                         }}
-                                        source={{uri: product.images.filter(image => image.id === item.image_id)[0]?.src}}
+                                        source={{ uri: product.images.filter(image => image.id === item.image_id)[0]?.src }}
                                         resizeMode={"contain"}
-                                 />
+                                    />
                                 </TouchableOpacity>
                             )
                         }}
@@ -494,9 +504,7 @@ function ProductScreen({ navigation, route, navigator }) {
                         style={{
                             height: normalize(15)
                         }}
-                    >
-
-                    </View>
+                    />
                 </View>
             </ActionSheet>
             
@@ -553,7 +561,7 @@ function ProductScreen({ navigation, route, navigator }) {
                         padding: normalize(15)
                     }}
                     showsVerticalScrollIndicator={false}
-            >
+                >
                     {
                         variantIsLoading === false && 
                         <Gallery
@@ -576,171 +584,131 @@ function ProductScreen({ navigation, route, navigator }) {
                         style={{
                             fontSize: theme.fontSize.heading,
                             lineHeight: theme.lineHeight.heading,
-                            flex:product?.options[0]?.name !== "Title" ? .85 : 1,
+                            flex: isColorVariantPresent === true ? .85 : 1,
                             textTransform: "capitalize"
                         }}
                     >
                         {product?.title}
-                    </Text>
-                   {/**
+                    </Text> 
+                    {/**
                     * Variants and Option for Color
                     */}
-                    {product?.options[0]?.name !== "Title" &&
-                    <TouchableOpacity
-                        style={{
-                            flex:.2,
-                            justifyContent: "center",
-                            alignItems: "center"
-                        }}
-                        onPress={()=>{
-                            colorsVariantRef.current?.setModalVisible(true);
-                        }}
-                        disabled={variantIsLoading}
-                    >
-                       <View
-                        style={{
-                            borderRadius: normalize(35),
-                            borderBottomColor:theme.colors.notification,
-
-                            borderTopColor:"#e35e12",
-
-                            borderRightColor:theme.colors.primary,
-
-                            borderLeftColor:"#090861",
-                            borderWidth: 2,
-                            padding:normalize(5),
-                            width: normalize(35),
-                            height: normalize(35),
-                            justifyContent: "center",
-                            alignItems: "center"
-                        }}
-                       >
-                           <Text
+                    {isColorVariantPresent === true &&
+                        <TouchableOpacity
                             style={{
-                                fontWeight: theme.fontWeight.medium,
+                                flex:.2,
+                                justifyContent: "center",
+                                alignItems: "center"
                             }}
-                           >
-                               +{ product?.options[0]?.values?.length }
-                            </Text>
-                        </View> 
-                       <Text
-                        style={{
-                            color:theme.colors.placeholder,
-                            fontWeight: theme.fontWeight.bold,
-                            fontSize: normalize(12.1),
-                            textAlign: "center",
-                            marginTop :normalize(10),
-                            textTransform: "uppercase"
-                        }}
-                       >
-                           {product.options[0].name}
-                       </Text>
-                    </TouchableOpacity>
-}
-                
-                    </View>
-                    
-                    
-                    {/* <Text
-                        style={{
-                            marginTop: normalize(15),
-                            fontSize: theme.fontSize.subheading,
-                            fontWeight: theme.fontWeight.bold
-                        }}
-                    >
-                        {currVariantIndex >= 0 ? `$ ${product?.variants[currVariantIndex]?.price}` : `Choose Variant`}
-                    </Text>
-                    <SubHeading>
-                        Colors
-                    </SubHeading>
-                    <FlatList
-                        horizontal
-                        data={product?.options[0].values}
-                        showsHorizontalScrollIndicator={false}
-                        renderItem={({ item, index }) => {
-                            return (
-                                <TouchableOpacity
-                                    style={[
-                                        index === currColor && { borderWidth: 2, borderColor: theme.colors.primary },
-                                        {
-                                            backgroundColor: item?.value?.toLowerCase(),
-                                            minWidth: normalize(50),
-                                            borderRadius: normalize(13),
-                                            paddingHorizontal: normalize(10),
-                                            marginRight: normalize(10)
-                                        }]}
-                                    onPress={() => {
-                                        setCurrColor(index)
-                                        loadingImages(0, index);
+                            onPress={()=>{
+                                colorsVariantRef.current?.setModalVisible(true);
+                            }}
+                            disabled={variantIsLoading}
+                        >
+                            <View
+                                style={{
+                                    borderRadius: normalize(35),
+                                    borderBottomColor:theme.colors.notification,
+                                    borderTopColor:"#e35e12",
+                                    borderRightColor:theme.colors.primary,
+                                    borderLeftColor:"#090861",
+                                    borderWidth: 2,
+                                    padding:normalize(5),
+                                    width: normalize(35),
+                                    height: normalize(35),
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontWeight: theme.fontWeight.medium,
                                     }}
                                 >
-                                    <Text
-                                        style={{
-                                            textAlign: "center",
-                                            fontSize: theme.fontSize.paragraph,
-                                            fontWeight: theme.fontWeight.thin,
-                                            padding: normalize(2)
-                                        }}
-                                    >
-                                        {item?.value || item}
-                                    </Text>
-
-                                </TouchableOpacity>
-                            )
-                        }}
-                        keyExtractor={item => item?.value || item}
-                    /> */}
-                    {/* {product?.options.length > 1 &&
-                        <FlatList
-                            horizontal
-                            style={{
-                                marginVertical: normalize(20)
-                            }}
-                            data={product?.options[1].values}
-                            showsHorizontalScrollIndicator={false}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    <TouchableOpacity
-                                        style={[
-                                            index === currSize && { borderWidth: 2, borderColor: theme.colors.primary },
-                                            {
-                                                minWidth: normalize(50),
-                                                borderRadius: normalize(13),
-                                                paddingHorizontal: normalize(10),
-                                                marginRight: normalize(10)
-                                            }]}
-                                        onPress={() => {
-                                            setCurrSize(index);
-                                            loadingImages(1, index);
-                                        }}
-                                    >
-                                        <Text
-                                            style={{
-                                                textAlign: "center",
-                                                fontSize: theme.fontSize.paragraph,
-                                                fontWeight: theme.fontWeight.thin,
-                                                padding: normalize(2)
-                                            }}
-                                        >
-                                            {item?.value || item}
-                                        </Text>
-                                    </TouchableOpacity>
-                                )
-                            }}
-                            keyExtractor={item => item?.value || item}
-                        />
-                    } */}
-    
+                                    +{product?.options.filter(option => option.name.toLowerCase() === "color")[0]?.values?.length}
+                                </Text>
+                            </View>
+                            <Text
+                                style={{
+                                    color:theme.colors.placeholder,
+                                    fontWeight: theme.fontWeight.bold,
+                                    fontSize: normalize(12.1),
+                                    textAlign: "center",
+                                    marginTop :normalize(10),
+                                    textTransform: "uppercase"
+                                }}
+                            >
+                                Color
+                            </Text>
+                        </TouchableOpacity>
+                    }
+                
+                    </View>
                     <Text
                         style={{
                             fontSize: theme.fontSize.heading,
                             lineHeight: theme.lineHeight.subheading,
                             marginTop: normalize(10)
                         }}
-                    >
-                      $ {product.variants[variantChosen].price}
+                    >   
+                    $ {product.variants[variantChosen].price}
                     </Text>
-
+                    {isSizeVariantPresent !== false && 
+                        <Menu
+                            visible={sizesMenuState}
+                            onDismiss={()=>{
+                                setSizesMenuState(false);
+                            }}
+                            anchor={
+                                <TouchableOpacity
+                                    style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        backgroundColor: theme.colors.disabledButton,
+                                        width: '30%',
+                                        borderRadius: normalize(12),
+                                        justifyContent: "center",
+                                        marginTop: normalize(15)
+                                    }}
+                                    onPress={()=>{
+                                        setSizesMenuState(true);
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: theme.fontSize.paragraph,
+                                            fontWeight: theme.fontWeight.medium,
+                                            color: theme.colors.white
+                                        }}
+                                    >
+                                        {product.variants[variantChosen].option1}
+                                    </Text>
+                                    <List.Icon 
+                                        icon="arrow-down" 
+                                        color={theme.colors.white}  
+                                        style={{
+                                            width: normalize(20),
+                                        }}
+                                    />
+                                </TouchableOpacity>
+                            }
+                        >
+                            {product?.options.filter(option => option?.name?.toLowerCase() === "size")[0]?.values.map(value => {
+                                return(
+                                    <>
+                                        <Menu.Item 
+                                            onPress={() => {
+                                                onClickVariantHandler(value);
+                                                setSizesMenuState(false);
+                                            }} 
+                                            title={value} 
+                                        />
+                                        <Divider />
+                                    </>
+                                )})
+                            }
+                        </Menu>
+                    }
                     <View
                         style={{
                             width: '98%',
@@ -778,9 +746,7 @@ function ProductScreen({ navigation, route, navigator }) {
                             }
                         })}
                     </View>
-
                     
-
                     <View
                         style={{
                             height: normalize(20)
@@ -799,9 +765,7 @@ function ProductScreen({ navigation, route, navigator }) {
                     alignItems: "center",
                     borderRadius: normalize(12),
                     marginTop: normalize(15)
-
                 }}
-               
             >
                 {cartIsLoading ?
                     <ActivityIndicator color={theme.colors.white} />

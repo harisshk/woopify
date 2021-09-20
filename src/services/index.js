@@ -11,4 +11,4 @@ export const client = Client.buildClient({
 
 export const customerId = `5594941096103`;
 
-export const API_ENDPOINT = `https://9ee4-106-51-88-144.ngrok.io`;
+export const API_ENDPOINT = `https://f5fd-106-51-88-144.ngrok.io`;

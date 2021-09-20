@@ -68,6 +68,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
       }}
     >
       <ScrollView
+        showsVerticalScrollIndicator={false}
         style={{
           padding: normalize(15)
         }}
