@@ -204,7 +204,6 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         </SubHeading>
         <SkeletonContent
           containerStyle={{ width: '100%', flexDirection: "row" }}
-          isLoading={true}
           layout={[
             {
               width: width / 2.24,
