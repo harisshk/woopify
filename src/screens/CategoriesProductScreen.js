@@ -54,7 +54,7 @@ function CategoriesProduct({ navigation, route }) {
                 }
             >
                 <Image
-                    source={{ uri: category.image.src }}
+                    source={{ uri: category.image?.src }}
                     style={{
                         height: normalize(180),
                         width: '98%',

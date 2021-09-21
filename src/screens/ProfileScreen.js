@@ -36,6 +36,7 @@ const Profile = ({ navigation, customer }) => {
 
   const logoutHandler = async () => {
     await AsyncStorage.removeItem('user');
+    await AsyncStorage.removeItem('checkoutId')
     navigation.navigate('SplashScreen');
   }
 

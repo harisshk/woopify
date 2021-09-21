@@ -16,7 +16,7 @@ function CategoryHomeScreen({item , navigation}) {
             }}
         >
             <Image
-                source={{ uri: item.image.src }}
+                source={{ uri: item?.image?.src }}
                 style={{
                     padding: normalize(2),
                     height: normalize(65),

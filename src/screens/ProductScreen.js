@@ -335,9 +335,9 @@ function ProductScreen({ navigation, route, navigator }) {
                     }
                 ];
                 client.checkout.addLineItems(checkout.id, lineItemsToAdd).then((checkout) => {
-                    Alert.alert('Success', 'Added to Cart');
+                    Toast.show('Added to Cart');
                     setCartIsLoading(false);
-                });
+                })
                 setCartIsLoading(false);
                 return;
             });
@@ -355,7 +355,7 @@ function ProductScreen({ navigation, route, navigator }) {
         }
         ];
         client.checkout.addLineItems(checkoutId, lineItemsToAdd).then((checkout) => {
-            Alert.alert('Success', 'Added to Cart');
+            Toast.show('Added to Cart');
             setCartIsLoading(false);
         }).catch(error => {
             Alert.alert('Error', 'Something went wrong');

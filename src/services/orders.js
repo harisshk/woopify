@@ -1,8 +1,8 @@
-import { ACCESS_PASSWORD } from ".";
+import { ACCESS_PASSWORD, API_URL } from ".";
 
 export const getAllOrders = async (customerId, status) => {
     try {
-        const response = await fetch(`https://hari1407.myshopify.com/admin/orders.json?status=${status}&customer_id=${customerId}`, {
+        const response = await fetch(`${API_URL}/orders.json?status=${status}&customer_id=${customerId}`, {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type': 'application/json',
@@ -18,7 +18,7 @@ export const getAllOrders = async (customerId, status) => {
 
 export const getOrdersByOrderId = async (orderId) => {
     try {
-        const response = await fetch(`https://hari1407.myshopify.com/admin/api/2021-07/orders/${orderId}.json`, {
+        const response = await fetch(`${API_URL}/orders/${orderId}.json`, {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type': 'application/json',

@@ -83,11 +83,19 @@ function CartScreen({ navigation }) {
         let temp = await AsyncStorage.getItem('checkoutId');
         if (temp !== null) {
             setCheckoutId(JSON.parse(temp));
-            let checkout = await client.checkout.fetch(JSON.parse(temp));
-            let data = Object.assign({}, { checkout: checkout })
+            const checkout = await client.checkout.fetch(JSON.parse(temp));
+            const data = Object.assign({}, { checkout: checkout })
             setCartItem({ ...data.checkout });
             setIsLoading(false);
             setRefreshing(false);
+          
+        }else{ 
+            setCartItem({...{
+                lineItems: []
+            }})
+            setRefreshing(false);
+            setIsLoading(false);
+              
         }
     }
 
