@@ -672,6 +672,13 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
                         key: 'productPriceLoader',
                         borderRadius: normalize(12),
                         marginBottom: normalize(10)
+                    }, {
+                        marginHorizontal: normalize(24),
+                        width: '57%',
+                        height: normalize(31),
+                        key: 'productPriceLoade1r',
+                        borderRadius: normalize(12),
+                        marginBottom: normalize(10)
                     },
                     {
                         marginHorizontal: normalize(24),
