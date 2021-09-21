@@ -216,40 +216,6 @@ function OrderScreen({ navigation, customer }) {
                                 >
                                     Order {item.name}
                                 </SubHeading>
-                                {/* {item.line_items.map(item => {
-    return (
-        <View key={item.id}
-            style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginVertical: normalize(5)
-            }}
-        >
-            <Text
-                style={{
-                    fontSize: theme.fontSize.paragraph,
-                    flex: .7
-                }}
-            >{item.name}
-
-                <Text
-                    style={{
-                        fontWeight: theme.fontWeight.bold,
-
-                        fontSize: normalize(13)
-                    }}
-                >  ({item.quantity} item)</Text></Text>
-            <Text
-                style={{
-                    flex: .2,
-                    fontSize: theme.fontSize.paragraph,
-                    textAlign: "right",
-                    fontWeight: theme.fontWeight.medium
-                }}
-            >${item.price}</Text>
-        </View>
-    )
-})} */}
                                 <View>
                                     {item?.shipping_address &&
                                         <Text

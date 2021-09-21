@@ -1,26 +1,22 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import normalize from 'react-native-normalize';
-import { List, Subheading } from 'react-native-paper';
+import { List } from 'react-native-paper';
 import { connect } from 'react-redux';
 import Footer from '../components/Footer';
-import { customerId } from '../services';
-import { deleteAddress, getCustomerById } from '../services/customer';
+import { deleteAddress } from '../services/customer';
 import { theme } from '../utils/theme';
 
 
 
-const Profile = ({ navigation, customer }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const Profile = ({ navigation, customer, cart }) => {
 
-  const deleteAddressHandler = async () => {
-    setIsLoading(true);
-    const response = await deleteAddress(customer.id, customer?.default_address.id);
-    setIsLoading(false);
-    console.log(response, '-------Line 19-------');
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = () => {
+    setRefreshing(true);
+    setRefreshing(false);
   }
-
   const getGreetingsText = () => {
     const date = new Date();
     const hour = date.getHours();
@@ -51,6 +47,7 @@ const Profile = ({ navigation, customer }) => {
         style={{
           padding: normalize(15)
         }}
+        showsVerticalScrollIndicator={false}
       >
         <Text
           style={{
@@ -71,11 +68,25 @@ const Profile = ({ navigation, customer }) => {
           {getGreetingsText()}
         </Text>
       </View>
-      <View
+      <ScrollView
         style={{
           padding: normalize(15)
         }}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       >
+        <View
+          style={{
+            height: normalize(15)
+          }}
+        >
+
+        </View>
         <View
           style={{
             backgroundColor: theme.colors.white,
@@ -87,7 +98,6 @@ const Profile = ({ navigation, customer }) => {
             marginVertical: normalize(20),
           }}
         >
-
           <View
             style={{
               backgroundColor: theme.colors.primary,
@@ -99,14 +109,16 @@ const Profile = ({ navigation, customer }) => {
               justifyContent: "center",
               position: "absolute",
               top: -normalize(45),
-              left: '45%'
+              left: '45%',
+              zIndex: 1
             }}
           >
 
             <Text
               style={{
                 fontSize: theme.fontSize.heading,
-                color: theme.colors.white
+                color: theme.colors.white,
+                textTransform: "uppercase"
               }}
             >
               {customer?.first_name?.charAt(0)}{customer?.last_name?.charAt(0)}
@@ -403,6 +415,26 @@ const Profile = ({ navigation, customer }) => {
               Add Address
             </Text>
           </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              marginVertical: normalize(10),
+              borderBottomWidth: 2,
+              borderBottomColor: "#e3e3e3",
+              paddingBottom: normalize(10)
+            }}
+            onPress={() => {
+              navigation.navigate('CartScreen')
+            }}
+          >
+            <Text
+              style={{
+                fontSize: theme.fontSize.paragraph,
+                color: theme.colors.primary
+              }}
+            >
+              My Cart ({cart?.count || 0})
+            </Text>
+          </TouchableOpacity>
           {/* <TouchableOpacity
             style={{
               marginVertical: normalize(10),
@@ -443,13 +475,19 @@ const Profile = ({ navigation, customer }) => {
           </TouchableOpacity>
         </View>
         <Footer />
-      </View>
+        <View
+          style={{
+            height: normalize(30)
+          }}
+        />
+      </ScrollView>
     </SafeAreaView>
   )
 }
 
 const mapStateToProps = (state) => ({
   customer: state.customer,
+  cart: state.cart
 });
 
 // const mapDispatchToProps = (dispatch) => ({

@@ -23,15 +23,16 @@ import base64 from 'react-native-base64';
 import { CustomHeader } from '../components/CustomHeader';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
 import Toast from 'react-native-simple-toast';
-import ActionButton from 'react-native-action-button';
-import { Divider, List, Menu } from 'react-native-paper';
+import { Divider, Menu } from 'react-native-paper';
 import { FlatList } from 'react-native-gesture-handler';
+import { setCart } from '../redux/action/cart';
+import { connect } from 'react-redux';
 
 
 Array.prototype.insert = function (i, ...rest) {
     return this.slice(0, i).concat(rest, this.slice(i));
 }
-function ProductScreen({ navigation, route, navigator }) {
+function ProductScreen({ navigation, route, navigator, setCart, cart }) {
 
     const { height } = Dimensions.get('screen');
     const addToCartRef = createRef();
@@ -123,7 +124,6 @@ function ProductScreen({ navigation, route, navigator }) {
                     await allImages.map(item => {
                         if (item.variant_ids.includes(currVariant.id)) {
                             newVariantImages = newVariantImages.insert(0, item);
-
                         } else if (item.variant_ids.length === 0) {
                             newVariantImages.push(item);
                         }
@@ -216,10 +216,6 @@ function ProductScreen({ navigation, route, navigator }) {
                     setVariantsImages([...newVariantImages]);
                     break;
                 }
-                case 3: {
-                    setOptionsType("triple");
-                    break;
-                }
                 default: {
                     setOptionsType("multi");
                 }
@@ -230,6 +226,7 @@ function ProductScreen({ navigation, route, navigator }) {
     }
 
     const onClickVariantHandler = async (title) => {
+
         async function trySwitch() {
             switch (optionsType) {
                 case "single": {
@@ -303,17 +300,12 @@ function ProductScreen({ navigation, route, navigator }) {
                     });
                     break;
                 }
-                case "triple": {
-                    break;
-                }
-                case "multi": {
-                    break;
-                }
                 default: {
                     break;
                 }
             }
         }
+
         trySwitch();
     }
 
@@ -335,6 +327,10 @@ function ProductScreen({ navigation, route, navigator }) {
                     }
                 ];
                 client.checkout.addLineItems(checkout.id, lineItemsToAdd).then((checkout) => {
+                    const cart = {
+                        cart: { count: checkout?.lineItems?.length }
+                    }
+                    setCart({ ...cart });
                     Toast.show('Added to Cart');
                     setCartIsLoading(false);
                 })
@@ -355,7 +351,10 @@ function ProductScreen({ navigation, route, navigator }) {
         }
         ];
         client.checkout.addLineItems(checkoutId, lineItemsToAdd).then((checkout) => {
-            Toast.show('Added to Cart');
+            const cart = {
+                cart: { count: checkout?.lineItems?.length }
+            }
+            setCart({ ...cart });
             setCartIsLoading(false);
         }).catch(error => {
             Alert.alert('Error', 'Something went wrong');
@@ -823,13 +822,13 @@ function ProductScreen({ navigation, route, navigator }) {
                     </View>
                     <Text
                         style={{
-                            fontStyle:"italic",
+                            fontStyle: "italic",
                             color: theme.colors.placeholder,
                             fontSize: theme.fontSize.paragraph
                         }}
                     >
-                            {product?.variants[variantChosen]?.title}
-                        </Text>
+                        {product?.variants[variantChosen]?.title}
+                    </Text>
                     <Text
                         style={{
                             fontSize: theme.fontSize.heading,
@@ -877,11 +876,11 @@ function ProductScreen({ navigation, route, navigator }) {
                                             width: normalize(20),
                                         }}
                                     /> */}
-                                    <Image 
-                                        source={require('../assets/images/down-arrow.png')} 
+                                    <Image
+                                        source={require('../assets/images/down-arrow.png')}
                                         style={{
                                             height: normalize(24),
-                                            width: normalize(20), 
+                                            width: normalize(20),
                                             marginLeft: normalize(10)
                                         }}
                                     />
@@ -937,11 +936,11 @@ function ProductScreen({ navigation, route, navigator }) {
                                     >
                                         {product.variants[variantChosen].option1}
                                     </Text>
-                                    <Image 
-                                        source={require('../assets/images/down-arrow.png')} 
+                                    <Image
+                                        source={require('../assets/images/down-arrow.png')}
                                         style={{
                                             height: normalize(24),
-                                            width: normalize(20), 
+                                            width: normalize(20),
                                             marginLeft: normalize(10)
                                         }}
                                     />
@@ -1068,9 +1067,68 @@ function ProductScreen({ navigation, route, navigator }) {
                         </Text>
                     }
                 </TouchableOpacity>}
-
+            <TouchableOpacity
+                style={{
+                    position: 'absolute',
+                    bottom: normalize(100),
+                    backgroundColor: theme.colors.bottomTabActiveBg,
+                    padding: normalize(12),
+                    borderRadius: normalize(20),
+                    right: normalize(30),
+                    elevation: 2
+                }}
+                onPress={() => {
+                    navigation.navigate('CartScreen');
+                }}
+            >
+                <Image
+                    source={{ uri: "https://user-images.githubusercontent.com/54505967/132634830-0cbb53d4-7ed9-456f-be7a-8429fc514a15.png" }}
+                    resizeMode="contain"
+                    style={{
+                        width: normalize(30),
+                        height: normalize(30),
+                        alignSelf: "flex-end",
+                    }}
+                />
+                <View
+                    style={{
+                        height: normalize(20),
+                        width: normalize(20),
+                        elevation: 2,
+                        position: "absolute",
+                        right: 0,
+                        backgroundColor: theme.colors.primary,
+                        borderRadius: normalize(20),
+                        alignItems: "center", justifyContent: "center",
+                        top: -1
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: theme.colors.white,
+                            textAlign: "center",
+                            fontWeight: theme.fontWeight.medium
+                        }}
+                    >
+                        {cart?.count || 0}
+                    </Text>
+                </View>
+            </TouchableOpacity>
         </SafeAreaView>
     )
 }
 
-export default ProductScreen
+
+const mapDispatchToProps = dispatch => ({
+    setCart: cart => dispatch(setCart(cart)),
+});
+
+const mapStateToProps = state => {
+    return {
+        categories: state.categories,
+        products: state.products,
+        cart: state.cart
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductScreen);

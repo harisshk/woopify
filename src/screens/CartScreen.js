@@ -9,8 +9,10 @@ import { theme } from '../utils/theme';
 const { height } = Dimensions.get('screen');
 import ActionSheet from 'react-native-actions-sheet';
 import SubHeading from '../components/SubHeading';
+import { setCart } from '../redux/action/cart';
+import { connect } from 'react-redux';
 
-function CartScreen({ navigation }) {
+function CartScreen({ navigation, setCart }) {
     const [cartItem, setCartItem] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [editItem, setEditItem] = useState(null);
@@ -59,7 +61,11 @@ function CartScreen({ navigation }) {
         setEditCartLoading(true);
         try {
             let checkout = await client.checkout.removeLineItems(checkoutId, lineItemIdsToRemove);
-            let data = Object.assign({}, { checkout: checkout })
+            let data = Object.assign({}, { checkout: checkout });
+            const cart = {
+                cart : { count : checkout?.lineItems?.length}
+            }
+            setCart({...cart});
             setCartItem({ ...data.checkout });
             setEditCartLoading(false);
         } catch (error) {
@@ -88,7 +94,6 @@ function CartScreen({ navigation }) {
             setCartItem({ ...data.checkout });
             setIsLoading(false);
             setRefreshing(false);
-          
         }else{ 
             setCartItem({...{
                 lineItems: []
@@ -389,7 +394,6 @@ function CartScreen({ navigation }) {
                             <Text
                                 style={{
                                     fontSize: theme.fontSize.medium,
-
                                 }}
                             >
                                 Total Amount
@@ -434,4 +438,8 @@ function CartScreen({ navigation }) {
     )
 }
 
-export default CartScreen
+const mapDispatchToProps = dispatch => ({
+    setCart: cart => dispatch(setCart(cart))
+});
+
+export default  connect(null, mapDispatchToProps)(CartScreen);

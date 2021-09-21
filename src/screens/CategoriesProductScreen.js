@@ -6,11 +6,12 @@ import { connect } from 'react-redux';
 import { CustomHeader } from '../components/CustomHeader';
 import ProductView01 from '../components/ProductView01';
 import SubHeading from '../components/SubHeading';
+import { setCart } from '../redux/action/cart';
 import { getAllProductsByCategory } from '../services/categories';
 import { theme } from '../utils/theme';
 
 const { width } = Dimensions.get('screen');
-function CategoriesProduct({ navigation, route }) {
+function CategoriesProduct({ navigation, route, setCart }) {
     const { category } = route.params;
     const [products, setProducts] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -128,6 +129,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     setCategories: response => dispatch(setCategories(response)),
     setProducts: response => dispatch(setProducts(response)),
+    setCart: cart => dispatch(setCart(cart))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CategoriesProduct);

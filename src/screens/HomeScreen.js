@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { View, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Dimensions, ScrollView, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
-import Icon from 'react-native-vector-icons/FontAwesome';
-
 import { setCategories } from '../redux/action/categories';
 import { setProducts } from '../redux/action/products'
 import { getAllCategories } from '../services/categories';
@@ -12,18 +10,17 @@ import CategoryHomeScreen from '../components/CategoryHomeScreen';
 import { getAllProducts } from '../services/products';
 import SubHeading from '../components/SubHeading';
 import ProductView01 from '../components/ProductView01';
-import { client } from '../services';
-import { List } from 'react-native-paper';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
+import { List } from 'react-native-paper';
 const { width } = Dimensions.get('window');
 
-const wait = (timeout) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-}
-
-const HomeScreen = ({ categories, setCategories, navigation, products, setProducts }) => {
+const HomeScreen = ({ categories, setCategories, navigation, products, setProducts, cart }) => {
   const [refreshing, setRefreshing] = useState(false);
 
+  const listRef = useRef(null);
+
+  const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
+  const CONTENT_OFFSET_THRESHOLD = 220;
   const [categoryIsLoading, setCategoryIsLoading] = useState(true);
   const [productIsLoading, setProductIsLoading] = useState(true);
 
@@ -93,12 +90,16 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         style={{
           padding: normalize(15)
         }}
+        ref={listRef}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
           />
         }
+        onScroll={event => {
+          setContentVerticalOffset(event.nativeEvent.contentOffset.y);
+        }}
       >
         <View
           style={{
@@ -142,6 +143,31 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
                 alignSelf: "flex-end",
               }}
             />
+            <View
+              style={{
+                height: normalize(20),
+                width: normalize(20),
+                elevation: 2,
+
+                position: "absolute",
+                right: -10,
+                backgroundColor: theme.colors.primary,
+                borderRadius: normalize(20),
+                alignItems: "center", justifyContent: "center",
+                top: -7
+              }}
+            >
+              <Text
+                style={{
+                  color: theme.colors.white,
+                  textAlign: "center",
+                  fontWeight: theme.fontWeight.medium
+                }}
+              >
+                {cart?.count || 0}
+              </Text>
+            </View>
+
 
           </TouchableOpacity>
         </View>
@@ -245,7 +271,55 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           }} />
 
       </ScrollView>
-
+      {contentVerticalOffset > CONTENT_OFFSET_THRESHOLD && (
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            bottom: normalize(15),
+            backgroundColor: theme.colors.bottomTabActiveBg,
+            padding: normalize(12),
+            borderRadius: normalize(20),
+            right: normalize(30),
+            elevation: 2
+          }}
+          onPress={() => {
+            navigation.navigate('CartScreen');
+          }}
+        >
+          <Image
+            source={{ uri: "https://user-images.githubusercontent.com/54505967/132634830-0cbb53d4-7ed9-456f-be7a-8429fc514a15.png" }}
+            resizeMode="contain"
+            style={{
+              width: normalize(30),
+              height: normalize(30),
+              alignSelf: "flex-end",
+            }}
+          />
+          <View
+            style={{
+              height: normalize(20),
+              width: normalize(20),
+              elevation: 2,
+              position: "absolute",
+              right: 0,
+              backgroundColor: theme.colors.primary,
+              borderRadius: normalize(20),
+              alignItems: "center", justifyContent: "center",
+              top: -1
+            }}
+          >
+            <Text
+              style={{
+                color: theme.colors.white,
+                textAlign: "center",
+                fontWeight: theme.fontWeight.medium
+              }}
+            >
+              {cart?.count || 0}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )}
     </SafeAreaView>
   )
 }
@@ -253,7 +327,8 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
 const mapStateToProps = state => {
   return {
     categories: state.categories,
-    products: state.products
+    products: state.products,
+    cart: state.cart
   }
 }
 

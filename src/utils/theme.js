@@ -12,7 +12,10 @@ export const theme = {
         white: "#ffffff",
         black: "#000000",
         imageBackground: "#F8F8F8",
-        disabledButton: "#8171ab"
+        disabledButton: "#8171ab",
+        bottomTabBgColor:"#fbfafc",
+        bottomTabActiveBg: "#e7dcf2"
+        
     },
     fontSize: {
         medium: normalize(18),

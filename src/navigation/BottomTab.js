@@ -16,95 +16,100 @@ const Tab = createBottomTabNavigator();
 const TabBarCustomButton = (props) => {
     const { accessibilityState, children, name, onPress } = props;
     return (
-        <TouchableOpacity
+        <View
             style={{
                 flex: 1,
-                height: 60,
-                backgroundColor: theme.colors.white,
                 flexDirection: "row",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
+                paddingTop: normalize(16),
+                
             }}
-            activeOpacity={1}
-            onPress={onPress}
         >
-            <View
-
+            <TouchableOpacity
                 style={{
-                    width: "25%"
-                }}>
-                    {children}
-            </View>
-            {accessibilityState.selected && 
-                <Text
-                    style={{ 
-                        color: theme.colors.primary, 
-                        marginTop: normalize(4),
-                        fontWeight: theme.fontWeight.medium,
-                        lineHeight: theme.lineHeight.heading,
-                        marginLeft : normalize(2)
+                    flex: .8,
+                    height: normalize(40),
+                    alignSelf: "center",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: normalize(12),
+                    elevation: 2,
+                    backgroundColor: accessibilityState.selected ? theme.colors.bottomTabActiveBg : theme.colors.bottomTabBgColor,
+                }}
+                activeOpacity={1}
+                onPress={onPress}
+            >
+                <View
+                    style={{
+                        width: "25%"
                     }}
                 >
-                    {name}
-                </Text>
-            }
-        </TouchableOpacity>
+                    {children}
+                </View>
+                {accessibilityState.selected &&
+                    <Text
+                        style={{
+                            color: theme.colors.primary,
+                            marginTop: normalize(4),
+                            fontWeight: theme.fontWeight.medium,
+                            lineHeight: theme.lineHeight.heading,
+                            marginLeft: normalize(4)
+                        }}
+                    >
+                        {name}
+                    </Text>
+                }
+            </TouchableOpacity>
+        </View>
     )
 }
 
-const CustomTabBar = (props) => {
-    return (
-        <BottomTabBar
-            {...props.props}
-        />
-    );
-};
 
 const BottomTab = () => {
     return (
         <Tab.Navigator
             screenOptions={{
                 showLabel: false,
-                style: {
-                    position: 'absolute',
-                    left: 0,
-                    bottom: 0,
-                    right: 0,
-                    borderTopWidth: 0,
-                    backgroundColor :'red',
-                    // backgroundColor: "#e0d6ff",
-                    elevation: 2
-                }
+                tabBarStyle: {
+                    backgroundColor: theme.colors.bottomTabBgColor,
+                    height: normalize(75)
+                },
+
             }}
-            tabBar={(props) => (
-                <CustomTabBar
-                    props={props}
-                />
-            )}
             initialRouteName="HomeScreen"
         >
-            
-            
             <Tab.Screen
                 name="OrdersScreen"
-
                 component={OrdersScreen}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <Image
-                            source={{ uri: "https://user-images.githubusercontent.com/54505967/132632954-f40b3b4d-b2b6-4f2e-8d7c-9f6296a221a9.png" }}
-                            resizeMode="contain"
-                            style={{
-                                width: normalize(30),
-                                height: normalize(30),
-                                tintColor: focused ? theme.colors.primary : theme.colors.secondary
-                            }}
-                        />
+                        focused === true ?
+                            <Image
+                                source={require('../assets/images/history.png')}
+                                resizeMode="contain"
+                                style={{
+                                    width: normalize(23),
+                                    height: normalize(23),
+                                    tintColor: focused ? theme.colors.primary : theme.colors.secondary
+                                }}
+                            />
+                            :
+                            <Image
+                                source={require('../assets/images/history-outline.png')}
+                                resizeMode="contain"
+                                style={{
+                                    width: normalize(22),
+                                    height: normalize(22),
+                                    tintColor: focused ? theme.colors.primary : theme.colors.secondary
+                                }}
+                            />
                     ),
                     tabBarButton: (props) => (
                         <TabBarCustomButton
                             {...props}
-                            name={'Order'}
+                            name={'Orders'}
                         />
                     ),
                     headerShown: false,
@@ -116,42 +121,62 @@ const BottomTab = () => {
                 component={HomeScreen}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <Image
-                            source={{ uri: "https://user-images.githubusercontent.com/54505967/132632570-d8dce1c6-9507-45e7-b978-a71c5a4d3795.png" }}
+                        focused === true ? <Image
+                            source={require('../assets/images/home.png')}
                             resizeMode="contain"
                             style={{
-                                width: 25,
-                                height: 25,
+                                width: 22,
+                                height: 22,
                                 tintColor: focused ? theme.colors.primary : theme.colors.secondary
                             }}
-                        />
+                        /> :
+                            <Image
+                                source={require('../assets/images/home-outline.png')}
+                                resizeMode="contain"
+                                style={{
+                                    width: 22,
+                                    height: 22,
+                                    tintColor: focused ? theme.colors.primary : theme.colors.secondary
+                                }}
+                            />
                     ),
                     tabBarButton: (props) => (
                         <TabBarCustomButton
                             {...props}
-                            name={'Home'}
+                            name={' Home'}
                         />
                     ),
                     headerShown: false,
                     tabBarShowLabel: false,
                 }}
             />
-            
+
             <Tab.Screen
                 name="ProfileScreen"
 
                 component={ProfileScreen}
                 options={{
                     tabBarIcon: ({ focused }) => (
-                        <Image
-                            source={{ uri: "https://user-images.githubusercontent.com/54505967/132633937-4bdc4d6a-57c7-4e10-9f30-1300d76e289e.png" }}
-                            resizeMode="contain"
-                            style={{
-                                width: 25,
-                                height: 25,
-                                tintColor: focused ? theme.colors.primary : theme.colors.secondary
-                            }}
-                        />
+                        focused === true ?
+                            <Image
+                                source={require('../assets/images/user.png')}
+                                resizeMode="contain"
+                                style={{
+                                    width: 22,
+                                    height: 22,
+                                    tintColor: focused ? theme.colors.primary : theme.colors.secondary
+                                }}
+                            />
+                            :
+                            <Image
+                                source={require('../assets/images/user-outline.png')}
+                                resizeMode="contain"
+                                style={{
+                                    width: 22,
+                                    height: 22,
+                                    tintColor: focused ? theme.colors.primary : theme.colors.secondary
+                                }}
+                            />
                     ),
                     tabBarButton: (props) => (
                         <TabBarCustomButton
