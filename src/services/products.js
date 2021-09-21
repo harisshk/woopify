@@ -32,3 +32,19 @@ export const getProductInfo = async (productId) => {
         console.log(error)
     }
 }
+
+export const getProductByVariant = async (variantId) => {
+    try{
+        const response = await fetch(`${API_URL}/variants/${variantId}.json`, {
+            method: 'GET', // *GET, POST, PUT, DELETE, etc.
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Shopify-Access-Token' : ACCESS_PASSWORD
+            },
+            });
+        return response.json();
+      
+    }catch(error){
+        console.log(error)
+    }
+}

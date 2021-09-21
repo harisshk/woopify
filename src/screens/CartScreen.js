@@ -11,6 +11,8 @@ import ActionSheet from 'react-native-actions-sheet';
 import SubHeading from '../components/SubHeading';
 import { setCart } from '../redux/action/cart';
 import { connect } from 'react-redux';
+import { getProductByVariant } from '../services/products';
+import base64 from 'react-native-base64';
 
 function CartScreen({ navigation, setCart }) {
     const [cartItem, setCartItem] = useState({});
@@ -63,9 +65,9 @@ function CartScreen({ navigation, setCart }) {
             let checkout = await client.checkout.removeLineItems(checkoutId, lineItemIdsToRemove);
             let data = Object.assign({}, { checkout: checkout });
             const cart = {
-                cart : { count : checkout?.lineItems?.length}
+                cart: { count: checkout?.lineItems?.length }
             }
-            setCart({...cart});
+            setCart({ ...cart });
             setCartItem({ ...data.checkout });
             setEditCartLoading(false);
         } catch (error) {
@@ -85,7 +87,7 @@ function CartScreen({ navigation, setCart }) {
         }
     }, [isFocussed]);
 
-    const getCartItem = async() => {
+    const getCartItem = async () => {
         let temp = await AsyncStorage.getItem('checkoutId');
         if (temp !== null) {
             setCheckoutId(JSON.parse(temp));
@@ -94,13 +96,15 @@ function CartScreen({ navigation, setCart }) {
             setCartItem({ ...data.checkout });
             setIsLoading(false);
             setRefreshing(false);
-        }else{ 
-            setCartItem({...{
-                lineItems: []
-            }})
+        } else {
+            setCartItem({
+                ...{
+                    lineItems: []
+                }
+            })
             setRefreshing(false);
             setIsLoading(false);
-              
+
         }
     }
 
@@ -110,7 +114,7 @@ function CartScreen({ navigation, setCart }) {
                 flex: 1,
                 backgroundColor: theme.colors.background
             }}
-           
+
         >
             <ActionSheet
                 ref={editActionRef}
@@ -314,10 +318,21 @@ function CartScreen({ navigation, setCart }) {
                                                 Quantity {item.quantity}
                                             </Text>
                                             <TouchableOpacity
-                                                onPress={() => {
-                                                    setSelectedStock(item.quantity || 1);
-                                                    setEditItem(item);
+                                                onPress={async () => {
+                                                    const variantId = base64.decode(item.variant.id + "").split("/");
+                                                    const variant = await getProductByVariant(variantId[variantId.length - 1]);
+                                                    const { inventory_quantity } = variant.variant;
+                                                    let newStockCount = [];
+                                                    for (let i = 0; i < inventory_quantity; i++) {
+                                                        newStockCount.push({
+                                                            label: (i + 1) + "",
+                                                            value: (i + 1) + ""
+                                                        });
+                                                    }
                                                     editActionRef.current?.setModalVisible(true);
+                                                    setTotalStock([...newStockCount]);
+                                                    setSelectedStock(item?.quantity || 1);
+                                                    setEditItem(item);
                                                 }}
                                                 style={{
                                                     alignItems: "center",
@@ -442,4 +457,4 @@ const mapDispatchToProps = dispatch => ({
     setCart: cart => dispatch(setCart(cart))
 });
 
-export default  connect(null, mapDispatchToProps)(CartScreen);
+export default connect(null, mapDispatchToProps)(CartScreen);

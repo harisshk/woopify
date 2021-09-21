@@ -19,7 +19,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
   const listRef = useRef(null);
 
   const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
-  const CONTENT_OFFSET_THRESHOLD = 220;
+  const CONTENT_OFFSET_THRESHOLD = 145;
   const [categoryIsLoading, setCategoryIsLoading] = useState(true);
   const [productIsLoading, setProductIsLoading] = useState(true);
 
