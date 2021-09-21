@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import { useIsFocused } from '@react-navigation/native';
 import React, { createRef, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, Dimensions, FlatList, Image, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, FlatList, Image, RefreshControl, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
 import normalize from 'react-native-normalize'
 import { client } from '../services';
 import { theme } from '../utils/theme';
@@ -26,7 +26,12 @@ function CartScreen({ navigation }) {
         { label: "4", value: "4" },
         { label: "5", value: "5" },
     ]);
-
+    const [refreshing, setRefreshing] = useState(true);
+    const onRefresh = () => {
+        setRefreshing(true);
+        getCartItem();
+        setRefreshing(false);
+    }
     const updateQuantity = async () => {
         if (checkoutId !== null) {
             try {
@@ -68,6 +73,13 @@ function CartScreen({ navigation }) {
 
     useEffect(async () => {
 
+        getCartItem();
+        return () => {
+            setIsLoading(true);
+        }
+    }, [isFocussed]);
+
+    const getCartItem = async() => {
         let temp = await AsyncStorage.getItem('checkoutId');
         if (temp !== null) {
             setCheckoutId(JSON.parse(temp));
@@ -75,11 +87,9 @@ function CartScreen({ navigation }) {
             let data = Object.assign({}, { checkout: checkout })
             setCartItem({ ...data.checkout });
             setIsLoading(false);
+            setRefreshing(false);
         }
-        return () => {
-            setIsLoading(true);
-        }
-    }, [isFocussed]);
+    }
 
     return (
         <SafeAreaView
@@ -87,6 +97,7 @@ function CartScreen({ navigation }) {
                 flex: 1,
                 backgroundColor: theme.colors.background
             }}
+           
         >
             <ActionSheet
                 ref={editActionRef}
@@ -224,6 +235,12 @@ function CartScreen({ navigation }) {
                             marginVertical: normalize(10),
                             flex: 1,
                         }}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                        }
                         showsVerticalScrollIndicator={false}
                         renderItem={({ item }) => {
                             return (
