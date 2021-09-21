@@ -1,10 +1,12 @@
-import React from 'react'
-import { SafeAreaView } from 'react-native'
+import React, { useState } from 'react'
+import { SafeAreaView, View, Text, ActivityIndicator } from 'react-native'
+import normalize from 'react-native-normalize';
 import WebView from 'react-native-webview'
 import { theme } from '../utils/theme'
 
 function CheckoutScreen({navigation , route}) {
     const {uri} = route.params;
+    const[isLoading,setIsLoading] = useState(true);
     return (
         <SafeAreaView
             style={{
@@ -12,8 +14,32 @@ function CheckoutScreen({navigation , route}) {
                 backgroundColor: theme.colors.background
             }}
         >
+            {isLoading === true ?
+                <View
+                    style={{
+                        height: normalize(300),
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}
+                >
+                    <ActivityIndicator
+                        color={theme.colors.primary}
+                        size={24}
+                    />
+                </View>
+            :
+                <></>
+            }
             <WebView
-
+                onLoad={() => {
+                    setIsLoading(true)
+                }}
+                onLoadStart={() => {
+                    setIsLoading(true)
+                }}
+                onLoadEnd={() => {
+                    setIsLoading(false)
+                }}
                 style={{
                     flex: 1,
                 }}

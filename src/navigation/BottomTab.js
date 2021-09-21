@@ -22,7 +22,6 @@ const TabBarCustomButton = (props) => {
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
-                paddingTop: normalize(16),
                 
             }}
         >
@@ -90,8 +89,8 @@ const BottomTab = () => {
                                 source={require('../assets/images/history.png')}
                                 resizeMode="contain"
                                 style={{
-                                    width: normalize(23),
-                                    height: normalize(23),
+                                    width: normalize(25),
+                                    height: normalize(25),
                                     tintColor: focused ? theme.colors.primary : theme.colors.secondary
                                 }}
                             />
@@ -125,8 +124,8 @@ const BottomTab = () => {
                             source={require('../assets/images/home.png')}
                             resizeMode="contain"
                             style={{
-                                width: 22,
-                                height: 22,
+                                width: normalize(23),
+                                height: normalize(23),
                                 tintColor: focused ? theme.colors.primary : theme.colors.secondary
                             }}
                         /> :
@@ -134,8 +133,8 @@ const BottomTab = () => {
                                 source={require('../assets/images/home-outline.png')}
                                 resizeMode="contain"
                                 style={{
-                                    width: 22,
-                                    height: 22,
+                                    width:normalize(22),
+                                    height: normalize(22),
                                     tintColor: focused ? theme.colors.primary : theme.colors.secondary
                                 }}
                             />
@@ -162,8 +161,8 @@ const BottomTab = () => {
                                 source={require('../assets/images/user.png')}
                                 resizeMode="contain"
                                 style={{
-                                    width: 22,
-                                    height: 22,
+                                    width: normalize(22),
+                                    height: normalize(22),
                                     tintColor: focused ? theme.colors.primary : theme.colors.secondary
                                 }}
                             />
@@ -172,8 +171,8 @@ const BottomTab = () => {
                                 source={require('../assets/images/user-outline.png')}
                                 resizeMode="contain"
                                 style={{
-                                    width: 22,
-                                    height: 22,
+                                    width: normalize(22),
+                                    height: normalize(22),
                                     tintColor: focused ? theme.colors.primary : theme.colors.secondary
                                 }}
                             />

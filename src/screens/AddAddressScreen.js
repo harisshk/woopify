@@ -678,12 +678,12 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
 
                             } : {
                                 backgroundColor: theme.colors.primary,
-
                             },
                             {
                                 alignItems: "center",
                                 padding: normalize(13),
-                                borderRadius: normalize(12)
+                                borderRadius: normalize(12),
+                                marginVertical: normalize(15)
                             }]}
                     >
                         {input.isLoading === true ?

@@ -38,10 +38,10 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                 style={{
                     backgroundColor: theme.colors.imageBackground,
                     width: '100%',
-                    height: normalize(140),
+                    height: '62%',
                     padding: normalize(5),
                     alignSelf: "center",
-                    borderRadius: normalize(12),
+                    borderRadius: normalize(15),
                 }}
                 resizeMode="contain"
                 source={{ uri: item.images[0].src }}

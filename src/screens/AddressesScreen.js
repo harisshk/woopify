@@ -1,5 +1,5 @@
-import React from 'react';
-import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import React,{useState} from 'react';
+import { FlatList, RefreshControl, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import normalize from 'react-native-normalize';
 import { connect } from 'react-redux';
 import AddressView from '../components/AddressView'
@@ -9,7 +9,11 @@ import { theme } from '../utils/theme';
 
 
 function AddressesScreen({ navigation, customer, setCustomer }) {
-
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = () => {
+        setRefreshing(true);
+        setRefreshing(false);
+    }
     return (
         <SafeAreaView
             style={{
@@ -30,6 +34,14 @@ function AddressesScreen({ navigation, customer, setCustomer }) {
                         renderItem={({ item }) => {
                             return <AddressView address={item} customer={customer} key={item.id} setCustomer={setCustomer} navigation={navigation} canEdit={false} />
                         }}
+
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                        }
+
                         keyExtractor={item => item.id}
                         style={{
                             width: '100%',

@@ -357,7 +357,6 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
             setCart({ ...cart });
             setCartIsLoading(false);
         }).catch(error => {
-            Alert.alert('Error', 'Something went wrong');
             setCartIsLoading(false);
             console.log('----------------Line 114-----------------');
             console.log(error);
@@ -1053,7 +1052,7 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: normalize(12),
-                        marginTop: normalize(15)
+                        marginVertical: normalize(15)
 
                     }}
                     onPress={() => {

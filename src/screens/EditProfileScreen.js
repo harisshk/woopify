@@ -308,13 +308,13 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
             </View>
             <View
                 style={{
-                    height: normalize(250),
+                    height: normalize(170),
                     backgroundColor: "#927abf",
                     borderRadius: normalize(35),
                     position: "absolute",
-                    bottom: -10,
+                    bottom: -17,
                     left: -45,
-                    width: '60%'
+                    width: '50%'
                 }}
             />
         </SafeAreaView>

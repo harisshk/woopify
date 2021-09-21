@@ -140,8 +140,8 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
               source={{ uri: "https://user-images.githubusercontent.com/54505967/132634830-0cbb53d4-7ed9-456f-be7a-8429fc514a15.png" }}
               resizeMode="contain"
               style={{
-                width: 35,
-                height: 40,
+                width: normalize(30),
+                height: normalize(35),
                 alignSelf: "flex-end",
               }}
             />
@@ -150,13 +150,12 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
                 height: normalize(20),
                 width: normalize(20),
                 elevation: 2,
-
                 position: "absolute",
-                right: -10,
+                right:-normalize(8),
                 backgroundColor: theme.colors.primary,
                 borderRadius: normalize(20),
                 alignItems: "center", justifyContent: "center",
-                top: -7
+                top: -normalize(3)
               }}
             >
               <Text
@@ -184,28 +183,28 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           layout={[
             {
               width: normalize(70),
-              height: 70,
+              height: normalize(70),
               key: 'imageLoader1',
               borderRadius: normalize(80),
               marginRight: normalize(10)
             },
             {
               width: normalize(70),
-              height: 70,
+              height: normalize(70),
               key: 'imageLoader2',
               marginRight: normalize(10),
               borderRadius: normalize(80),
             },
             {
               width: normalize(70),
-              height: 70,
+              height: normalize(70),
               key: 'imageLoader3',
               borderRadius: normalize(80),
               marginRight: normalize(10),
             },
             {
               width: normalize(70),
-              height: 70,
+              height: normalize(70),
               key: 'imageLoader4',
               marginRight: normalize(10),
               borderRadius: normalize(80),
@@ -218,6 +217,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             style={{
               marginBottom: normalize(7)
             }}
+            showsHorizontalScrollIndicator={false}
             renderItem={({ item }) =>
               <CategoryHomeScreen
                 item={item}
@@ -262,6 +262,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
               <ProductView01
                 key={product.id}
                 item={product}
+                
                 navigation={navigation}
               />
             )}
