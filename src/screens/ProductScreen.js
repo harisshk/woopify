@@ -651,8 +651,8 @@ function ProductScreen({ navigation, route, navigator }) {
                     },
                     {
                         marginHorizontal: normalize(15),
-                        width: '90%',
-                        height: normalize(90),
+                        width: '89%',
+                        height: normalize(70),
                         key: 'imageThumbnailLoader',
                         borderRadius: normalize(12),
                         alignSelf: "center",
@@ -660,7 +660,7 @@ function ProductScreen({ navigation, route, navigator }) {
                     },
                     {
                         marginHorizontal: normalize(24),
-                        width: '80%',
+                        width: '89%',
                         height: normalize(40),
                         key: 'productNameLoader',
                         borderRadius: normalize(12),
@@ -718,10 +718,9 @@ function ProductScreen({ navigation, route, navigator }) {
                         >
                             {product?.title}
                         </Text>
-                       
                         {/**
-                    * Variants and Option for Color
-                    */}
+                        * Variants and Option for Color
+                        */}
                         {listOfColors && isColorVariantPresent === true && variantIsLoading === false && optionsType === "double" &&
                             <TouchableOpacity
                                 style={{

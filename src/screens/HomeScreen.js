@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Dimensions, ScrollView } from 'react-native';
+import { View, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Dimensions, ScrollView, RefreshControl } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -14,11 +14,25 @@ import SubHeading from '../components/SubHeading';
 import ProductView01 from '../components/ProductView01';
 import { client } from '../services';
 import { List } from 'react-native-paper';
+import SkeletonContent from 'react-native-skeleton-content-nonexpo';
 const { width } = Dimensions.get('window');
 
+const wait = (timeout) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+}
 
 const HomeScreen = ({ categories, setCategories, navigation, products, setProducts }) => {
-  // const[products,setProducts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const [categoryIsLoading, setCategoryIsLoading] = useState(true);
+  const [productIsLoading, setProductIsLoading] = useState(true);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    getCategoriesHelper();
+    getProductsHelper();
+    setRefreshing(false);
+  }
   useEffect(() => {
     getCategoriesHelper();
     getProductsHelper();
@@ -35,7 +49,10 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     //   console.log(data);
     //   setCategories({ categories: data.collections })
     // });
+    setCategoryIsLoading(true);
     let data = await getAllCategories();
+
+    setCategoryIsLoading(false);
     if (data?.error) {
       console.log(data.error)
       console.log('----------Error Line 8 Home Screen----------');
@@ -51,7 +68,11 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
 
     //   setProducts(data)
     // });
+
+    setProductIsLoading(true);
     let data = await getAllProducts();
+
+    setProductIsLoading(false);
     if (data?.error) {
       console.log(data.error)
       console.log('----------Error Line 8 Home Screen----------');
@@ -72,6 +93,12 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         style={{
           padding: normalize(15)
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       >
         <View
           style={{
@@ -123,40 +150,96 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           Collections
         </SubHeading>
 
-        <FlatList
-          horizontal
-          data={categories}
-          style={{
-            marginBottom: normalize(7)
-          }}
-          renderItem={({ item }) =>
-            <CategoryHomeScreen
-              item={item}
-              navigation={navigation}
-            />
-          }
-          keyExtractor={(item) => item.id}
-        />
+        <SkeletonContent
+          containerStyle={{ width: '100%', flexDirection: "row" }}
+          isLoading={categoryIsLoading}
+          layout={[
+            {
+              width: normalize(70),
+              height: 70,
+              key: 'imageLoader1',
+              borderRadius: normalize(80),
+              marginRight: normalize(10)
+            },
+            {
+              width: normalize(70),
+              height: 70,
+              key: 'imageLoader2',
+              marginRight: normalize(10),
+              borderRadius: normalize(80),
+            },
+            {
+              width: normalize(70),
+              height: 70,
+              key: 'imageLoader3',
+              borderRadius: normalize(80),
+              marginRight: normalize(10),
+            },
+            {
+              width: normalize(70),
+              height: 70,
+              key: 'imageLoader4',
+              marginRight: normalize(10),
+              borderRadius: normalize(80),
+            },
+          ]}
+        >
+          <FlatList
+            horizontal
+            data={categories}
+            style={{
+              marginBottom: normalize(7)
+            }}
+            renderItem={({ item }) =>
+              <CategoryHomeScreen
+                item={item}
+                navigation={navigation}
+              />
+            }
+            keyExtractor={(item) => item.id}
+          />
+        </SkeletonContent>
         <SubHeading>
           All Products
         </SubHeading>
-        <View
-          style={{
-            flexWrap: "wrap",
-            width: '100%',
-            flexDirection: "row",
-            justifyContent: "space-between"
-          }}
+        <SkeletonContent
+          containerStyle={{ width: '100%', flexDirection: "row" }}
+          isLoading={true}
+          layout={[
+            {
+              width: width / 2.24,
+              height: normalize(220),
+              key: 'imageLoader1',
+              borderRadius: normalize(10),
+              marginRight: normalize(10)
+            },
+            {
+              width: width / 2.24,
+              height: normalize(220),
+              key: 'imageLoader2',
+              marginRight: normalize(10),
+              borderRadius: normalize(10),
+            },
+          ]}
+          isLoading={productIsLoading}
         >
-          {products.map((product) =>
-            <ProductView01
-              key={product.id}
-              item={product}
-              navigation={navigation}
-            />
-          )}
-        </View>
-
+          <View
+            style={{
+              flexWrap: "wrap",
+              width: '100%',
+              flexDirection: "row",
+              justifyContent: "space-between"
+            }}
+          >
+            {products.map((product) =>
+              <ProductView01
+                key={product.id}
+                item={product}
+                navigation={navigation}
+              />
+            )}
+          </View>
+        </SkeletonContent>
         <View
           style={{
             height: normalize(20)
