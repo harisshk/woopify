@@ -11,7 +11,6 @@ import { getAllProducts } from '../services/products';
 import SubHeading from '../components/SubHeading';
 import ProductView01 from '../components/ProductView01';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
-import { List } from 'react-native-paper';
 const { width } = Dimensions.get('window');
 
 const HomeScreen = ({ categories, setCategories, navigation, products, setProducts, cart }) => {
@@ -33,6 +32,9 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
   useEffect(() => {
     getCategoriesHelper();
     getProductsHelper();
+    return () => {
+      setContentVerticalOffset(0);
+    }
   }, []);
 
   /**
