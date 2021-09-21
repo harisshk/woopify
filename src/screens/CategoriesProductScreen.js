@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { SafeAreaView, ScrollView, View, Image } from 'react-native';
 import normalize from 'react-native-normalize';
 import { connect } from 'react-redux';
+import { CustomHeader } from '../components/CustomHeader';
 import ProductView01 from '../components/ProductView01';
 import SubHeading from '../components/SubHeading';
 import { client } from '../services';
@@ -29,6 +30,7 @@ function CategoriesProduct({ navigation, route }) {
                 flex: 1
             }}
         >
+            <CustomHeader navigation={navigation} title={""}/>
             <ScrollView
                 style={{
                     flex: 1,

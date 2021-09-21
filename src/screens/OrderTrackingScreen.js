@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ActivityIndicator, SafeAreaView, View } from 'react-native'
 import normalize from 'react-native-normalize';
 import WebView from 'react-native-webview'
+import { CustomHeader } from '../components/CustomHeader';
 import { getOrdersByOrderId } from '../services/orders';
 import { theme } from '../utils/theme'
 
@@ -34,6 +35,7 @@ function OrderTrackingScreen({ navigation, route }) {
                 backgroundColor: theme.colors.background
             }}
         >
+            <CustomHeader navigation={navigation} title={"Order Tracking"} />
             {isOrderFetched === true || isLoading === true ?
                 <View
                     style={{

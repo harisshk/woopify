@@ -34,8 +34,8 @@ const HomeNavigator = () => {
             />
             <MainNavigator.Screen 
                 options={({ route }) => ({
-                    title: '',
-                    headerBackTitleVisible: false
+                    headerShown :false
+                   
                 })} 
                 name="CategoriesProductScreen" 
                 component={CategoriesProductScreen} 
@@ -74,7 +74,7 @@ const HomeNavigator = () => {
                 options={({ route }) => ({
                     title: 'Order Tracking',
                     headerBackTitle:"Back",
-                    // headerShown :false
+                    headerShown :false
                     // headerBackTitleVisible: false
                 })} 
                 name="OrderTrackingScreen" 

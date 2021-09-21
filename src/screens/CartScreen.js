@@ -245,7 +245,8 @@ function CartScreen({ navigation }) {
                                             marginRight: normalize(5),
                                             borderRadius: normalize(10)
                                         }}
-                                        source={{ uri: item.variant.image.src }}
+                                        resizeMode={"center"}
+                                        source={{ uri: item.variant?.image?.src }}
                                     />
                                     <View
                                         style={{
@@ -259,7 +260,16 @@ function CartScreen({ navigation }) {
                                                 fontSize: theme.fontSize.paragraph
                                             }}
                                             numberOfLines={2}
-                                        >{item.title}</Text>
+                                        >
+                                            {item.title}
+                                        </Text>
+                                        <Text
+                                            style={{
+                                                color: theme.colors.placeholder
+                                            }}
+                                        >
+                                            {item.variant.title}
+                                        </Text>
 
                                         <View
                                             style={{
