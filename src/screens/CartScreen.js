@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { getProductByVariant } from '../services/products';
 import base64 from 'react-native-base64';
 
-function CartScreen({ navigation, setCart }) {
+function CartScreen({ navigation, setCart, customer }) {
     const [cartItem, setCartItem] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [editItem, setEditItem] = useState(null);
@@ -434,7 +434,28 @@ function CartScreen({ navigation, setCart }) {
                                 alignItems: "center",
                             }}
                             onPress={() => {
-                                navigation.navigate('CheckoutScreen', { uri: cartItem.webUrl })
+                                if(customer?.default_address?._id){
+                                    const shippingAddress = {
+                                        address1: customer?.default_address?.address1,
+                                        address2: customer?.default_address?.address2,
+                                        city: customer?.default_address?.city,
+                                        company: customer?.default_address?.company || null,
+                                        country: customer?.default_address?.country,
+                                        firstName:customer?.default_address?.first_name,
+                                        lastName: customer?.default_address?.last_name,
+                                        phone: customer?.default_address?.phone,
+                                        province: customer?.default_address?.province,
+                                        zip: customer?.default_address?.zip
+                                        
+                                    };
+                                    client.checkout.updateShippingAddress(checkoutId, shippingAddress).then(checkout => {
+                                        navigation.navigate('CheckoutScreen', { uri: cartItem.webUrl })
+                                    });
+                                }else{
+                                    navigation.navigate('CheckoutScreen', { uri: cartItem.webUrl })
+                                    
+                                }
+                                
                             }}
                         >
                             <Text
@@ -453,8 +474,16 @@ function CartScreen({ navigation, setCart }) {
     )
 }
 
+
+const mapStateToProps = state => {
+    return {
+      customer: state.customer,
+      cart: state.cart
+    }
+  }
+  
 const mapDispatchToProps = dispatch => ({
     setCart: cart => dispatch(setCart(cart))
 });
 
-export default connect(null, mapDispatchToProps)(CartScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);
