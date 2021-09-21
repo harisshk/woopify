@@ -1,6 +1,6 @@
 import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react'
-import { FlatList, SafeAreaView, Text, TouchableOpacity, View, Image } from 'react-native'
+import { FlatList, SafeAreaView, Text, TouchableOpacity, View, Image, RefreshControl } from 'react-native'
 import normalize from 'react-native-normalize';
 import SubHeading from '../components/SubHeading';
 import { getAllOrders } from '../services/orders';
@@ -16,12 +16,22 @@ function OrderScreen({ navigation, customer }) {
     const [status, setStatus] = useState("any")
     const [statusMenu, setStatusMenu] = useState(false);
     const isFocussed = useIsFocused();
+    const [refreshing, setRefreshing] = useState(false);
+    const onRefresh = () => {
+        setRefreshing(true);
+        getOrders();
+        setRefreshing(false);
+    }
     useEffect(async () => {
+        getOrders();
+    }, [isFocussed, status]);
+
+    const getOrders = async () => {
         setIsLoading(true);
         const data = await getAllOrders(customer?.id, status);
         setOrders(data.orders);
         setIsLoading(false);
-    }, [isFocussed, status]);
+    }
 
     return (
         <SafeAreaView
@@ -166,6 +176,12 @@ function OrderScreen({ navigation, customer }) {
                     padding: normalize(15),
                     flex: 1
                 }}
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                    />
+                }
                 renderItem={({ item }) => {
                     return (
                         item?.shipping_address && <View
@@ -292,4 +308,4 @@ function OrderScreen({ navigation, customer }) {
 const mapStateToProps = state => ({
     customer: state.customer
 })
-export default connect(mapStateToProps,null)(OrderScreen);
+export default connect(mapStateToProps, null)(OrderScreen);
