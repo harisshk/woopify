@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
 import { useIsFocused } from '@react-navigation/native';
 import React, { createRef, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, Dimensions, FlatList, Image, RefreshControl, SafeAreaView, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Dimensions, FlatList, Image, RefreshControl, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import normalize from 'react-native-normalize'
 import { client } from '../services';
 import { theme } from '../utils/theme';
@@ -13,6 +13,7 @@ import { setCart } from '../redux/action/cart';
 import { connect } from 'react-redux';
 import { getProductByVariant } from '../services/products';
 import base64 from 'react-native-base64';
+import { List } from 'react-native-paper';
 
 function CartScreen({ navigation, setCart, customer }) {
     const [cartItem, setCartItem] = useState({});
@@ -20,6 +21,7 @@ function CartScreen({ navigation, setCart, customer }) {
     const [editItem, setEditItem] = useState(null);
     const isFocussed = useIsFocused();
     const editActionRef = createRef();
+    const addressActionRef = createRef();
     const [editCartLoading, setEditCartLoading] = useState(false);
     const [selectedStock, setSelectedStock] = useState(1);
     const [checkoutId, setCheckoutId] = useState(null);
@@ -108,6 +110,34 @@ function CartScreen({ navigation, setCart, customer }) {
         }
     }
 
+    const shippingAddressHandler = async (address) => {
+        const shippingAddress = {
+            address1: address?.address1,
+            address2: address?.address2,
+            city: address?.city,
+            company: address?.company || null,
+            country: address?.country,
+            firstName: address?.first_name,
+            lastName: address?.last_name,
+            phone: address?.phone,
+            province: address?.province,
+            zip: address?.zip
+        };
+        try {
+            client.checkout.updateShippingAddress(checkoutId, shippingAddress).then(checkout => {
+                navigation.navigate('CheckoutScreen', { uri: cartItem.webUrl });
+                addressActionRef.current?.hide();
+            });
+        } catch (error) {
+            console.log(error);
+            console.log('----------------CartScreen Line 134----------------------');
+            addressActionRef.current?.hide();
+            Alert.alert('Error', 'Something went wrong');
+        }
+
+
+    }
+
     return (
         <SafeAreaView
             style={{
@@ -170,7 +200,6 @@ function CartScreen({ navigation, setCart, customer }) {
                             alignSelf: 'center',
                             borderRadius: normalize(12)
                         }}
-
                     >
                         <SubHeading
                             style={{
@@ -184,6 +213,165 @@ function CartScreen({ navigation, setCart, customer }) {
                             Update Quantity
                         </SubHeading>
                     </TouchableOpacity>
+                </View>
+            </ActionSheet>
+
+            <ActionSheet
+                ref={addressActionRef}
+                drawUnderStatusBar={true}
+                containerStyle={{
+                    height: height / 1.4,
+                }}
+                extraScroll={true}
+                nestedScrollEnabled={true}
+            >
+                <View
+                    style={{
+                        padding: normalize(15),
+                        height: '97%'
+                    }}
+                >
+                    <Text
+                        style={{
+                            fontWeight: theme.fontWeight.normal,
+                            fontSize: theme.fontSize.subheading,
+                            textAlign: "center"
+                        }}
+                    >
+                        Choose Shipping Address
+                    </Text>
+                    <ScrollView
+                        showsVerticalScrollIndicator={false}
+
+                        contentContainerStyle={{
+                            flex: 1
+                        }}
+                    >
+                        {customer.addresses.length === 0 ?
+                            <View
+                                style={{
+                                    justifyContent: "center",
+                                    alignContent: "center",
+                                    alignItems: "center",
+                                    height: '100%'
+                                }}
+                            >
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.subheading,
+                                        fontWeight: theme.fontWeight.thin
+                                    }}
+                                >
+                                    No Address Found
+                                </Text>
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        navigation.navigate('AddAddressScreen', { toUpdateAddress: false });
+                                        addressActionRef.current?.hide();
+                                    }}
+                                >
+
+                                    <Text
+                                        style={{
+                                            color: theme.colors.primary,
+                                            textDecorationLine: "underline",
+                                            marginTop: normalize(14),
+                                            fontSize: theme.fontSize.subheading,
+                                        }}
+                                    >
+                                        Add Address to Continue.
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+                            :
+                            customer.addresses.map(item => {
+                                return (
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: theme.colors.imageBackground,
+                                            padding: normalize(12),
+                                            borderRadius: normalize(12),
+                                            flexDirection: "row",
+                                            marginVertical: normalize(5),
+                                            elevation: normalize(5),
+                                            alignItems: "center",
+                                            height: normalize(120)
+                                        }}
+                                        onPress={() => {
+                                            shippingAddressHandler(item);
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                flex: .8
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: theme.fontSize.paragraph,
+                                                    fontWeight: theme.fontWeight.medium,
+                                                    lineHeight: theme.lineHeight.medium
+                                                }}
+                                            >
+                                                {item.name},
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: theme.fontSize.paragraph,
+                                                    fontWeight: theme.fontWeight.normal,
+                                                    lineHeight: theme.lineHeight.paragraph
+                                                }}
+                                            >
+                                                {item.address1}, {item.address2},
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: theme.fontSize.paragraph,
+                                                    fontWeight: theme.fontWeight.normal,
+                                                    lineHeight: theme.lineHeight.paragraph
+                                                }}
+                                            >
+                                                {item.city}, {item.province},
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: theme.fontSize.paragraph,
+                                                    fontWeight: theme.fontWeight.normal,
+                                                    lineHeight: theme.lineHeight.paragraph
+                                                }}
+                                            >
+                                                {item.zip}, {item.country}.
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: theme.fontSize.paragraph,
+                                                    fontWeight: theme.fontWeight.medium,
+                                                    lineHeight: theme.lineHeight.paragraph,
+                                                    marginTop: normalize(5),
+                                                    color: theme.colors.primary
+                                                }}
+                                            >
+                                                {item?.address?.default === true && "(Default Address)"}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                flex: .2
+                                            }}
+                                        >
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    addressActionRef.current?.hide();
+                                                    navigation.navigate('AddAddressScreen', { toUpdateAddress: true, address: item })
+                                                }}
+                                            >
+                                                <List.Icon icon="circle-edit-outline" color={theme.colors.primary} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            })}
+                    </ScrollView>
                 </View>
             </ActionSheet>
 
@@ -261,7 +449,7 @@ function CartScreen({ navigation, setCart, customer }) {
                         showsVerticalScrollIndicator={false}
                         renderItem={({ item }) => {
                             return (
-                                <View
+                                <TouchableOpacity
                                     style={{
                                         flex: 1,
                                         width: '98%',
@@ -351,7 +539,6 @@ function CartScreen({ navigation, setCart, customer }) {
                                                             fontWeight: theme.fontWeight.thin,
                                                             marginLeft: normalize(10),
                                                             color: theme.colors.primary
-
                                                         }}
                                                     >
                                                         Edit
@@ -362,7 +549,6 @@ function CartScreen({ navigation, setCart, customer }) {
                                                 onPress={() => {
                                                     removeItemFromCart(item);
                                                 }}
-
                                                 disabled={editCartLoading}
                                             >
                                                 {editCartLoading === false &&
@@ -371,7 +557,6 @@ function CartScreen({ navigation, setCart, customer }) {
                                                             fontWeight: theme.fontWeight.thin,
                                                             marginLeft: normalize(10),
                                                             color: "red"
-
                                                         }}
                                                     >
                                                         Remove
@@ -380,12 +565,10 @@ function CartScreen({ navigation, setCart, customer }) {
                                             </TouchableOpacity>
                                         </View>
                                     </View>
-
                                     <View style={{ flex: .4, alignSelf: 'center' }}>
-
                                         <Text style={{ textAlign: "right", fontSize: theme.fontSize.medium }}>$ {item?.variant?.price}</Text>
                                     </View>
-                                </View>
+                                </TouchableOpacity>
                             )
                         }}
                         keyExtractor={item => item.id}
@@ -434,28 +617,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                 alignItems: "center",
                             }}
                             onPress={() => {
-                                if(customer?.default_address?._id){
-                                    const shippingAddress = {
-                                        address1: customer?.default_address?.address1,
-                                        address2: customer?.default_address?.address2,
-                                        city: customer?.default_address?.city,
-                                        company: customer?.default_address?.company || null,
-                                        country: customer?.default_address?.country,
-                                        firstName:customer?.default_address?.first_name,
-                                        lastName: customer?.default_address?.last_name,
-                                        phone: customer?.default_address?.phone,
-                                        province: customer?.default_address?.province,
-                                        zip: customer?.default_address?.zip
-                                        
-                                    };
-                                    client.checkout.updateShippingAddress(checkoutId, shippingAddress).then(checkout => {
-                                        navigation.navigate('CheckoutScreen', { uri: cartItem.webUrl })
-                                    });
-                                }else{
-                                    navigation.navigate('CheckoutScreen', { uri: cartItem.webUrl })
-                                    
-                                }
-                                
+                                addressActionRef.current?.show();
                             }}
                         >
                             <Text
@@ -477,11 +639,11 @@ function CartScreen({ navigation, setCart, customer }) {
 
 const mapStateToProps = state => {
     return {
-      customer: state.customer,
-      cart: state.cart
+        customer: state.customer,
+        cart: state.cart
     }
-  }
-  
+}
+
 const mapDispatchToProps = dispatch => ({
     setCart: cart => dispatch(setCart(cart))
 });

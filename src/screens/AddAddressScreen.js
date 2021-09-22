@@ -15,16 +15,16 @@ import { CustomHeader } from '../components/CustomHeader'
 function AddAddressScreen({ navigation, customer, setCustomer, route }) {
     const { toUpdateAddress, address } = route.params;
     const [input, setInput] = useState({
-        phone: { value: toUpdateAddress ? address.phone : "", error: "" },
-        firstName: { value: toUpdateAddress ? address.first_name : "", error: "" },
-        lastName: { value: toUpdateAddress ? address.last_name : "", error: "" },
-        address1: { value: toUpdateAddress ? address.address1 : "", error: "" },
-        address2: { value: toUpdateAddress ? address.address2 : "", error: "" },
-        city: { value: toUpdateAddress ? address.city : "", error: "" },
-        province: { value: toUpdateAddress ? address.province : "", error: "" },
-        country: { value: toUpdateAddress ? address.country : "United States", error: "" },
-        zip: { value: toUpdateAddress ? address.zip : "", error: "" },
-        default: toUpdateAddress ? address.default : true,
+        phone: { value: toUpdateAddress ? address?.phone : "", error: "" },
+        firstName: { value: toUpdateAddress ? address?.first_name : "", error: "" },
+        lastName: { value: toUpdateAddress ? address?.last_name : "", error: "" },
+        address1: { value: toUpdateAddress ? address?.address1 : "", error: "" },
+        address2: { value: toUpdateAddress ? address?.address2 : "", error: "" },
+        city: { value: toUpdateAddress ? address?.city : "", error: "" },
+        province: { value: toUpdateAddress ? address?.province : "", error: "" },
+        country: { value: toUpdateAddress ? address?.country : "United States", error: "" },
+        zip: { value: toUpdateAddress ? address?.zip : "", error: "" },
+        default: toUpdateAddress ? address?.default : true,
         isLoading: false
     });
 
