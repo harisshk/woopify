@@ -27,6 +27,7 @@ import { Divider, Menu } from 'react-native-paper';
 import { FlatList } from 'react-native-gesture-handler';
 import { setCart } from '../redux/action/cart';
 import { connect } from 'react-redux';
+import { createCheckout } from '../services/cart';
 
 
 Array.prototype.insert = function (i, ...rest) {
@@ -313,12 +314,14 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
         setCartIsLoading(true);
         let checkoutExists = await AsyncStorage.getItem('checkoutId');
         if (checkoutExists === null) {
+
             client.checkout.create().then(async (checkout) => {
                 await AsyncStorage.setItem('checkoutId', JSON.stringify(checkout.id));
                 /**
                  * Rest API Id to StoreFront API ID
                  */
-                const variantId = base64.encode(product.variants[variantChosen < 0 ? 0 : variantChosen].admin_graphql_api_id + "");
+               const variantId = base64.encode(product.variants[variantChosen < 0 ? 0 : variantChosen].admin_graphql_api_id + "");
+                // const variantId = product.variants[variantChosen < 0 ? 0 : variantChosen].id;
                 const lineItemsToAdd = [
                     {
                         variantId: variantId,
@@ -337,6 +340,16 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
                 setCartIsLoading(false);
                 return;
             });
+            // const body = {
+            //     checkouts:{
+            //         line_items: lineItemsToAdd,
+            //     }
+            // }
+            // const data = await createCheckout(body);
+            // console.log(data);
+            // return;
+
+
         }
         checkoutExists = await AsyncStorage.getItem('checkoutId');
         const checkoutId = JSON.parse(checkoutExists);

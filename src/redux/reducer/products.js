@@ -7,7 +7,6 @@ const products = (state = initialState, action) => {
       return[
         ...products
       ]
-      
     default:
       return state;
   }

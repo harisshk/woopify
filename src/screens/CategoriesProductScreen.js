@@ -102,7 +102,14 @@ function CategoriesProduct({ navigation, route, setCart }) {
                             },
                         ]}
                         isLoading={isLoading}
-                    >
+                    ><View
+                    style={{
+                      flexWrap: "wrap",
+                      width: '100%',
+                      flexDirection: "row",
+                      justifyContent: "space-between"
+                    }}
+                  >
                         {products.map((product) =>
                             <ProductView01
                                 isFromCategory={true}
@@ -111,6 +118,7 @@ function CategoriesProduct({ navigation, route, setCart }) {
                                 navigation={navigation}
                             />
                         )}
+                        </View>
 
                     </SkeletonContent>
                 </View>
