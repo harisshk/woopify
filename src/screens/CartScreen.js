@@ -370,28 +370,28 @@ function CartScreen({ navigation, setCart, customer }) {
                                             </TouchableOpacity>
                                         </View>
                                     </TouchableOpacity>
-                                    
+
                                 )
                             })}
-                            <TouchableOpacity
-                                    onPress={() => {
-                                        navigation.navigate('AddAddressScreen', { toUpdateAddress: false });
-                                        addressActionRef.current?.hide();
-                                    }}
-                                >
+                        <TouchableOpacity
+                            onPress={() => {
+                                navigation.navigate('AddAddressScreen', { toUpdateAddress: false });
+                                addressActionRef.current?.hide();
+                            }}
+                        >
 
-                                    <Text
-                                        style={{
-                                            color: theme.colors.primary,
-                                            textDecorationLine: "underline",
-                                            marginTop: normalize(14),
-                                            fontSize: theme.fontSize.subheading,
-                                            textAlign: "center"
-                                        }}
-                                    >
-                                        Add Address to Continue.
-                                    </Text>
-                                </TouchableOpacity>
+                            <Text
+                                style={{
+                                    color: theme.colors.primary,
+                                    textDecorationLine: "underline",
+                                    marginTop: normalize(14),
+                                    fontSize: theme.fontSize.subheading,
+                                    textAlign: "center"
+                                }}
+                            >
+                                Add Address to Continue.
+                            </Text>
+                        </TouchableOpacity>
                     </ScrollView>
                 </View>
             </ActionSheet>
