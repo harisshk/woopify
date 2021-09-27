@@ -1089,7 +1089,7 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
             <TouchableOpacity
                 style={{
                     position: 'absolute',
-                    bottom: normalize(100),
+                    bottom: normalize(110),
                     backgroundColor: theme.colors.bottomTabActiveBg,
                     padding: normalize(12),
                     borderRadius: normalize(20),
