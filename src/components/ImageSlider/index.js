@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Image, View, FlatList, TouchableOpacity, Dimensions, ActivityIndicator } from "react-native"
 import normalize from "react-native-normalize"
-import { black } from 'react-native-paper/lib/typescript/styles/colors';
 import { theme } from "../../utils/theme"
 const { height } = Dimensions.get('window');
 import Lightbox from 'react-native-lightbox';

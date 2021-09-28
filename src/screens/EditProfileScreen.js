@@ -3,7 +3,7 @@ import { SafeAreaView, Text, View, TouchableOpacity, Alert } from 'react-native'
 import normalize from 'react-native-normalize';
 import { ActivityIndicator, TextInput } from 'react-native-paper';
 import { connect } from 'react-redux';
-import { getCustomerById, updateCustomerProfile } from '../services/customer';
+import { updateCustomerProfile } from '../services/customer';
 import { theme } from '../utils/theme';
 import Toast from 'react-native-simple-toast'
 import { setCustomer } from '../redux/action/customer';

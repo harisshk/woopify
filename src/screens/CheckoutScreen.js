@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { SafeAreaView, View, Text, ActivityIndicator } from 'react-native'
+import { SafeAreaView, View, ActivityIndicator } from 'react-native'
 import normalize from 'react-native-normalize';
 import WebView from 'react-native-webview'
 import { theme } from '../utils/theme'

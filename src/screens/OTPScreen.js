@@ -10,13 +10,10 @@ import {
     View
 } from 'react-native';
 import normalize from 'react-native-normalize';
-import { TextInput } from 'react-native-paper';
 import Footer from '../components/Footer';
 import { theme } from '../utils/theme';
 import Toast from 'react-native-simple-toast';
-import { isValidOtp } from '../utils/validation/otp';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
-import { getCustomerById } from '../services/customer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 import { setCustomer } from '../redux/action/customer';

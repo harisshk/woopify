@@ -1,11 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
 import normalize from 'react-native-normalize';
 import { List } from 'react-native-paper';
 import { connect } from 'react-redux';
 import Footer from '../components/Footer';
-import { deleteAddress } from '../services/customer';
 import { theme } from '../utils/theme';
 
 

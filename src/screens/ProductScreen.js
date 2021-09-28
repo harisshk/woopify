@@ -27,7 +27,6 @@ import { Divider, Menu } from 'react-native-paper';
 import { FlatList } from 'react-native-gesture-handler';
 import { setCart } from '../redux/action/cart';
 import { connect } from 'react-redux';
-import { createCheckout } from '../services/cart';
 
 
 Array.prototype.insert = function (i, ...rest) {

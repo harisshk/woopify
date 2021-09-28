@@ -1,6 +1,5 @@
 import React from 'react'
-import { View } from 'react-native'
-import { theme } from '../utils/theme'
+import { View } from 'react-native';
 
 function CategoryRelatedView({item, navigation}) {
     return (

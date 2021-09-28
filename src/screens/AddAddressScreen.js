@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { KeyboardAvoidingView, SafeAreaView, ScrollView, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native'
 import normalize from 'react-native-normalize'
-import { Checkbox, List } from 'react-native-paper'
+import { Checkbox } from 'react-native-paper'
 import { addNewAddress, getCustomerById, updateAddress, updateCustomerProfile } from '../services/customer'
 import { theme } from '../utils/theme';
 import Toast from 'react-native-simple-toast'
 import { connect } from 'react-redux'
 import { setCustomer } from '../redux/action/customer';
-import SubHeading from '../components/SubHeading';
 import { TextInput } from 'react-native-paper'
 import { CustomHeader } from '../components/CustomHeader'
 

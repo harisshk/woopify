@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect } from 'react';
-import { View , Text, SafeAreaView } from 'react-native';
+import { Text, SafeAreaView } from 'react-native';
 import { connect } from 'react-redux';
 import { setCart } from '../redux/action/cart';
 import { setCustomer } from '../redux/action/customer';

@@ -1,11 +1,10 @@
 import React from 'react'
 import { Dimensions, TouchableOpacity, Image, Text } from 'react-native';
 import normalize from 'react-native-normalize';
-import { out } from 'react-native/Libraries/Animated/Easing';
 import { getProductInfo } from '../services/products';
 import { theme } from '../utils/theme';
 import Toast from 'react-native-simple-toast';
-const { width } = Dimensions.get('screen');
+
 
 function ProductView01({ item, navigation, isFromCategory = false }) {
     return (
