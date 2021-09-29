@@ -132,6 +132,17 @@ function SearchScreen({ navigation }) {
                     />
                 }
             >
+                {isLoading === true &&
+                    <Text
+                        style={{
+                            fontSize: theme.fontSize.medium,
+                            color: theme.colors.disabledButton,
+                            textAlign: "center"
+                        }}
+                    >
+                        Searching for products ...
+                    </Text>
+                }
                 {products.length === 0 && isLoading === false &&
                     <Text
                         style={{
