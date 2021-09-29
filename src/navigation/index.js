@@ -13,6 +13,7 @@ import RegisterScreen from '../screens/RegisterScreen';
 import AddAddressScreen from '../screens/AddAddressScreen';
 import AddressesScreen from '../screens/AddressesScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
+import SearchScreen from '../screens/SearchScreen';
 
 const MainNavigator = createStackNavigator();
 
@@ -35,10 +36,16 @@ const HomeNavigator = () => {
             <MainNavigator.Screen 
                 options={({ route }) => ({
                     headerShown :false
-                   
                 })} 
                 name="CategoriesProductScreen" 
                 component={CategoriesProductScreen} 
+            />
+            <MainNavigator.Screen 
+                options={({ route }) => ({
+                    headerShown :false
+                })} 
+                name="SearchScreen" 
+                component={SearchScreen} 
             />
             <MainNavigator.Screen 
                 options={({ route }) => ({

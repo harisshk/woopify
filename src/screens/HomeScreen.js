@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Dimensions, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Dimensions, ScrollView, RefreshControl, TextInput } from 'react-native';
 import { connect } from 'react-redux';
 import { setCategories } from '../redux/action/categories';
 import { setProducts } from '../redux/action/products'
@@ -11,6 +11,7 @@ import { getAllProducts } from '../services/products';
 import SubHeading from '../components/SubHeading';
 import ProductView01 from '../components/ProductView01';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
+import { client } from '../services';
 const { width } = Dimensions.get('window');
 
 const HomeScreen = ({ categories, setCategories, navigation, products, setProducts, cart }) => {
@@ -128,6 +129,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
               Welcome !
             </Text>
           </View>
+          
           <TouchableOpacity
             style={{
               flex: 1,
@@ -172,6 +174,40 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
 
           </TouchableOpacity>
         </View>
+        <TouchableOpacity
+          onPress={()=>{
+            navigation.navigate('SearchScreen')
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: theme.colors.bottomTabActiveBg,
+              padding: normalize(15),
+              marginTop: normalize(15),
+              borderRadius: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: theme.fontWeight.medium,
+                fontSize: theme.fontSize.paragraph
+              }}
+            >
+              Search...
+            </Text>
+          </View>
+          <Image
+            source={require('../assets/images/search.png')}
+            style={{
+              padding:1,
+              height: normalize(23),
+              width:normalize(23),
+              position: "absolute",
+              right: normalize(20),
+              top: normalize(29)
+            }}
+          />
+        </TouchableOpacity>
         <SubHeading>
 
           Collections
@@ -227,6 +263,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             keyExtractor={(item) => item.id}
           />
         </SkeletonContent>
+        
         <SubHeading>
           All Products
         </SubHeading>
