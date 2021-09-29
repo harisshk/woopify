@@ -25,12 +25,12 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                 width: '46%',
                 margin: normalize(5),
                 justifyContent: "center",
-                backgroundColor: theme.colors.imageBackground,
                 padding: normalize(10),
                 alignSelf: "center",
                 height: normalize(210),
-                borderRadius: normalize(15),
+                borderRadius: normalize(10),
                 elevation: 2,
+                backgroundColor: theme.colors.imageBackground
             }}
         >
             <Image
