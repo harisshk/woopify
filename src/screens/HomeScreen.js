@@ -50,7 +50,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     //   setCategories({ categories: data.collections })
     // });
     setCategoryIsLoading(true);
-    let data = await getAllCategories();
+    const data = await getAllCategories();
 
     setCategoryIsLoading(false);
     if (data?.error) {

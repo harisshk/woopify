@@ -131,11 +131,9 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                 }
             };
             const response = await addNewAddress(customer.id, body);
-            console.log(response, '---------Line 84---------');
             if (response?.errors) {
                 const { errors } = response;
                 for (const field in errors) {
-                    console.log(`${field} ${errors[field]}`);
                     Toast.show(`${field} ${errors[field]}`);
                     setInput({
                         ...input,
@@ -269,11 +267,9 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
             };
             const response = await updateAddress(customer.id, address.id, body);
             
-            console.log(response, '---------Line 129---------');
             if (response?.errors) {
                 const { errors } = response;
                 for (const field in errors) {
-                    console.log(`${field} ${errors[field]}`);
                     Toast.show(`${field} ${errors[field]}`);
                     setInput({
                         ...input,

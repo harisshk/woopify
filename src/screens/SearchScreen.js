@@ -104,7 +104,6 @@ function SearchScreen({ navigation }) {
                             top: normalize(29)
                         }}
                         onPress={()=>{
-                            console.log(query)
                             searchHandler(query)
                         }}
                         disabled={isLoading}

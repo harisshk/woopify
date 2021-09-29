@@ -49,7 +49,6 @@ function RegisterScreen({navigation, setCustomer}) {
                 email: email,
             };
             const response = await sendOTPViaEmail(body);
-            console.log(response, '--')
             if (!response) {
                 Toast.show('Something went wrong');
                 setInput({

@@ -112,7 +112,6 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
             });
             setIsLoading(false);
         }
-       
     }
 
     const backHandler = () => {
