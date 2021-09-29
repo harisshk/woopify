@@ -136,7 +136,8 @@ function SearchScreen({ navigation }) {
                         style={{
                             fontSize: theme.fontSize.medium,
                             color: theme.colors.disabledButton,
-                            textAlign: "center"
+                            textAlign: "center",
+                            marginVertical: normalize(20)
                         }}
                     >
                         Searching for products ...
