@@ -80,13 +80,6 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
 
     const getProductInfoHelper = async () => {
         setIsLoading(true);
-        // client.product.fetch("Z2lkOi8vc2hvcGlmeS9Qcm9kdWN0LzcwMTA4MzI2NzkwNzk=").then((product) => {
-        //     // setProduct(data.product);
-        //     // admin_graphql_api_id
-        //     // setCurrentVariantIndex(-1);
-        //     // // loadingImages(0, 0);
-        //     // setIsLoading(false);
-        // });
         const data = await getProductInfo(product.id);
         if (data?.errors) {
             Toast.show('Something went wrong');
@@ -97,6 +90,7 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
         }
         const productInfo = data?.product;
         const { options } = productInfo;
+        
         const colors = await options.filter(option => option?.name?.toLowerCase() === "color");
         const sizes = await options.filter(option => option?.name?.toLowerCase() === "size");
         if (colors.length > 0) {

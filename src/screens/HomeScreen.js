@@ -51,7 +51,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     // });
     setCategoryIsLoading(true);
     const data = await getAllCategories();
-
+    console.log(data);
     setCategoryIsLoading(false);
     if (data?.error) {
       console.log(data.error)
@@ -71,7 +71,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
 
     setProductIsLoading(true);
     let data = await getAllProducts();
-
+    console.log(data.errors,'---products')
     setProductIsLoading(false);
     if (data?.error) {
       console.log(data.error)
@@ -208,12 +208,12 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             }}
           />
         </TouchableOpacity>
-        <SubHeading>
+        {/* <SubHeading>
 
           Collections
-        </SubHeading>
+        </SubHeading> */}
 
-        <SkeletonContent
+        {/* <SkeletonContent
           containerStyle={{ width: '100%', flexDirection: "row" }}
           isLoading={categoryIsLoading}
           layout={[
@@ -263,7 +263,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             keyExtractor={(item) => item.id}
           />
         </SkeletonContent>
-        
+         */}
         <SubHeading>
           All Products
         </SubHeading>

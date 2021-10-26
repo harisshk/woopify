@@ -36,7 +36,7 @@ const SplashScreen = ({navigation, setCustomer, setCart}) => {
         }else{
           navigation.reset({
             index: 0,
-            routes: [{ name: 'LoginScreen' }],
+            routes: [{ name: 'BottomTab' }],
           });
         }
       } catch (error) {
