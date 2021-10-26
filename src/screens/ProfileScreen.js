@@ -185,17 +185,19 @@ const Profile = ({ navigation, customer, cart }) => {
               >
                 View
               </Text>
+
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate('OrderTrackingScreen', { fetchFromId: true, orderId: customer.last_order_id });
                 }}
+                disabled={!customer.last_order_id}
               >
                 <Text
-                  style={{
-                    color: theme.colors.primary,
+                  style={[{
                     fontSize: theme.fontSize.paragraph,
                     marginTop: normalize(10),
-                  }}
+                  }
+                    , customer.last_order_id ? { color: theme.colors.primary } : { color: theme.colors.disabled }]}
                 >
                   Last Order
                 </Text>
