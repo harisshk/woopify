@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import { getProductByVariant } from '../services/products';
 import base64 from 'react-native-base64';
 import { List } from 'react-native-paper';
+import StepperCounter from '../components/StepperCounter';
 
 function CartScreen({ navigation, setCart, customer }) {
     const [cartItem, setCartItem] = useState({});
@@ -25,13 +26,9 @@ function CartScreen({ navigation, setCart, customer }) {
     const [editCartLoading, setEditCartLoading] = useState(false);
     const [selectedStock, setSelectedStock] = useState(1);
     const [checkoutId, setCheckoutId] = useState(null);
-    const [totalStock, setTotalStock] = useState([
-        { label: "1", value: "1" },
-        { label: "2", value: "2" },
-        { label: "3", value: "3" },
-        { label: "4", value: "4" },
-        { label: "5", value: "5" },
-    ]);
+    const [totalStock, setTotalStock] = useState(1);
+    const [policy, setPolicy] = useState(null);
+    
     const [refreshing, setRefreshing] = useState(true);
     const onRefresh = () => {
         setRefreshing(true);
@@ -160,7 +157,13 @@ function CartScreen({ navigation, setCart, customer }) {
                         justifyContent: "space-between"
                     }}
                 >
-                    <Picker
+                    <StepperCounter
+                        max={totalStock}
+                        min={1}
+                        curr={selectedStock}
+                        setCurr={setSelectedStock}
+                    />
+                    {/* <Picker
                         selectedValue={selectedStock}
                         color={theme.colors.primary}
                         style={{
@@ -188,7 +191,8 @@ function CartScreen({ navigation, setCart, customer }) {
                                 />
                             )
                         })}
-                    </Picker>
+                    </Picker> */}
+
                     <TouchableOpacity
                         onPress={() => {
                             updateQuantity(parseInt(selectedStock));
@@ -530,16 +534,11 @@ function CartScreen({ navigation, setCart, customer }) {
                                                 onPress={async () => {
                                                     const variantId = base64.decode(item.variant.id + "").split("/");
                                                     const variant = await getProductByVariant(variantId[variantId.length - 1]);
-                                                    const { inventory_quantity } = variant.variant;
-                                                    let newStockCount = [];
-                                                    for (let i = 0; i < inventory_quantity; i++) {
-                                                        newStockCount.push({
-                                                            label: (i + 1) + "",
-                                                            value: (i + 1) + ""
-                                                        });
-                                                    }
+                                                    const { inventory_quantity, inventory_policy} = variant.variant;
+                                                    setTotalStock(inventory_quantity);
+                                                    setPolicy(inventory_policy);
                                                     editActionRef.current?.setModalVisible(true);
-                                                    setTotalStock([...newStockCount]);
+                                                    // setTotalStock([...newStockCount]);
                                                     setSelectedStock(item?.quantity || 1);
                                                     setEditItem(item);
                                                 }}

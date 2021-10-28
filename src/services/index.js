@@ -19,4 +19,4 @@ export const client = Client.buildClient({
 });
 
 
-export const API_ENDPOINT = `https://4a10-106-51-88-144.ngrok.io`;
+export const API_ENDPOINT = `https://fd56-106-51-88-144.ngrok.io`;

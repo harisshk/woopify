@@ -22,25 +22,26 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                 navigation.navigate('ProductListeningScreen', { product: item });
             }}
             style={{
-                width: '46%',
+                width: '46.1%',
                 margin: normalize(5),
-                justifyContent: "center",
-                padding: normalize(10),
+                // justifyContent: "center",
+                // padding: normalize(10),
                 alignSelf: "center",
-                height: normalize(210),
+                height: normalize(250),
                 borderRadius: normalize(10),
                 elevation: 2,
-                backgroundColor: theme.colors.imageBackground
+                // backgroundColor: "red"
             }}
         >
             <Image
                 style={{
-                    backgroundColor: theme.colors.imageBackground,
+                    // backgroundColor: theme.colors.primary,
                     width: '100%',
-                    height: '62%',
+                    // height: '80%',
                     padding: normalize(5),
                     alignSelf: "center",
-                    borderRadius: normalize(15),
+                    borderRadius: normalize(2),
+                    flex:1,
                 }}
                 resizeMode="contain"
                 source={{ uri: item.images[0].src }}
@@ -48,10 +49,12 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
             <Text
 
                 style={{
-                    fontWeight: theme.fontWeight.bold,
-                    marginTop: normalize(12),
-                    color: "grey"
+                    fontWeight: theme.fontWeight.medium,
+                    marginTop: normalize(3),
+                    color: theme.colors.black,
+                    fontSize: theme.fontSize.medium,
                 }}
+                numberOfLines={1}
             >
                 {item.title.substring(0, 15)} {item.title.length > 15 && "..."}
             </Text>
@@ -59,8 +62,9 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                 <Text
                     style={{
                         fontWeight: theme.fontWeight.medium,
-                        fontSize: theme.fontSize.paragraph,
-                        marginVertical: normalize(8)
+                        fontSize: theme.fontSize.subheading,
+                        marginVertical: normalize(8),
+                        color: theme.colors.primary
                     }}
                 >
                     ${item?.variants[0]?.price}

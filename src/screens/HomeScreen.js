@@ -109,7 +109,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
                 fontWeight: theme.fontWeight.medium
               }}
             >
-              Shopify Connect
+              PetInPick
             </Text>
             <Text
               style={{
@@ -254,8 +254,8 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             }
             keyExtractor={(item) => item.id}
           />
-        </SkeletonContent>
-         */}
+        </SkeletonContent> */}
+        
         {/* <SubHeading>
           All Products
         </SubHeading> */}

@@ -27,6 +27,7 @@ import Toast from 'react-native-simple-toast';
 import { setCart } from '../redux/action/cart';
 import ImagePicker from 'react-native-image-crop-picker';
 import { uploadImage } from '../services/asset';
+import StepperCounter from '../components/StepperCounter';
 
 
 
@@ -98,7 +99,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
         const response = await uploadImage(image);
         const { data } = response;
         if (data.success === true) {
-            Toast.showWithGravity('Image Uploaded Successfully...', Toast.SHORT, Toast.TOP);
+            Toast.showWithGravity ('Image Uploaded Successfully...', Toast.SHORT, Toast.TOP);
             const { asset } = data;
             let checkoutExists = await AsyncStorage.getItem('checkoutId');
 
@@ -149,6 +150,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                 const cart = {
                     cart: { count: checkout?.lineItems?.length }
                 }
+                console.log(checkout)
                 setCart({ ...cart });
                 setCartIsLoading(false);
                 Toast.show('Added to Cart');
@@ -248,7 +250,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
     const uploadImageHandler = async() => {
         try{
             const options = {
-                cropping: true,
+                // cropping: true,
                 includeBase64: true,
                 mediaType: "photo",
                 multiple: false
@@ -260,7 +262,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                 product: product.id,
                 uri: image.sourceURL,
             };
-            
             setImage({
                 ...upload
             });
@@ -552,9 +553,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                             fontSize: theme.fontSize.medium,
                                         }}
                                     >
-                                        
                                         Remove and Re-Upload
-
                                     </Text>
                                     </>
                                 :
@@ -573,90 +572,8 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                 }
                             </TouchableOpacity>
                         }
-
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                width: '70%',
-                                justifyContent: "center",
-                                alignItems: "center",
-                                marginVertical: normalize(15),
-                                alignSelf: "center"
-                            }}
-                        >
-                            <TouchableOpacity
-                                style={{
-                                    backgroundColor: theme.colors.primary,
-                                    alignSelf: "center",
-                                    height: normalize(50),
-                                    justifyContent: "center",
-                                    flex: 1,
-                                    borderTopLeftRadius: normalize(8),
-                                    borderBottomLeftRadius: normalize(8)
-                                }}
-                                onPress={()=>{
-                                    if(product?.variants[selectedVariantIndex]?.inventory_quantity >= selectedStock
-                                        || product?.variants[selectedVariantIndex]?.inventory_policy === "deny"){
-                                        setSelectedStock(selectedStock + 1);
-                                    }
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color: theme.colors.white,
-                                        textAlign: "center",
-                                        fontSize: theme.fontSize.title,
-                                        fontWeight: theme.fontWeight.bold
-                                    }}
-                                >
-                                    +
-                                </Text>
-                            </TouchableOpacity>
-                            <View
-                                style={{
-                                    backgroundColor: theme.colors.secondary,
-                                    flex: 1,
-                                    height: normalize(50),
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                            >
-                            <Text
-                                style={{
-                                    color: theme.colors.white,
-                                    fontSize: theme.fontSize.subheading
-                                }}
-                            >
-                                {selectedStock}
-                            </Text>
-                            </View>
-                            <TouchableOpacity
-                                onPress={()=>{
-                                    if(selectedStock >= 2){
-                                        setSelectedStock(selectedStock - 1);
-                                    }
-                                }}
-                                style={{
-                                    backgroundColor: theme.colors.primary,
-                                    alignSelf: "center",
-                                    height: normalize(50),
-                                    justifyContent: "center",
-                                    flex: 1,borderTopRightRadius: normalize(8),
-                                    borderBottomRightRadius: normalize(8)
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        color: theme.colors.white,
-                                        textAlign: "center",
-                                        fontSize: theme.fontSize.title,
-                                        fontWeight: theme.fontWeight.bold
-                                    }}
-                                >
-                                    -
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                        <StepperCounter max={product?.variants[selectedVariantIndex]?.inventory_quantity || 0} curr={selectedStock} setCurr={setSelectedStock} policy={product?.variants[selectedVariantIndex]?.inventory_policy} />
+                        
                         <TouchableOpacity
                             onPress={() => {
                                 // addToCartRef.current?.hide();
@@ -668,7 +585,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                 alignSelf: 'center',
                                 borderRadius: normalize(12)
                             }}
-
                         >
                             <SubHeading
                                 style={{
