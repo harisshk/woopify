@@ -14,9 +14,8 @@ function OrderTrackingScreen({ navigation, route }) {
     useEffect(async()=>{
         if(fetchFromId === true){
             try{
-                let response = await getOrdersByOrderId(orderId);
-                console.log(response)
-                let {order} = response;
+                const response = await getOrdersByOrderId(orderId);
+                const { order } = response;
                 setUri(order?.order_status_url);
 
                 setIsOrderFetched(false);

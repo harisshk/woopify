@@ -51,7 +51,6 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     // });
     setCategoryIsLoading(true);
     const data = await getAllCategories();
-    console.log(data);
     setCategoryIsLoading(false);
     if (data?.error) {
       console.log(data.error)

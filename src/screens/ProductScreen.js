@@ -346,7 +346,6 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
         }
         checkoutExists = await AsyncStorage.getItem('checkoutId');
         const checkoutId = JSON.parse(checkoutExists);
-        console.log(checkoutId,'-')
         /**
          * Rest API Id to StoreFront API ID
          */

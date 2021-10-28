@@ -18,7 +18,6 @@ const SplashScreen = ({navigation, setCustomer, setCart}) => {
           const temp = await AsyncStorage.getItem('checkoutId');
           if (temp !== null) {
               const checkout = await client.checkout.fetch(JSON.parse(temp));
-              console.log(checkout?.lineItems[0].attrs)
               const cartItem = {
                 count: checkout?.lineItems?.length,
               };

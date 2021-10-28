@@ -54,7 +54,6 @@ function LoginScreen({navigation}) {
             const { data } = response;
             const { message, success } = data;
             Toast.show(message);
-            console.log(data);
             setIsLoading(false);
             if (success === false) {
                 setInput({
