@@ -4,18 +4,18 @@ export const theme = {
     ...DefaultTheme,
     colors: {
         ...DefaultTheme.colors,
-        primary: '#560CCE',
-        secondary: '#414757',
+        primary: '#F1605F',
+        secondary: '#212121',
         background: '#ffffff',
         focused: "red",
         unfocused: "gray",
         white: "#ffffff",
         black: "#000000",
         imageBackground: "#F8F8F8",
-        disabledButton: "#8171ab",
-        bottomTabBgColor:"#fbfafc",
-        bottomTabActiveBg: "#e7dcf2"
-        
+        disabledButton: "#EAEBEF",
+        bottomTabBgColor:"#212121",
+        bottomTabActiveBg: "#F8F8F8",
+        inactiveTabIcons: "white",
     },
     fontSize: {
         medium: normalize(18),

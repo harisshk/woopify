@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { SafeAreaView, View, ActivityIndicator } from 'react-native'
 import normalize from 'react-native-normalize';
 import WebView from 'react-native-webview'
+import { CustomHeader } from '../components/CustomHeader';
 import { theme } from '../utils/theme'
 
 function CheckoutScreen({navigation , route}) {
@@ -13,7 +14,10 @@ function CheckoutScreen({navigation , route}) {
                 flex: 1,
                 backgroundColor: theme.colors.background
             }}
-        >
+        ><CustomHeader
+                navigation={navigation}
+                title={'Checkout'}
+            />
             {isLoading === true ?
                 <View
                     style={{
@@ -30,6 +34,7 @@ function CheckoutScreen({navigation , route}) {
             :
                 <></>
             }
+            
             <WebView
                 onLoad={() => {
                     setIsLoading(true)

@@ -647,7 +647,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                     fontSize: theme.fontSize.medium
                                 }}
                             >
-                                Proceed Checkout
+                                PROCEED CHECKOUT
                             </Text>
                         </TouchableOpacity>
                     </View>

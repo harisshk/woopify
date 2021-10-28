@@ -91,8 +91,6 @@ function RegisterScreen({navigation, setCustomer}) {
                     }
                 });
             }
-
-
         } catch (error) {
             console.log('------------------Register Screen Line 25----------------------');
             console.log(error);
@@ -217,7 +215,7 @@ function RegisterScreen({navigation, setCustomer}) {
                     last_name: last_name,
                     first_name: first_name,
                     email: input.email.value,
-                    phone: phone,
+                    phone: "+91" + phone,
                     verified_email: true,
                     password: password,
                     password_confirmation: password_confirmation,
@@ -227,6 +225,7 @@ function RegisterScreen({navigation, setCustomer}) {
             let response = await createNewCustomer(body);
             if(response?.errors){
                 const {errors} = response;
+                console.log(response)
                 if(errors?.email){
                     Toast.show(`Email ${errors.email[0]}`);
                     setInput({
@@ -239,7 +238,7 @@ function RegisterScreen({navigation, setCustomer}) {
                     });
                 }
                 if(errors?.phone){
-                    Toast.show(errors?.phone[0]);   
+                    Toast.show(`Mobile Number ${errors?.phone[0]}`);   
                     setInput({
                         ...input,
                         mobileNumber:{

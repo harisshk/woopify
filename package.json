@@ -25,6 +25,7 @@
     "react-native-base64": "^0.2.1",
     "react-native-gallery-view": "^0.0.2",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-image-crop-picker": "^0.36.4",
     "react-native-lightbox": "^0.8.1",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-normalize": "^1.0.1",

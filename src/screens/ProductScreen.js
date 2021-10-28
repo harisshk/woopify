@@ -313,7 +313,7 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
                 /**
                  * Rest API Id to StoreFront API ID
                  */
-               const variantId = base64.encode(product.variants[variantChosen < 0 ? 0 : variantChosen].admin_graphql_api_id + "");
+                const variantId = base64.encode(product.variants[variantChosen < 0 ? 0 : variantChosen].admin_graphql_api_id + "");
                 // const variantId = product.variants[variantChosen < 0 ? 0 : variantChosen].id;
                 const lineItemsToAdd = [
                     {
@@ -346,6 +346,7 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
         }
         checkoutExists = await AsyncStorage.getItem('checkoutId');
         const checkoutId = JSON.parse(checkoutExists);
+        console.log(checkoutId,'-')
         /**
          * Rest API Id to StoreFront API ID
          */

@@ -62,16 +62,9 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     setCategories({ categories: custom_collections });
   }
 
-  let getProductsHelper = async () => {
-    // client.product.fetchAll().then((products) => {
-    //   let data = Object.assign({}, { products: products });
-
-    //   setProducts(data)
-    // });
-
+  const getProductsHelper = async () => {
     setProductIsLoading(true);
     let data = await getAllProducts();
-    console.log(data.errors,'---products')
     setProductIsLoading(false);
     if (data?.error) {
       console.log(data.error)
@@ -264,9 +257,15 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           />
         </SkeletonContent>
          */}
-        <SubHeading>
+        {/* <SubHeading>
           All Products
-        </SubHeading>
+        </SubHeading> */}
+        <View
+          style={{
+            height: normalize(20),
+            width: '100%'
+          }}
+        />
         <SkeletonContent
           containerStyle={{ width: '100%', flexDirection: "row" }}
           layout={[

@@ -29,6 +29,7 @@ function OrderScreen({ navigation, customer }) {
     const getOrders = async () => {
         setIsLoading(true);
         const data = await getAllOrders(customer?.id, status);
+        console.log(data.orders[0])
         setOrders(data.orders);
         setIsLoading(false);
     }

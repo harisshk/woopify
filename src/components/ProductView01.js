@@ -19,7 +19,7 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                     }
                     return;
                 }
-                navigation.navigate('ProductScreen', { product: item });
+                navigation.navigate('ProductListeningScreen', { product: item });
             }}
             style={{
                 width: '46%',

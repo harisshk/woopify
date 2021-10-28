@@ -14,6 +14,7 @@ import AddAddressScreen from '../screens/AddAddressScreen';
 import AddressesScreen from '../screens/AddressesScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import SearchScreen from '../screens/SearchScreen';
+import ProductListeningScreen from '../screens/ProductListeningScreen';
 
 const MainNavigator = createStackNavigator();
 
@@ -56,6 +57,16 @@ const HomeNavigator = () => {
                 })} 
                 name="ProductScreen" 
                 component={ProductScreen} 
+            />
+            <MainNavigator.Screen 
+                options={({ route }) => ({
+                    title: '',
+                    headerShown: false
+                    // headerBackTitle:"Back"
+                    // headerBackTitleVisible: false
+                })} 
+                name="ProductListeningScreen" 
+                component={ProductListeningScreen} 
             />
             <MainNavigator.Screen 
                 options={({ route }) => ({
