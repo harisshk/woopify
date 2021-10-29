@@ -373,7 +373,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                                         {
                                                             padding: normalize(6),
                                                             marginRight: normalize(5),
-                                                            borderRadius: normalize(5),
+                                                            borderRadius: normalize(1),
                                                             elevation: 1,
                                                             borderColor: theme.colors.unfocused,
                                                             borderWidth: 1
@@ -470,7 +470,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                     height: normalize(55),
                                     width: '100%',
                                     alignSelf: "center",
-                                    backgroundColor: theme.colors.primary,
+                                    backgroundColor: theme.colors.secondary,
                                     justifyContent: "center",
                                     alignItems: "center",
                                     borderRadius: normalize(12),
@@ -521,7 +521,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                             
                             <TouchableOpacity
                                 style={{
-                                    backgroundColor: theme.colors.primary,
+                                    backgroundColor: theme.colors.secondary,
                                     borderRadius: normalize(7),
                                     elevation: 4,
                                     // padding: normalize(15),
@@ -538,7 +538,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                     <Image
                                         source={{uri: (image.uri)}}
                                         style={{
-                                            height: Dimensions.get('screen').height - normalize(600),
+                                            height: Dimensions.get('screen').height - normalize(615),
                                             width: '100%',
                                             padding: normalize(2),
                                             borderRadius: normalize(2),
@@ -573,14 +573,23 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                             </TouchableOpacity>
                         }
                         <StepperCounter max={product?.variants[selectedVariantIndex]?.inventory_quantity || 0} curr={selectedStock} setCurr={setSelectedStock} policy={product?.variants[selectedVariantIndex]?.inventory_policy} />
-                        
+                        <Text
+                style={{
+                    textAlign: "center",
+                    fontSize: theme.fontSize.medium,
+                    fontWeight: theme.fontWeight.thin,
+                    lineHeight: theme.lineHeight.medium,
+                    marginBottom: normalize(15),
+
+                }}
+            >Choose Quantity</Text>
                         <TouchableOpacity
                             onPress={() => {
                                 // addToCartRef.current?.hide();
                                 addToCartListener(selectedStock);
                             }}
                             style={{
-                                backgroundColor: theme.colors.primary,
+                                backgroundColor: theme.colors.secondary,
                                 width: '90%',
                                 alignSelf: 'center',
                                 borderRadius: normalize(12)

@@ -345,7 +345,7 @@ function RegisterScreen({navigation, setCustomer}) {
                             style={[input.isLoading === true || input.email.disabled === true ? {
                                 backgroundColor: theme.colors.disabledButton
                             } : {
-                                backgroundColor: theme.colors.primary,
+                                backgroundColor: theme.colors.secondary,
                             }, {
 
                                 padding: normalize(5),
@@ -591,7 +591,7 @@ function RegisterScreen({navigation, setCustomer}) {
                                 backgroundColor: theme.colors.disabledButton,
 
                             } : {
-                                backgroundColor: theme.colors.primary,
+                                backgroundColor: theme.colors.secondary,
                             }, {
                                 padding: normalize(12),
                                 borderRadius: normalize(12),

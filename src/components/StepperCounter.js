@@ -1,8 +1,8 @@
 import React from 'react'
 import { theme } from '../utils/theme';
-import {View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import normalize from 'react-native-normalize';
-function StepperCounter({max, min, curr, setCurr, policy}) {
+function StepperCounter({ max, min, curr, setCurr, policy }) {
     return (
         <View
             style={{
@@ -16,7 +16,7 @@ function StepperCounter({max, min, curr, setCurr, policy}) {
         >
             <TouchableOpacity
                 style={{
-                    backgroundColor: theme.colors.primary,
+                    backgroundColor: theme.colors.secondary,
                     alignSelf: "center",
                     height: normalize(50),
                     justifyContent: "center",
@@ -25,6 +25,7 @@ function StepperCounter({max, min, curr, setCurr, policy}) {
                     borderBottomLeftRadius: normalize(8)
                 }}
                 onPress={() => {
+                    console.log(policy)
                     if (max >= curr || policy === "deny") {
                         setCurr(curr + 1);
                     }
@@ -43,7 +44,7 @@ function StepperCounter({max, min, curr, setCurr, policy}) {
             </TouchableOpacity>
             <View
                 style={{
-                    backgroundColor: theme.colors.secondary,
+                    backgroundColor: theme.colors.primary,
                     flex: 1,
                     height: normalize(50),
                     justifyContent: "center",
@@ -66,11 +67,11 @@ function StepperCounter({max, min, curr, setCurr, policy}) {
                     }
                 }}
                 style={{
-                    backgroundColor: theme.colors.primary,
+                    backgroundColor: theme.colors.secondary,
                     alignSelf: "center",
                     height: normalize(50),
                     justifyContent: "center",
-                    flex: 1, 
+                    flex: 1,
                     borderTopRightRadius: normalize(8),
                     borderBottomRightRadius: normalize(8)
                 }}
@@ -86,6 +87,7 @@ function StepperCounter({max, min, curr, setCurr, policy}) {
                     -
                 </Text>
             </TouchableOpacity>
+            
         </View>
     )
 }

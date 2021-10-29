@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { KeyboardAvoidingView, SafeAreaView, ScrollView, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native'
 import normalize from 'react-native-normalize'
-import { Checkbox } from 'react-native-paper'
+// import { Checkbox } from 'react-native-paper'
+import CheckBox from '@react-native-community/checkbox';
+
 import { addNewAddress, getCustomerById, updateAddress, updateCustomerProfile } from '../services/customer'
 import { theme } from '../utils/theme';
 import Toast from 'react-native-simple-toast'
@@ -26,6 +28,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
         default: toUpdateAddress ? address?.default : true,
         isLoading: false
     });
+    const [isDefault, setIsDefault] = useState(toUpdateAddress ? address?.default : true)
 
     const changeText = (field, text) => {
         setInput({
@@ -633,23 +636,24 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                         >
                             <View
                                 style={{
-                                    borderRadius: normalize(10),
-                                    borderColor: theme.colors.primary,
+                                    borderRadius: normalize(20),
+                                    // borderColor: theme.colors.primary,
                                     borderWidth: 1,
                                 }}
                             >
-                                <Checkbox
-                                    status={input.default ? 'checked' : 'unchecked'}
-                                    onPress={() => {
-                                        setInput({
-                                            ...input,
-                                            default: !input.default
-                                        })
+                                <CheckBox
+                                    value={isDefault}
+                                    onValueChange={()=>{
+                                        setIsDefault(!isDefault)
                                     }}
                                     style={{
-                                        backgroundColor: "red"
+                                        // backgroundColor: theme.colors.secondary,
+                                        borderRadius: normalize(20),
                                     }}
-                                    color={theme.colors.primary}
+                                    tintColor={theme.colors.secondary }
+                                    onCheckColor={theme.colors.primary}
+                                    onTintColor={theme.colors.primary}
+                                    // color={theme.colors.primary}
                                 />
                             </View>
                             <Text
@@ -672,7 +676,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                                 backgroundColor: theme.colors.disabledButton,
 
                             } : {
-                                backgroundColor: theme.colors.primary,
+                                backgroundColor: theme.colors.secondary,
                             },
                             {
                                 alignItems: "center",
@@ -707,7 +711,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                                     fontWeight: theme.fontWeight.medium
                                 }}
                             >
-                                {toUpdateAddress === true ? "Update Address" : "Add New Address"}
+                                {toUpdateAddress === true ? "UPDATE ADDRESS" : "ADD NEW ADDRESS"}
                             
                             </Text>
                         }

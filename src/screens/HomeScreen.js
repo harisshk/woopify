@@ -12,6 +12,7 @@ import SubHeading from '../components/SubHeading';
 import ProductView01 from '../components/ProductView01';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
 import { client } from '../services';
+import Footer from '../components/Footer';
 const { width } = Dimensions.get('window');
 
 const HomeScreen = ({ categories, setCategories, navigation, products, setProducts, cart }) => {
@@ -80,10 +81,79 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         backgroundColor: theme.colors.background,
       }}
     >
+      <View
+        style={{
+          // flex:1
+        }}
+      >
+        {/* <Text
+              style={{
+                fontSize: theme.fontSize.title,
+                fontWeight: theme.fontWeight.medium
+              }}
+            >
+              PetInPick
+            </Text> */}
+        <Image
+          source={{ uri: `https://cdn.shopify.com/s/files/1/0602/9036/7736/files/1280x720-new-pnp_190x@2x.png?v=1634032473` }}
+          style={{
+            height: normalize(40),
+            width: '100%',
+            marginVertical: normalize(15)
+          }}
+          resizeMode="contain"
+        />
+        {/* <Text
+              style={{
+                color: theme.colors.secondary,
+                marginVertical: normalize(8),
+                fontSize: theme.fontSize.paragraph
+              }}
+            >
+              Welcome !
+            </Text> */}
+      </View>
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('SearchScreen')
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: theme.colors.bottomTabActiveBg,
+            padding: normalize(15),
+            marginBottom: normalize(15),
+            borderRadius: normalize(8),
+            width: "90%",
+            alignSelf: "center"
+          }}
+        >
+          <Text
+            style={{
+              fontWeight: theme.fontWeight.medium,
+              fontSize: theme.fontSize.paragraph
+            }}
+          >
+            Search...
+          </Text>
+        </View>
+        <Image
+          source={require('../assets/images/search.png')}
+          style={{
+            padding: 1,
+            height: normalize(23),
+            width: normalize(23),
+            position: "absolute",
+            right: normalize(35),
+            top: normalize(13)
+          }}
+        />
+      </TouchableOpacity>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          padding: normalize(15)
+          padding: normalize(15),
+          flex: 1
         }}
         ref={listRef}
         refreshControl={
@@ -92,37 +162,19 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             onRefresh={onRefresh}
           />
         }
-        onScroll={event => {
-          setContentVerticalOffset(event.nativeEvent.contentOffset.y);
-        }}
+      // onScroll={event => {
+      //   setContentVerticalOffset(event.nativeEvent.contentOffset.y);
+      // }}
       >
-        <View
+        {/* <View
           style={{
             width: '100%',
             flexDirection: "row"
           }}
-        >
-          <View>
-            <Text
-              style={{
-                fontSize: theme.fontSize.title,
-                fontWeight: theme.fontWeight.medium
-              }}
-            >
-              PetInPick
-            </Text>
-            <Text
-              style={{
-                color: theme.colors.secondary,
-                marginVertical: normalize(8),
-                fontSize: theme.fontSize.paragraph
-              }}
-            >
-              Welcome !
-            </Text>
-          </View>
-          
-          <TouchableOpacity
+        > */}
+
+
+          {/* <TouchableOpacity
             style={{
               flex: 1,
             }}
@@ -162,44 +214,9 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
                 {cart?.count || 0}
               </Text>
             </View>
+          </TouchableOpacity> */}
+        {/* </View> */}
 
-
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          onPress={()=>{
-            navigation.navigate('SearchScreen')
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: theme.colors.bottomTabActiveBg,
-              padding: normalize(15),
-              marginTop: normalize(15),
-              borderRadius: 10,
-            }}
-          >
-            <Text
-              style={{
-                fontWeight: theme.fontWeight.medium,
-                fontSize: theme.fontSize.paragraph
-              }}
-            >
-              Search...
-            </Text>
-          </View>
-          <Image
-            source={require('../assets/images/search.png')}
-            style={{
-              padding:1,
-              height: normalize(23),
-              width:normalize(23),
-              position: "absolute",
-              right: normalize(20),
-              top: normalize(29)
-            }}
-          />
-        </TouchableOpacity>
         {/* <SubHeading>
 
           Collections
@@ -255,16 +272,36 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             keyExtractor={(item) => item.id}
           />
         </SkeletonContent> */}
-        
+
         {/* <SubHeading>
           All Products
         </SubHeading> */}
-        <View
+        {/* <View
           style={{
             height: normalize(20),
             width: '100%'
           }}
-        />
+        /> */}
+        <SkeletonContent
+          containerStyle={{ width: '100%', flexDirection: "row", marginBottom: normalize(20) }}
+          layout={[
+            {
+              width: width / 2.24,
+              height: normalize(220),
+              key: 'imageLoader1',
+              borderRadius: normalize(10),
+              marginRight: normalize(10)
+            },
+            {
+              width: width / 2.24,
+              height: normalize(220),
+              key: 'imageLoader2',
+              marginRight: normalize(10),
+              borderRadius: normalize(10),
+            },
+          ]}
+          isLoading={productIsLoading}
+        ></SkeletonContent>
         <SkeletonContent
           containerStyle={{ width: '100%', flexDirection: "row" }}
           layout={[
@@ -297,19 +334,21 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
               <ProductView01
                 key={product.id}
                 item={product}
-                
+
                 navigation={navigation}
               />
             )}
           </View>
         </SkeletonContent>
+        <Footer
+        />
         <View
           style={{
             height: normalize(20)
           }} />
 
       </ScrollView>
-      {contentVerticalOffset > CONTENT_OFFSET_THRESHOLD && (
+      {/* {contentVerticalOffset > CONTENT_OFFSET_THRESHOLD && (
         <TouchableOpacity
           style={{
             position: 'absolute',
@@ -357,7 +396,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             </Text>
           </View>
         </TouchableOpacity>
-      )}
+      )} */}
     </SafeAreaView>
   )
 }

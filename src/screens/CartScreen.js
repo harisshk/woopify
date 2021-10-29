@@ -13,7 +13,6 @@ import { setCart } from '../redux/action/cart';
 import { connect } from 'react-redux';
 import { getProductByVariant } from '../services/products';
 import base64 from 'react-native-base64';
-import { List } from 'react-native-paper';
 import StepperCounter from '../components/StepperCounter';
 
 function CartScreen({ navigation, setCart, customer }) {
@@ -26,7 +25,7 @@ function CartScreen({ navigation, setCart, customer }) {
     const [editCartLoading, setEditCartLoading] = useState(false);
     const [selectedStock, setSelectedStock] = useState(1);
     const [checkoutId, setCheckoutId] = useState(null);
-    const [totalStock, setTotalStock] = useState(1);
+    const [totalStock, setTotalStock] = useState(0);
     const [policy, setPolicy] = useState(null);
     
     const [refreshing, setRefreshing] = useState(true);
@@ -162,6 +161,7 @@ function CartScreen({ navigation, setCart, customer }) {
                         min={1}
                         curr={selectedStock}
                         setCurr={setSelectedStock}
+                        policy={policy}
                     />
                     {/* <Picker
                         selectedValue={selectedStock}
@@ -300,7 +300,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                             marginVertical: normalize(5),
                                             elevation: normalize(5),
                                             alignItems: "center",
-                                            height: normalize(120)
+                                            minHeight: normalize(120)
                                         }}
                                         onPress={() => {
                                             shippingAddressHandler(item);
@@ -370,7 +370,16 @@ function CartScreen({ navigation, setCart, customer }) {
                                                     navigation.navigate('AddAddressScreen', { toUpdateAddress: true, address: item })
                                                 }}
                                             >
-                                                <List.Icon icon="circle-edit-outline" color={theme.colors.primary} />
+
+                                                <Image
+                                                    source={require('../assets/images/edit.png')}
+                                                    style={{
+                                                        padding: normalize(1),
+                                                        height: normalize(20),
+                                                        width: normalize(20),
+                                                        marginLeft: normalize(20)
+                                                    }}
+                                                />
                                             </TouchableOpacity>
                                         </View>
                                     </TouchableOpacity>
@@ -439,7 +448,7 @@ function CartScreen({ navigation, setCart, customer }) {
 
                 <View
                     style={{
-                        height: height / 1.35
+                        height: height / 1.5
                     }}
                 >
                     {isLoading === false && cartItem?.lineItems?.length === 0 &&
@@ -459,11 +468,13 @@ function CartScreen({ navigation, setCart, customer }) {
                             > Oops !!! No Cart Items found.</Text>
                         </View>
                     }
+                    <View>
                     <FlatList
                         data={cartItem.lineItems}
                         style={{
                             marginVertical: normalize(10),
-                            flex: 1,
+                            // flex: 1,
+                            height: '90%',
                         }}
                         refreshControl={
                             <RefreshControl
@@ -535,8 +546,8 @@ function CartScreen({ navigation, setCart, customer }) {
                                                     const variantId = base64.decode(item.variant.id + "").split("/");
                                                     const variant = await getProductByVariant(variantId[variantId.length - 1]);
                                                     const { inventory_quantity, inventory_policy} = variant.variant;
-                                                    setTotalStock(inventory_quantity);
                                                     setPolicy(inventory_policy);
+                                                    setTotalStock(inventory_quantity);
                                                     editActionRef.current?.setModalVisible(true);
                                                     // setTotalStock([...newStockCount]);
                                                     setSelectedStock(item?.quantity || 1);
@@ -549,16 +560,16 @@ function CartScreen({ navigation, setCart, customer }) {
                                             >
                                                 {editCartLoading ?
                                                     <ActivityIndicator
-                                                        color={theme.colors.primary}
+                                                        color={theme.colors?.secondary}
                                                         style={{
                                                             marginLeft: normalize(12),
                                                         }}
                                                     /> :
                                                     <Text
                                                         style={{
-                                                            fontWeight: theme.fontWeight.thin,
+                                                            fontWeight: theme.fontWeight.normal,
                                                             marginLeft: normalize(10),
-                                                            color: theme.colors.primary
+                                                            color: theme.colors.secondary,
                                                         }}
                                                     >
                                                         Edit
@@ -593,6 +604,7 @@ function CartScreen({ navigation, setCart, customer }) {
                         }}
                         keyExtractor={item => item.id}
                     />
+                    </View>
                 </View>
 
                 {isLoading === false && cartItem?.lineItems.length > 0 &&
@@ -600,7 +612,7 @@ function CartScreen({ navigation, setCart, customer }) {
                         style={{
                             elevation: 2,
                             borderTopWidth: 2,
-                            borderTopColor: "#f5f5f5"
+                            borderTopColor: "#f5f5f5",
                         }}
                     >
                         <View
@@ -652,6 +664,7 @@ function CartScreen({ navigation, setCart, customer }) {
                     </View>
                 }
             </View>
+            
         </SafeAreaView>
     )
 }

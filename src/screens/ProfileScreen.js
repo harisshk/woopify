@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, RefreshControl } from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, RefreshControl, Image } from 'react-native';
 import normalize from 'react-native-normalize';
-import { List } from 'react-native-paper';
+// import { List } from 'react-native-paper';
 import { connect } from 'react-redux';
 import Footer from '../components/Footer';
 import { theme } from '../utils/theme';
@@ -146,7 +146,16 @@ const Profile = ({ navigation, customer, cart }) => {
                 }}
 
               >
-                <List.Icon icon="circle-edit-outline" color={theme.colors.primary} />
+                <Image
+                  source={require('../assets/images/edit.png')}
+                  style={{
+                    padding: normalize(1),
+                    height: normalize(20),
+                    width: normalize(20),
+                    marginLeft: normalize(20)
+                  }}
+                />
+                {/* <List.Icon icon="circle-edit-outline" color={theme.colors.secondary} /> */}
               </TouchableOpacity>
             </View>
 
@@ -218,7 +227,8 @@ const Profile = ({ navigation, customer, cart }) => {
                   color: theme.colors.primary,
                   fontSize: theme.fontSize.paragraph,
                   marginTop: normalize(10),
-                  textAlign: "center"
+                  textAlign: "center",
+                  fontWeight: theme.fontWeight.bold
                 }}
               >
                 {customer?.orders_count || 0}
@@ -257,7 +267,7 @@ const Profile = ({ navigation, customer, cart }) => {
               </Text>
               <TouchableOpacity
                 style={{
-                  backgroundColor: theme.colors.primary,
+                  backgroundColor: theme.colors.secondary,
                   padding: normalize(5),
                   marginLeft: normalize(7),
                   borderRadius: normalize(5),
@@ -389,7 +399,7 @@ const Profile = ({ navigation, customer, cart }) => {
             <Text
               style={{
                 fontSize: theme.fontSize.paragraph,
-                color: theme.colors.primary
+                color: theme.colors.secondary
               }}
             >
               My Orders
@@ -410,7 +420,7 @@ const Profile = ({ navigation, customer, cart }) => {
             <Text
               style={{
                 fontSize: theme.fontSize.paragraph,
-                color: theme.colors.primary
+                color: theme.colors.secondary
               }}
             >
               Add Address
@@ -430,7 +440,7 @@ const Profile = ({ navigation, customer, cart }) => {
             <Text
               style={{
                 fontSize: theme.fontSize.paragraph,
-                color: theme.colors.primary
+                color: theme.colors.secondary
               }}
             >
               My Cart ({cart?.count || 0})
@@ -468,7 +478,7 @@ const Profile = ({ navigation, customer, cart }) => {
             <Text
               style={{
                 fontSize: theme.fontSize.paragraph,
-                color: theme.colors.primary
+                color: theme.colors.secondary
               }}
             >
               Log out

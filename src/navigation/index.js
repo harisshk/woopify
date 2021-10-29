@@ -15,6 +15,7 @@ import AddressesScreen from '../screens/AddressesScreen';
 import EditProfileScreen from '../screens/EditProfileScreen';
 import SearchScreen from '../screens/SearchScreen';
 import ProductListeningScreen from '../screens/ProductListeningScreen';
+import OrdersScreen from '../screens/OrdersScreen';
 
 const MainNavigator = createStackNavigator();
 
@@ -47,6 +48,13 @@ const HomeNavigator = () => {
                 })} 
                 name="SearchScreen" 
                 component={SearchScreen} 
+            />
+             <MainNavigator.Screen 
+                options={({ route }) => ({
+                    headerShown :false
+                })} 
+                name="OrdersScreen" 
+                component={OrdersScreen} 
             />
             <MainNavigator.Screen 
                 options={({ route }) => ({

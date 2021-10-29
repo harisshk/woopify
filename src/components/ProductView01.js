@@ -22,12 +22,12 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                 navigation.navigate('ProductListeningScreen', { product: item });
             }}
             style={{
-                width: '46.1%',
-                margin: normalize(5),
+                width: '47%',
+                // margin: normalize(5),
                 // justifyContent: "center",
                 // padding: normalize(10),
                 alignSelf: "center",
-                height: normalize(250),
+                height: normalize(260),
                 borderRadius: normalize(10),
                 elevation: 2,
                 // backgroundColor: "red"

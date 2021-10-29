@@ -158,7 +158,7 @@ function OTPScreen({ navigation, route, setCustomer }) {
                         pinCount={6}
                         autoFocusOnLoad
                         codeInputFieldStyle={{
-                            borderColor: theme.colors.primary,
+                            borderColor: theme.colors.secondary,
                             color: theme.colors.primary,
                             borderRadius: normalize(10),
                             fontSize: theme.fontSize.medium,
@@ -197,7 +197,7 @@ function OTPScreen({ navigation, route, setCustomer }) {
                             isLoading === true ? {
                                 backgroundColor: "#8171ab"
                             } : {
-                                backgroundColor: theme.colors.primary,
+                                backgroundColor: theme.colors.secondary,
                             }, {
                                 width: '95%',
                                 alignSelf: "center",

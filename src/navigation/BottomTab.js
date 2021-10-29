@@ -11,6 +11,7 @@ import { theme } from '../utils/theme';
 import ProfileScreen from '../screens/ProfileScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import normalize from 'react-native-normalize';
+import CartScreen from '../screens/CartScreen';
 const Tab = createBottomTabNavigator();
 
 const TabBarCustomButton = (props) => {
@@ -80,7 +81,7 @@ const BottomTab = () => {
             }}
             initialRouteName="HomeScreen"
         >
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="OrdersScreen"
                 component={OrdersScreen}
                 options={{
@@ -115,7 +116,7 @@ const BottomTab = () => {
                     headerShown: false,
                     tabBarShowLabel: false,
                 }}
-            />
+            /> */}
             <Tab.Screen
                 name="HomeScreen"
                 component={HomeScreen}
@@ -143,14 +144,49 @@ const BottomTab = () => {
                     tabBarButton: (props) => (
                         <TabBarCustomButton
                             {...props}
-                            name={' Home'}
+                            name={' Shop'}
                         />
                     ),
                     headerShown: false,
                     tabBarShowLabel: false,
                 }}
             />
-
+            <Tab.Screen
+                name="CartScreen"
+                component={CartScreen}
+                options={{
+                    tabBarIcon: ({ focused }) => (
+                        focused === true ?
+                            <Image
+                                source={require('../assets/images/bag.png')}
+                                resizeMode="contain"
+                                style={{
+                                    width: normalize(25),
+                                    height: normalize(25),
+                                    tintColor: focused ? theme.colors.primary : theme.colors.inactiveTabIcons
+                                }}
+                            />
+                            :
+                            <Image
+                                source={require('../assets/images/bag-outline.png')}
+                                resizeMode="contain"
+                                style={{
+                                    width: normalize(22),
+                                    height: normalize(22),
+                                    tintColor: focused ? theme.colors.primary : theme.colors.inactiveTabIcons
+                                }}
+                            />
+                    ),
+                    tabBarButton: (props) => (
+                        <TabBarCustomButton
+                            {...props}
+                            name={'My Cart'}
+                        />
+                    ),
+                    headerShown: false,
+                    tabBarShowLabel: false,
+                }}
+            />
             <Tab.Screen
                 name="ProfileScreen"
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View, Image } from 'react-native'
 import normalize from 'react-native-normalize';
 import { List } from 'react-native-paper';
 import { deleteAddress, getCustomerById } from '../services/customer';
@@ -99,21 +99,45 @@ function AddressView({ navigation, address, canEdit, customer, setCustomer }) {
                     </View>
                     <View
                         style={{
-                            flex: .2
+                            flex: .2,
+                            justifyContent: "space-around",
                         }}
                     >
                         <TouchableOpacity
                             onPress={() => {
                                 navigation.navigate('AddAddressScreen', { toUpdateAddress: true, address: address })
                             }}
+                            style={{
+                                alignSelf: "center",
+                                marginVertical: normalize(10)
+                            }}
                         >
-                            <List.Icon icon="circle-edit-outline" color={theme.colors.primary} />
+                            <Image
+                                source={require('../assets/images/edit.png')}
+                                style={{
+                                    padding: normalize(1),
+                                    height: normalize(20),
+                                    width: normalize(20),
+                                    
+                                }}
+                            />
                         </TouchableOpacity>
                         {address.default === false &&
                             <TouchableOpacity
                                 onPress={deleteAddressHandler}
+                                style={{
+                                    alignSelf: "center",
+                                    marginVertical: normalize(10)
+                                }}
                             >
-                                <List.Icon icon="trash-can-outline" color={"red"} />
+                            <Image
+                                source={require('../assets/images/delete.png')}
+                                style={{
+                                    padding: normalize(1),
+                                    height: normalize(22),
+                                    width: normalize(22),
+                                }}
+                            />
                             </TouchableOpacity>
                         }
                     </View>

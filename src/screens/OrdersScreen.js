@@ -65,13 +65,13 @@ function OrderScreen({ navigation, customer }) {
                         <TouchableOpacity onPress={() => {
                             setStatusMenu(true);
                         }}
-                            style={{ flexDirection: "row", justifyContent: "center", alignItems: "center" }}
+                            style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.secondary, height: normalize(45), paddingHorizontal: normalize(15), borderRadius: normalize(4), elevation: 2 }}
                         >
-                            <Image source={require('../assets/images/expand-arrow.png')} style={{
-                                height: normalize(15),
-                                width: normalize(15), marginRight: normalize(10)
-
-                            }}
+                            <Image source={require('../assets/images/expand-arrow.png')} 
+                                style={{
+                                    height: normalize(15),
+                                    width: normalize(15), marginRight: normalize(10)
+                                }}
                                 resizeMode="contain"
                             />
                             <Text
@@ -79,6 +79,7 @@ function OrderScreen({ navigation, customer }) {
                                     color: theme.colors.primary,
                                     textTransform: "uppercase",
                                     fontSize: theme.fontSize.paragraph,
+                                    fontWeight: theme.fontWeight.bold
                                 }}
                             >{status === "any" ? "All Orders" : status === "open" ? "Processing" : status === "closed" ? "Completed" : "Cancelled"}</Text>
 

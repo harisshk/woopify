@@ -185,7 +185,7 @@ function LoginScreen({navigation}) {
                             isLoading === true ? {
                                 backgroundColor: theme.colors.disabledButton
                             } : {
-                                backgroundColor: theme.colors.primary,
+                                backgroundColor: theme.colors.secondary,
                             }, {
                                 width: '95%',
                                 alignSelf: "center",

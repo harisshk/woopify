@@ -1,62 +1,62 @@
 import { DefaultTheme, configureFonts } from 'react-native-paper';
 import normalize from 'react-native-normalize';
 
-const fontConfig = {
-    web: {
-        regular: {
-            fontFamily: 'sans-serif',
-            fontWeight: 'normal',
-        },
-        medium: {
-            fontFamily: 'sans-serif-medium',
-            fontWeight: 'normal',
-        },
-        light: {
-            fontFamily: 'sans-serif-light',
-            fontWeight: 'normal',
-        },
-        thin: {
-            fontFamily: 'sans-serif-thin',
-            fontWeight: 'normal',
-        },
-    },
-    ios: {
-        regular: {
-            fontFamily: 'Jost-Regular',
-            // fontWeight: 'normal',
-        },
-        medium: {
-            fontFamily: 'Jost-Medium',
-            // fontWeight: 'normal',
-        },
-        light: {
-            fontFamily: 'Jost-Light',
-            // fontWeight: 'normal',
-        },
-        thin: {
-            fontFamily: 'Jost-Thin',
-            // fontWeight: 'normal',
-        },
-    },
-    android: {
-        regular: {
-            fontFamily: 'sans-serif',
-            fontWeight: 'normal',
-        },
-        medium: {
-            fontFamily: 'sans-serif-medium',
-            fontWeight: 'normal',
-        },
-        light: {
-            fontFamily: 'sans-serif-light',
-            fontWeight: 'normal',
-        },
-        thin: {
-            fontFamily: 'sans-serif-thin',
-            fontWeight: 'normal',
-        },
-    }
-};
+// const fontConfig = {
+//     web: {
+//         regular: {
+//             fontFamily: 'sans-serif',
+//             fontWeight: 'normal',
+//         },
+//         medium: {
+//             fontFamily: 'sans-serif-medium',
+//             fontWeight: 'normal',
+//         },
+//         light: {
+//             fontFamily: 'sans-serif-light',
+//             fontWeight: 'normal',
+//         },
+//         thin: {
+//             fontFamily: 'sans-serif-thin',
+//             fontWeight: 'normal',
+//         },
+//     },
+//     ios: {
+//         regular: {
+//             fontFamily: 'Jost-Regular',
+//             // fontWeight: 'normal',
+//         },
+//         medium: {
+//             fontFamily: 'Jost-Medium',
+//             // fontWeight: 'normal',
+//         },
+//         light: {
+//             fontFamily: 'Jost-Light',
+//             // fontWeight: 'normal',
+//         },
+//         thin: {
+//             fontFamily: 'Jost-Thin',
+//             // fontWeight: 'normal',
+//         },
+//     },
+//     android: {
+//         regular: {
+//             fontFamily: 'sans-serif',
+//             fontWeight: 'normal',
+//         },
+//         medium: {
+//             fontFamily: 'sans-serif-medium',
+//             fontWeight: 'normal',
+//         },
+//         light: {
+//             fontFamily: 'sans-serif-light',
+//             fontWeight: 'normal',
+//         },
+//         thin: {
+//             fontFamily: 'sans-serif-thin',
+//             fontWeight: 'normal',
+//         },
+//     }
+// };
 
 export const theme = {
     ...DefaultTheme,
@@ -95,5 +95,4 @@ export const theme = {
         medium: "500",
         thin: "200",
     },
-    fonts: configureFonts(fontConfig),
 };
