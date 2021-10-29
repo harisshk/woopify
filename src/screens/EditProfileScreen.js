@@ -145,17 +145,17 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 backgroundColor: theme.colors.background
             }}
         >
-            <View
+            {/* <View
                 style={{
                     height: normalize(200),
-                    backgroundColor: theme.colors.disabledButton,
+                    backgroundColor:"#A3861C",
                     borderRadius: normalize(50),
                     position: "absolute",
                     top: 0,
                     right: -50,
                     width: '50%'
                 }}
-            />
+            /> */}
             <View
                 style={{
                     padding: normalize(15),
@@ -259,7 +259,7 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                         input.isChanged === false || input.isLoading === true ? {
                             backgroundColor: theme.colors.disabledButton,
                         } : {
-                            backgroundColor: theme.colors.primary,
+                            backgroundColor: theme.colors.secondary,
                         }, {
                             padding: normalize(13),
                             borderRadius: normalize(10),
@@ -305,17 +305,17 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 </TouchableOpacity>
                 </View>
             </View>
-            <View
+            {/* <View
                 style={{
                     height: normalize(170),
-                    backgroundColor: "#927abf",
+                    backgroundColor: "#A3861C",
                     borderRadius: normalize(35),
                     position: "absolute",
                     bottom: -17,
                     left: -45,
                     width: '50%'
                 }}
-            />
+            /> */}
         </SafeAreaView>
     )
 }

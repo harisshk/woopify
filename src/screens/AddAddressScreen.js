@@ -180,15 +180,15 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                 ...input,
                 isLoading: true
             });
-            const address1 = input.address1.value.trim();
-            const address2 = input.address2.value.trim();
-            const city = input.city.value.trim();
-            const province = input.province.value.trim();
-            const phone = input.phone.value.trim();
-            const first_name = input.firstName.value.trim();
-            const last_name = input.lastName.value.trim();
-            const zip = input.zip.value.trim();
-            const country = input.country.value.trim();
+            const address1 = input.address1?.value.trim();
+            const address2 = input.address2?.value?.trim();
+            const city = input.city?.value?.trim();
+            const province = input.province?.value.trim();
+            const phone = input.phone?.value?.trim();
+            const first_name = input.firstName?.value?.trim();
+            const last_name = input.lastName?.value?.trim();
+            const zip = input.zip?.value?.trim();
+            const country = input.country?.value?.trim();
             if (!address1) {
                 setInput({
                     ...input,
@@ -265,7 +265,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                     last_name:last_name,
                     zip: zip,
                     country: country,
-                    default: input.default
+                    default: isDefault
                 }
             };
             const response = await updateAddress(customer.id, address.id, body);

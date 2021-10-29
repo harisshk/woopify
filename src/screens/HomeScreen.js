@@ -84,6 +84,9 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
       <View
         style={{
           // flex:1
+          elevation:1,
+          shadowColor: theme.colors.primary,
+          shadowOpacity: 1
         }}
       >
         {/* <Text
@@ -117,15 +120,18 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         onPress={() => {
           navigation.navigate('SearchScreen')
         }}
+        style={{
+          
+        }}
       >
         <View
           style={{
             backgroundColor: theme.colors.bottomTabActiveBg,
             padding: normalize(15),
-            marginBottom: normalize(15),
+            marginBottom: normalize(10),
             borderRadius: normalize(8),
             width: "90%",
-            alignSelf: "center"
+            alignSelf: "center",
           }}
         >
           <Text
@@ -152,8 +158,10 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          padding: normalize(15),
-          flex: 1
+          // padding: normalize(15),
+          paddingHorizontal: normalize(15),
+          paddingBottom: normalize(15),
+          flex: 1,
         }}
         ref={listRef}
         refreshControl={
@@ -283,7 +291,11 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           }}
         /> */}
         <SkeletonContent
-          containerStyle={{ width: '100%', flexDirection: "row", marginBottom: normalize(20) }}
+          containerStyle={[
+            productIsLoading && {
+              marginVertical: normalize(30)
+            },
+            { width: '100%', flexDirection: "row"}]}
           layout={[
             {
               width: width / 2.24,
@@ -327,7 +339,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
               flexWrap: "wrap",
               width: '100%',
               flexDirection: "row",
-              justifyContent: "space-between"
+              justifyContent: "space-between",
             }}
           >
             {products.map((product) =>

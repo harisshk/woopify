@@ -67,7 +67,7 @@ function OrderScreen({ navigation, customer }) {
                         }}
                             style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.secondary, height: normalize(45), paddingHorizontal: normalize(15), borderRadius: normalize(4), elevation: 2 }}
                         >
-                            <Image source={require('../assets/images/expand-arrow.png')} 
+                            <Image source={require('../assets/images/expand-arrow.png')}
                                 style={{
                                     height: normalize(15),
                                     width: normalize(15), marginRight: normalize(10)
@@ -171,6 +171,7 @@ function OrderScreen({ navigation, customer }) {
                     </Text>
                 </View>
             }
+            {console.log(orders[0])}
             <FlatList
                 data={orders}
                 style={{
@@ -183,21 +184,27 @@ function OrderScreen({ navigation, customer }) {
                         onRefresh={onRefresh}
                     />
                 }
-                renderItem={({ item }) => {
+                renderItem={({ item, index }) => {
                     return (
                         item?.shipping_address && <View
-                            style={{
+                            style={[{
                                 // backgroundColor: "#bbbbfa",
-                                backgroundColor: "#f7f2fc",
+                                backgroundColor: theme.colors.white,
                                 padding: normalize(10),
                                 borderRadius: normalize(10),
-                                elevation: 3,
+                                elevation: 2,
                                 marginVertical: normalize(5),
                                 flexDirection: "row",
                                 flex: 1,
                                 borderWidth: 2,
-                                borderColor: "#e8e8e8"
-                            }}
+                                borderColor: theme.colors.white,
+                                shadowOpacity: .1,
+                                shadowColor: theme.colors.secondary
+                            },
+                            index + 1 === orders.length && orders.length > 3 && {
+                                marginBottom: normalize(25)
+                            }
+                            ]}
                         >
                             <TouchableOpacity
                                 onPress={() => {
@@ -212,12 +219,20 @@ function OrderScreen({ navigation, customer }) {
                                     style={{
                                         marginBottom: 0,
                                         marginTop: normalize(5),
-                                        fontSize: theme.fontSize.medium
+                                        fontSize: theme.fontSize.subheading,
+                                        fontWeight: theme.fontWeight.medium
                                     }}
                                 >
                                     Order {item.name}
                                 </SubHeading>
-                                <View>
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.paragraph,
+                                    }}
+                                >
+                                    {/* Products Added {item?.line_items?.length} */}
+                                </Text>
+                                {/* <View>
                                     {item?.shipping_address &&
                                         <Text
                                             style={{
@@ -229,27 +244,83 @@ function OrderScreen({ navigation, customer }) {
                                             {item?.shipping_address?.address1}, {item?.shipping_address?.address2}, {item?.shipping_address?.city}, {item?.shipping_address?.province}, Zip Code {item?.shipping_address?.zip}.
                                         </Text>
                                     }
+                                </View> */}
+                                <View>
+                                <FlatList
+                                    data={item.line_items }
+                                    style={{
+                                        marginVertical: normalize(10)
+                                    }}
+                                    horizontal
+                                    renderItem={({item, index}) => {
+                                        return(
+                                            <Image
+                                                source={{uri: item?.properties?.length > 0 ? item?.properties[1].value : `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAMFBMVEX09PTMzMzJycnPz8/d3d3V1dXi4uLo6Ojw8PDx8fH39/ft7e3Y2NjQ0NDp6enb29uHE20LAAACaklEQVR4nO3b6W6CQBhGYUTWD9T7v9uylLIN6jCk8Cbn+deEGo6DMOAYRQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIJyFiuzshLesStJAdVZdufEV38LFydkZm6w+IrBJrK86itkxgU1ifnaKmz363QvUvsbjmoNYdjuXPPMQz6R7lfLsGKeq3bd76LvfHwnFIXt0tOKYwjuF51kVtjMUbzqFVmR1/cpK30idwv7qH98yz0SVwvI+XP19JygqhY9xehMnXokihfl0/hZ77a5I4WM2zXz5DKJI4XwKvjHLNGeGRmE1L7w7N7fKeRLSKCy+KGwCnedZjcJofruXuo7SbpwdiRqFlk4D42y9rf0eyOtEjcL5BzFeb2rV5oRApNAmj6QcjyRs8g4sE0UKJ4nxemJq8yGeJ6oURpY/uic26frppy0uJvNEmcI2JM/yovlz8cxlGbhIFCrcsA6cX0/kC52Bt3hMlC90Bk5HUbzQPYL9KA6b6BXmk8/YZuCYqFdYj/f47wL/EtUKrR6/LXsfOCSKFbaBQ+KnwGa79sqpVWjp7x1Ec6B+DhQsHAK7xM+BeoVjYLPzr499eoXTwO+IFfoHihXuWbWgVVh792kV7lt3IlRoe0ZQqvCLax+FZ8c4UUghheebFu6jU1gk++gU7l3t3f2rRmGAyxcGr329cuEh60stunBh2Z3y6yxM/wX52S1u/bf3Ryzzdq9tuIDnYWv1q7NTNlhy0O8t/Nb6/SfLbnHoYbpjSep/sjLfOZ0ZXfTXJKPgH69deAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABDyA0uAKIxQw0bjAAAAAElFTkSuQmCC`}}
+                                                style={[
+                                                    {
+                                                        height: normalize(75),
+                                                        width: normalize(75),
+                                                        borderRadius: normalize(7),
+                                                        // left: -10
+                                                        elevation: 2
+                                                        
+                                                    },
+                                                    index > 0 && {
+                                                        position: "absolute",
+                                                        top: 0,
+                                                        left: - (index * 20)
+                                                    }
+                                                ]}
+                                            />
+                                        )
+                                    }}
+                                    keyExtractor={item => item.id}
+                                />
                                 </View>
+                                <Text
+                                    style={[
+                                        {
+                                            fontSize: theme.fontSize.paragraph,
+                                            textTransform: "uppercase",
+                                            // fontWeight: theme.fontWeight.normal,
+                                            color: "white",
+                                            // alignItems: "center",
+                                            // alignSelf: "center",
+                                            textAlign: "center",
+                                            padding: normalize(2),
+                                        },
+                                        item.fulfillment_status === "fulfilled" ? {
+                                            backgroundColor: "#1c6946"
+                                        } : item.fulfillment_status === "cancelled" ? {
+                                            backgroundColor: "#541010"
 
-
+                                        } : {
+                                            backgroundColor: theme.colors.primary
+                                        }
+                                    ]}
+                                    
+                                >{item.fulfillment_status || "Processing"}
+                                </Text>
                             </TouchableOpacity>
                             <View
                                 style={{
-                                    flex: .21,
+                                    flex: .5,
                                     justifyContent: "space-around"
                                 }}
                             >
                                 <Text
                                     style={{
-                                        fontSize: theme.fontSize.paragraph,
-                                        fontWeight: theme.fontWeight.bold,
+                                        fontSize: theme.fontSize.heading,
+                                        fontWeight: theme.fontWeight.medium,
+                                        lineHeight: theme.lineHeight.subheading,
                                         alignSelf: "center",
-                                        marginBottom: normalize(15)
+                                        // marginBottom: normalize(15),
+                                        color: theme.colors.notification
                                     }}
                                 >
-                                    ${item.current_total_price}
+                                    {item.currency === "USD" ? "$" : item.currency} {item.current_total_price}
                                 </Text>
-                                <Image
+                                {/* <Image
                                     // source={{uri : "https://www.vhv.rs/dpng/d/356-3568543_check-icon-green-tick-hd-png-download.png"}}
                                     // source={{uri : "https://toppng.com/uploads/preview/red-cross-mark-download-png-red-cross-check-mark-11562934675swbmqcbecx.png"}}
                                     source={{ uri: item.fulfillment_status === "fulfilled" ? "https://user-images.githubusercontent.com/54505967/132626961-91e73bed-8e1e-4f76-a1c4-0a2f2b86d7c4.png" : item.fulfillment_status === "cancelled" ? "https://toppng.com/uploads/preview/red-cross-mark-download-png-red-cross-check-mark-11562934675swbmqcbecx.png" : "https://user-images.githubusercontent.com/54505967/132627173-60d5b342-fb1d-4e81-8bf1-e10ff32e7ebb.png" }}
@@ -260,8 +331,8 @@ function OrderScreen({ navigation, customer }) {
                                         // marginLeft: item.fulfillment_status === "fulfilled" ? -16: 0
                                     }}
                                     resizeMode="center"
-                                />
-
+                                /> */}
+                                
                             </View>
                         </View>
 
@@ -269,6 +340,7 @@ function OrderScreen({ navigation, customer }) {
                 }}
                 keyExtractor={item => item.id}
             />
+
         </SafeAreaView>
     )
 }

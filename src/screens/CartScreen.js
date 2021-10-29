@@ -224,16 +224,18 @@ function CartScreen({ navigation, setCart, customer }) {
                 ref={addressActionRef}
                 drawUnderStatusBar={true}
                 containerStyle={{
-                    height: height / 1.4,
+                    height: height / 1.34,
                 }}
                 extraScroll={true}
                 nestedScrollEnabled={true}
             >
-                <View
+                <ScrollView
                     style={{
-                        padding: normalize(15),
-                        height: '97%'
+                        padding: normalize(10),
+                        height: '97%',
+                        margin: normalize(10)
                     }}
+                    showsVerticalScrollIndicator={false}
                 >
                     <Text
                         style={{
@@ -245,11 +247,18 @@ function CartScreen({ navigation, setCart, customer }) {
                     >
                         Choose Shipping Address
                     </Text>
-                    <ScrollView
+                    {/* <ScrollView
                         showsVerticalScrollIndicator={false}
 
                         contentContainerStyle={{
-                            flex: 1
+                            // flex: 1,
+                            backgroundColor: "red",
+                            height: normalize(300)
+                        }}
+                        style={{
+                            backgroundColor: "red",
+                            height: normalize(300),
+                            // flex:1
                         }}
                     >
                         {customer.addresses.length === 0 ?
@@ -289,7 +298,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                 </TouchableOpacity>
                             </View>
                             :
-                            customer.addresses.map(item => {
+                            customer.addresses.map((item,index) => {
                                 return (
                                     <TouchableOpacity
                                         style={{
@@ -305,6 +314,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                         onPress={() => {
                                             shippingAddressHandler(item);
                                         }}
+                                        key={index}
                                     >
                                         <View
                                             style={{
@@ -405,8 +415,121 @@ function CartScreen({ navigation, setCart, customer }) {
                                 Add Address to Continue.
                             </Text>
                         </TouchableOpacity>
-                    </ScrollView>
-                </View>
+                    </ScrollView> */}
+                    
+                    <View
+                        style={{
+                            // backgroundColor: "red",
+                            // height: 320
+                        }}
+                    >
+                    <FlatList
+                        style={{
+                            // height: '100%'
+                        }}
+                        data={customer.addresses}
+
+                        renderItem={({item,index}) => {
+                            return(
+<TouchableOpacity
+                                        style={{
+                                            backgroundColor: theme.colors.imageBackground,
+                                            padding: normalize(12),
+                                            borderRadius: normalize(12),
+                                            flexDirection: "row",
+                                            marginVertical: normalize(5),
+                                            elevation: normalize(5),
+                                            alignItems: "center",
+                                            minHeight: normalize(120)
+                                        }}
+                                        onPress={() => {
+                                            // shippingAddressHandler(item);
+                                        }}
+                                        key={index}
+                                    >
+                                        <View
+                                            style={{
+                                                flex: .8
+                                            }}
+                                        >
+                                            <Text
+                                                style={{
+                                                    fontSize: theme.fontSize.paragraph,
+                                                    fontWeight: theme.fontWeight.medium,
+                                                    lineHeight: theme.lineHeight.medium
+                                                }}
+                                            >
+                                                {item.name},
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: theme.fontSize.paragraph,
+                                                    fontWeight: theme.fontWeight.normal,
+                                                    lineHeight: theme.lineHeight.paragraph
+                                                }}
+                                            >
+                                                {item.address1}, {item.address2},
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: theme.fontSize.paragraph,
+                                                    fontWeight: theme.fontWeight.normal,
+                                                    lineHeight: theme.lineHeight.paragraph
+                                                }}
+                                            >
+                                                {item.city}, {item.province},
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: theme.fontSize.paragraph,
+                                                    fontWeight: theme.fontWeight.normal,
+                                                    lineHeight: theme.lineHeight.paragraph
+                                                }}
+                                            >
+                                                {item.zip}, {item.country}.
+                                            </Text>
+                                            <Text
+                                                style={{
+                                                    fontSize: theme.fontSize.paragraph,
+                                                    fontWeight: theme.fontWeight.medium,
+                                                    lineHeight: theme.lineHeight.paragraph,
+                                                    marginTop: normalize(5),
+                                                    color: theme.colors.primary
+                                                }}
+                                            >
+                                                {item?.address?.default === true && "(Default Address)"}
+                                            </Text>
+                                        </View>
+                                        <View
+                                            style={{
+                                                flex: .2
+                                            }}
+                                        >
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    addressActionRef.current?.hide();
+                                                    navigation.navigate('AddAddressScreen', { toUpdateAddress: true, address: item })
+                                                }}
+                                            >
+
+                                                <Image
+                                                    source={require('../assets/images/edit.png')}
+                                                    style={{
+                                                        padding: normalize(1),
+                                                        height: normalize(20),
+                                                        width: normalize(20),
+                                                        marginLeft: normalize(20)
+                                                    }}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    </TouchableOpacity>
+                            )
+                        }}
+                        keyExtractor={(item,index) => index}
+                    />
+                    </View>
+                </ScrollView>
             </ActionSheet>
 
             <View
@@ -437,8 +560,9 @@ function CartScreen({ navigation, setCart, customer }) {
                     >
                         <Text
                             style={{
-                                fontWeight: theme.fontWeight.thin,
+                                fontWeight: theme.fontWeight.medium,
                                 fontSize: theme.fontSize.paragraph,
+                                color: theme.colors.primary
                             }}
                         >
                             Continue Shopping
@@ -642,7 +766,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                 height: normalize(55),
                                 alignSelf: 'center',
                                 justifyContent: "center",
-                                backgroundColor: theme.colors.primary,
+                                backgroundColor: theme.colors.secondary,
                                 width: '100%',
                                 borderRadius: normalize(12),
                                 marginTop: normalize(15),
