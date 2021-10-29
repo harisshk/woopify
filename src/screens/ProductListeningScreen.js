@@ -78,6 +78,23 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                     newVariantImages.push(item);
                 }
             });
+            if(currVariant.option2 !== null){
+                const optionAvailable = [[]];
+                const option2 = [currVariant.option2];
+
+                const option3 = [currVariant.option3];
+                for(let i = 0; i < product.variants.length; i++){
+                    if(product.variants[i].option1 === currVariant.option1){
+                        option2.push(product.variants[i].option2);
+                        option3.push(product.variants[i].option3);
+                        
+                    }
+                }
+                optionAvailable.push(option2);
+                optionAvailable.push(option3);
+                setAvailableOptions([...optionAvailable]);
+            }
+            
             setVariantImages([...newVariantImages]);
             setIsLoading(false);
         } catch (error) {
@@ -167,7 +184,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
 
     }
     const changeVariant = async (option1 = null, option2 = null, option3 = null) => {
-        console.log('---changing variant---')
         for (let i = 0; i < product?.variants?.length; i++) {
             const variant = product.variants[i];
             if (option1 !== null && option2 === null && option3 === null) {
@@ -195,6 +211,20 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                 }
             } else if (option1 !== null && option2 !== null && option3 === null) {
                 if (variant.option1 === option1 && variant.option2 === option2) {
+                    const optionAvailable = [[]];
+                    const option2 = [];
+                    const option3 = [];
+                    for (let i = 0; i < product.variants.length; i++) {
+                        if (product.variants[i].option1 === option1) {
+                            option2.push(product.variants[i].option2);
+                            option3.push(product.variants[i].option3);
+
+                        }
+                    }
+                    optionAvailable.push(option2);
+                    optionAvailable.push(option3);
+                    setAvailableOptions([...optionAvailable]);
+                    
                     setIsLoading(true);
                     setSelectedVariantIndex(i);
                     const allImages = product.images;
@@ -218,6 +248,18 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                 }
             } else {
                 if (variant.option1 === option1 && variant.option2 === option2 && variant.option3 === option3) {
+                    const optionAvailable = [[]];
+                    const option2 = [];
+                    const option3 = [];
+                    for (let i = 0; i < product.variants.length; i++) {
+                        if (product.variants[i].option1 === option1) {
+                            option2.push(product.variants[i].option2);
+                            option3.push(product.variants[i].option3);
+                        }
+                    }
+                    optionAvailable.push(option2);
+                    optionAvailable.push(option3);
+                    setAvailableOptions([...optionAvailable]);
                     setIsLoading(true);
                     setSelectedVariantIndex(i);
                     const allImages = product.images;
@@ -244,6 +286,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
         }
     }
 
+    const[availableOptions, setAvailableOptions] = useState([]);
     const[image, setImage] = useState({});
     const[imageIsLoading, setImageIsLoading] = useState(false);
 
@@ -288,7 +331,8 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
         return () => {
 
         };
-    }, [])
+    }, []);
+    
     return (
         <SafeAreaView
             style={{
@@ -354,7 +398,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                         style={{
                                             marginVertical: normalize(10)
                                         }}
-                                        renderItem={({ item }) => {
+                                        renderItem={({ item, subIndex }) => {
                                             return (
                                                 <TouchableOpacity
                                                     onPress={() => {
@@ -378,6 +422,9 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                                             borderColor: theme.colors.unfocused,
                                                             borderWidth: 1
                                                         },
+                                                        index !== 0 && !availableOptions[index]?.includes(item) && {
+                                                            display: 'none'
+                                                        },
                                                         item === product.variants[selectedVariantIndex][`option${(index + 1) + ""}`] ? {
                                                             backgroundColor: theme.colors.secondary
                                                         } : {
@@ -385,6 +432,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                                         },
                                                     ]
                                                     }
+                                                    disabled={index !== 0 && !availableOptions[index]?.includes(item) }
                                                 >
                                                     <Text
                                                         style={[
