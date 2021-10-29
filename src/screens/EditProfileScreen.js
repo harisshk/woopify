@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Text, View, TouchableOpacity, Alert } from 'react-native';
+import { SafeAreaView, Text, View, TouchableOpacity, Alert, KeyboardAvoidingView, ScrollView } from 'react-native';
 import normalize from 'react-native-normalize';
 import { ActivityIndicator, TextInput } from 'react-native-paper';
 import { connect } from 'react-redux';
@@ -41,7 +41,7 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
             });
             const first_name = input.first_name.value.trim();
             const last_name = input.last_name.value.trim();
-            const phone = input.phone.value.trim();
+            const phone = input.phone?.value?.trim();
             if (!first_name) {
                 setInput({
                     ...input,
@@ -95,7 +95,7 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                     isChanged: true
                 })
                 return;
-            }else{
+            } else {
                 Toast.show('Profile Updated');
             }
             setInput({
@@ -145,7 +145,16 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 backgroundColor: theme.colors.background
             }}
         >
-            {/* <View
+            <KeyboardAvoidingView
+                style={{
+                    paddingBottom: normalize(15),
+                    paddingHorizontal: normalize(15),
+                    flex: 1,
+                }}
+                behavior="padding"
+            >
+                <ScrollView>
+                    {/* <View
                 style={{
                     height: normalize(200),
                     backgroundColor:"#A3861C",
@@ -156,47 +165,46 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                     width: '50%'
                 }}
             /> */}
-            <View
-                style={{
-                    padding: normalize(15),
-                    flex:1
-                }}
-            >
-                <TouchableOpacity
-
-                    style={{
-                        paddingVertical: normalize(10)
-                    }}
-                    onPress={backHandler}
-                >
-                    <Text
+                    <View
                         style={{
-                            fontWeight: theme.fontWeight.bold
+                            flex: 1
                         }}
-                    >{"<  "}Go Back</Text>
-                </TouchableOpacity>
-                <Text
-                    style={{
+                    >
+                        <TouchableOpacity
 
-                        fontWeight: theme.fontWeight.normal,
-                        lineHeight: theme.lineHeight.heading,
-                        color: theme.colors.secondary,
-                        fontSize: theme.fontSize.subheading,
-                    }}
-                >
-                    Welcome Buddy !!!
-                </Text>
-                <Text
-                    style={{
-                        fontSize: theme.fontSize.title,
-                        fontWeight: theme.fontWeight.medium,
-                        lineHeight: theme.lineHeight.heading,
-                        marginTop: normalize(5)
-                    }}
-                >
-                    {customer.first_name} {customer.last_name}
-                </Text>
-                {/* <View
+                            style={{
+                                paddingVertical: normalize(10)
+                            }}
+                            onPress={backHandler}
+                        >
+                            <Text
+                                style={{
+                                    fontWeight: theme.fontWeight.bold
+                                }}
+                            >{"<  "}Go Back</Text>
+                        </TouchableOpacity>
+                        <Text
+                            style={{
+
+                                fontWeight: theme.fontWeight.normal,
+                                lineHeight: theme.lineHeight.heading,
+                                color: theme.colors.secondary,
+                                fontSize: theme.fontSize.subheading,
+                            }}
+                        >
+                            Welcome Buddy !!!
+                        </Text>
+                        <Text
+                            style={{
+                                fontSize: theme.fontSize.title,
+                                fontWeight: theme.fontWeight.medium,
+                                lineHeight: theme.lineHeight.heading,
+                                marginTop: normalize(5)
+                            }}
+                        >
+                            {customer.first_name} {customer.last_name}
+                        </Text>
+                        {/* <View
                     style={{
                         width: '75%',
                         height: normalize(27),
@@ -205,107 +213,108 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                         marginBottom: normalize(20)
                     }}
                 /> */}
-                <View
-                    style={{
-                        flex:.7,
-                        justifyContent :"center",
-                    }}
-                >
-                <TextInput
-                    value={input.first_name.value}
-                    label={"First Name"}
-                    onChangeText={text => {
-                        changeText('first_name', text);
-                    }}
-                    style={{
-                        borderRadius: normalize(12),
-                        marginVertical: normalize(10),
-                    }}
-
-                    error={input.first_name.error}
-                    maxLength={35}
-                />
-                <TextInput
-                    value={input.last_name.value}
-                    label={"Last Name"}
-                    onChangeText={text => {
-                        changeText('last_name', text);
-                    }}
-                    style={{
-                        borderRadius: normalize(12),
-                        marginVertical: normalize(10),
-                    }}
-                    keyboardType="default"
-                    error={input.last_name.error}
-                    maxLength={35}
-                />
-                <TextInput
-                    value={input.phone.value}
-                    label={"Phone Number"}
-                    onChangeText={text => {
-                        changeText('phone', text);
-                    }}
-                    style={{
-                        borderRadius: normalize(12),
-                        marginVertical: normalize(10),
-                    }}
-                    keyboardType="phone-pad"
-                    autoCompleteType={"tel"}
-                    error={input.phone.error}
-                    maxLength={13}
-                />
-                <TouchableOpacity
-                    style={[
-                        input.isChanged === false || input.isLoading === true ? {
-                            backgroundColor: theme.colors.disabledButton,
-                        } : {
-                            backgroundColor: theme.colors.secondary,
-                        }, {
-                            padding: normalize(13),
-                            borderRadius: normalize(10),
-                            elevation: 2,
-                            justifyContent: "center",
-                            alignItems: "center",
-                            marginVertical: normalize(15),
-                        }
-                    ]}
-                    onPress={updateProfileListener}
-                    disabled={input.isChanged === false || input.isLoading === true}
-                >
-                    {input.isLoading === true ?
                         <View
                             style={{
-                                flexDirection: "row"
+                                flex: .7,
+                                justifyContent: "center",
                             }}
                         >
-                            <Text
-                                style={{
-                                    fontSize: theme.fontSize.medium,
-                                    color: theme.colors.white,
-                                    fontWeight: theme.fontWeight.medium
+
+                            <TextInput
+                                value={input.first_name.value}
+                                label={"First Name"}
+                                onChangeText={text => {
+                                    changeText('first_name', text);
                                 }}
+                                style={{
+                                    borderRadius: normalize(12),
+                                    marginVertical: normalize(10),
+                                }}
+
+                                error={input.first_name.error}
+                                maxLength={35}
+                            />
+                            <TextInput
+                                value={input.last_name.value}
+                                label={"Last Name"}
+                                onChangeText={text => {
+                                    changeText('last_name', text);
+                                }}
+                                style={{
+                                    borderRadius: normalize(12),
+                                    marginVertical: normalize(10),
+                                }}
+                                keyboardType="default"
+                                error={input.last_name.error}
+                                maxLength={35}
+                            />
+                            <TextInput
+                                value={input.phone.value}
+                                label={"Phone Number"}
+                                onChangeText={text => {
+                                    changeText('phone', text);
+                                }}
+                                style={{
+                                    borderRadius: normalize(12),
+                                    marginVertical: normalize(10),
+                                }}
+                                keyboardType="phone-pad"
+                                autoCompleteType={"tel"}
+                                error={input.phone.error}
+                                maxLength={13}
+                            />
+                            <TouchableOpacity
+                                style={[
+                                    input.isChanged === false || input.isLoading === true ? {
+                                        backgroundColor: theme.colors.disabledButton,
+                                    } : {
+                                        backgroundColor: theme.colors.secondary,
+                                    }, {
+                                        padding: normalize(13),
+                                        borderRadius: normalize(10),
+                                        elevation: 2,
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        marginVertical: normalize(15),
+                                    }
+                                ]}
+                                onPress={updateProfileListener}
+                                disabled={input.isChanged === false || input.isLoading === true}
                             >
-                                Loading
-                            </Text>
-                            <ActivityIndicator color={theme.colors.white} style={{ marginLeft: normalize(15) }} />
+                                {input.isLoading === true ?
+                                    <View
+                                        style={{
+                                            flexDirection: "row"
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                fontSize: theme.fontSize.medium,
+                                                color: theme.colors.white,
+                                                fontWeight: theme.fontWeight.medium
+                                            }}
+                                        >
+                                            Loading
+                                        </Text>
+                                        <ActivityIndicator color={theme.colors.white} style={{ marginLeft: normalize(15) }} />
+                                    </View>
+                                    :
+                                    <Text
+
+                                        style={{
+                                            fontSize: theme.fontSize.medium,
+                                            color: theme.colors.white,
+                                            fontWeight: theme.fontWeight.medium
+                                        }}
+                                    >
+
+                                        Update Your Profile
+                                    </Text>
+                                }
+                            </TouchableOpacity>
                         </View>
-                        :
-                        <Text
-
-                            style={{
-                                fontSize: theme.fontSize.medium,
-                                color: theme.colors.white,
-                                fontWeight: theme.fontWeight.medium
-                            }}
-                        >
-
-                            Update Your Profile
-                        </Text>
-                    }
-                </TouchableOpacity>
-                </View>
-            </View>
-            {/* <View
+                    </View>
+                    {/* <View
                 style={{
                     height: normalize(170),
                     backgroundColor: "#A3861C",
@@ -316,6 +325,8 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                     width: '50%'
                 }}
             /> */}
+                </ScrollView>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }

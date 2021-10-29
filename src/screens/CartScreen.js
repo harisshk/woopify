@@ -443,7 +443,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                             minHeight: normalize(120)
                                         }}
                                         onPress={() => {
-                                            // shippingAddressHandler(item);
+                                            shippingAddressHandler(item);
                                         }}
                                         key={index}
                                     >
