@@ -1,12 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect } from 'react';
-import { Text, SafeAreaView } from 'react-native';
+import { Text, SafeAreaView, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { setCart } from '../redux/action/cart';
 import { setCustomer } from '../redux/action/customer';
 import { client } from '../services';
 import { getCustomerById } from '../services/customer';
 import { theme } from '../utils/theme';
+import normalize from 'react-native-normalize';
 
 const SplashScreen = ({navigation, setCustomer, setCart}) => {
     useEffect(async() => {
@@ -52,7 +53,7 @@ const SplashScreen = ({navigation, setCustomer, setCart}) => {
         alignItems: "center"
       }}
     >
-      <Text
+      {/* <Text
         style={{
           fontWeight: theme.fontWeight.bold,
           lineHeight: theme.lineHeight.heading,
@@ -61,7 +62,17 @@ const SplashScreen = ({navigation, setCustomer, setCart}) => {
         }}
       >
         Shopify Connect
-      </Text>
+      </Text> */}
+      <Image
+          source={{ uri: `https://cdn.shopify.com/s/files/1/0602/9036/7736/files/1280x720-new-pnp_190x@2x.png?v=1634032473` }}
+          style={{
+            height: normalize(50),
+            width: '100%',
+            shadowColor: theme.colors.primary,
+            shadowOpacity: 2
+          }}
+          resizeMode="contain"
+        />
     </SafeAreaView>
   )
 }
