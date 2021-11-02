@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Dimensions, ScrollView, RefreshControl, TextInput } from 'react-native';
+import { View, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Dimensions, ScrollView, RefreshControl, TextInput, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import { setCategories } from '../redux/action/categories';
 import { setProducts } from '../redux/action/products'
@@ -25,7 +25,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
   const [limit, setLimit] = useState(1);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
-  const MAX_PRODUCT = 10
+  const MAX_PRODUCT = 10;
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -65,6 +65,9 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
   }
 
   const getProductsHelper = async () => {
+    if (isEnd === true) {
+      return;
+    }
     if (limit === 1) {
       setProductIsLoading(true);
     } else {
@@ -88,11 +91,15 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     if (limit === 1) {
       setProducts(data);
     } else {
-      if (data?.products?.length < (limit - 1) * MAX_PRODUCT) {
+      if (data?.products?.length < ((limit - 1) * MAX_PRODUCT)) {
         setIsEnd(true);
         return;
       }
-      const temp = data?.products.slice((limit - 1) * MAX_PRODUCT, data?.products?.length);
+      const temp = data?.products?.slice((limit - 1) * MAX_PRODUCT, data?.products?.length);
+      if (!temp) {
+        setIsEnd(true);
+        return;
+      }
       if (data?.products?.length <= products.length + temp.length) {
         setIsEnd(true);
       }
@@ -103,15 +110,14 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
 
   const handleLoadMore = async () => {
     if (isEnd === false) {
-      setLimit(limit + 1);
+      setLimit((previousLimit) => previousLimit + 1);
     }
   };
 
 
   const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
     const paddingToBottom = 30;
-    return layoutMeasurement.height + contentOffset.y >=
-      contentSize.height - paddingToBottom;
+    return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
   };
 
   return (
@@ -403,26 +409,15 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             )}
           </View>
         </SkeletonContent>
-        <SkeletonContent
-          containerStyle={{ width: '100%', flexDirection: "row", alignSelf: "center" }}
-          layout={[
-            {
-              width: width / 2.2,
-              height: normalize(220),
-              key: 'imageLoader11',
-              borderRadius: normalize(10),
-              marginRight: normalize(6)
-            },
-            {
-              width: width / 2.2,
-              height: normalize(220),
-              key: 'imageLoader21',
-              marginRight: normalize(10),
-              borderRadius: normalize(7),
-            },
-          ]}
-          isLoading={isLoadingMore}
-        ></SkeletonContent>
+        {isLoadingMore === true && 
+          <View
+            style={{
+              marginVertical: normalize(15)
+            }}
+          >
+            <ActivityIndicator size={"large"} color={theme.colors.primary} />
+          </View>
+        }
         {/* {isEnd === true && 
           <Text
             style={{

@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useEffect } from 'react';
-import { Text, SafeAreaView, Image } from 'react-native';
+import { Text, SafeAreaView, Image, View } from 'react-native';
 import { connect } from 'react-redux';
 import { setCart } from '../redux/action/cart';
 import { setCustomer } from '../redux/action/customer';
@@ -8,43 +8,44 @@ import { client } from '../services';
 import { getCustomerById } from '../services/customer';
 import { theme } from '../utils/theme';
 import normalize from 'react-native-normalize';
+import Footer from '../components/Footer';
 
-const SplashScreen = ({navigation, setCustomer, setCart}) => {
-    useEffect(async() => {
-      try {
-        const user = await AsyncStorage.getItem('user');
-        if (user !== null) {
-          const parsedUser = JSON.parse(user);
-          const data = await getCustomerById(parsedUser.id);
-          const temp = await AsyncStorage.getItem('checkoutId');
-          if (temp !== null) {
-              const checkout = await client.checkout.fetch(JSON.parse(temp));
-              const cartItem = {
-                count: checkout?.lineItems?.length,
-              };
-              setCart({cart : cartItem});
-          }else{
-            const cartItem = {
-              count: 0,
-            }
-            setCart({cart : cartItem});
+const SplashScreen = ({ navigation, setCustomer, setCart }) => {
+  useEffect(async () => {
+    try {
+      const user = await AsyncStorage.getItem('user');
+      if (user !== null) {
+        const parsedUser = JSON.parse(user);
+        const data = await getCustomerById(parsedUser.id);
+        const temp = await AsyncStorage.getItem('checkoutId');
+        if (temp !== null) {
+          const checkout = await client.checkout.fetch(JSON.parse(temp));
+          const cartItem = {
+            count: checkout?.lineItems?.length,
+          };
+          setCart({ cart: cartItem });
+        } else {
+          const cartItem = {
+            count: 0,
           }
-          setCustomer({...data});
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'BottomTab' }],
-          });
-        }else{
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'LoginScreen' }],
-          });
+          setCart({ cart: cartItem });
         }
-      } catch (error) {
-        console.error(error);
+        setCustomer({ ...data });
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'BottomTab' }],
+        });
+      } else {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'LoginScreen' }],
+        });
       }
-    },[]);
-  return(
+    } catch (error) {
+      console.error(error);
+    }
+  }, []);
+  return (
     <SafeAreaView
       style={{
         flex: 1,
@@ -64,15 +65,35 @@ const SplashScreen = ({navigation, setCustomer, setCart}) => {
         Shopify Connect
       </Text> */}
       <Image
-          source={{ uri: `https://cdn.shopify.com/s/files/1/0602/9036/7736/files/1280x720-new-pnp_190x@2x.png?v=1634032473` }}
-          style={{
-            height: normalize(50),
-            width: '100%',
-            shadowColor: theme.colors.primary,
-            shadowOpacity: 2
-          }}
-          resizeMode="contain"
-        />
+        source={{ uri: `https://cdn.shopify.com/s/files/1/0602/9036/7736/files/1280x720-new-pnp_190x@2x.png?v=1634032473` }}
+        style={{
+          height: normalize(52),
+          width: '100%',
+          shadowColor: theme.colors.primary,
+          shadowOpacity: 2
+        }}
+        resizeMode="contain"
+      />
+      <Text
+        style={{
+          fontWeight: theme.fontWeight.medium,
+          lineHeight: theme.lineHeight.subheading,
+          fontSize: theme.fontSize.subheading,
+          textAlign: "center",
+          marginVertical: normalize(25),
+          color: theme.colors.unfocused
+        }}
+      >
+        Pet Lover's Favorite
+      </Text>
+      <View
+        style={{
+          position: "absolute",
+          bottom: normalize(50)
+        }}
+      >
+        <Footer />
+      </View>
     </SafeAreaView>
   )
 }
