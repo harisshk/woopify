@@ -372,7 +372,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                 fontSize: theme.fontSize.title,
                                 fontWeight: theme.fontWeight.normal,
                                 lineHeight: theme.lineHeight.title,
-                                color: theme.colors.notification,
+                                color: theme.colors.primary,
                                 marginBottom: normalize(15)
                             }}
                         >
