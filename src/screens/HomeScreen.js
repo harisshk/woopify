@@ -17,13 +17,15 @@ const { width } = Dimensions.get('window');
 
 const HomeScreen = ({ categories, setCategories, navigation, products, setProducts, cart }) => {
   const [refreshing, setRefreshing] = useState(false);
-
   const listRef = useRef(null);
-
   const [contentVerticalOffset, setContentVerticalOffset] = useState(0);
   const CONTENT_OFFSET_THRESHOLD = 145;
   const [categoryIsLoading, setCategoryIsLoading] = useState(true);
   const [productIsLoading, setProductIsLoading] = useState(true);
+  const [limit, setLimit] = useState(1);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [isEnd, setIsEnd] = useState(false);
+  const MAX_PRODUCT = 10
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -32,18 +34,18 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     setRefreshing(false);
   }
   useEffect(() => {
-    getCategoriesHelper();
+    // getCategoriesHelper();
     getProductsHelper();
     return () => {
       setContentVerticalOffset(0);
     }
-  }, []);
+  }, [limit]);
 
   /**
    * @description getting all categories and storing in redux
    * @returns void
    */
-  let getCategoriesHelper = async () => {
+  const getCategoriesHelper = async () => {
     // client.collection.fetchAllWithProducts().then((collections) => {
     //   // Do something with the collections
     //   let data = Object.assign({}, { collections: collections })
@@ -55,7 +57,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     setCategoryIsLoading(false);
     if (data?.error) {
       console.log(data.error)
-      console.log('----------Error Line 8 Home Screen----------');
+      console.log('----------Error Line 60 Home Screen----------');
       return;
     }
     const { custom_collections } = data;
@@ -63,16 +65,46 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
   }
 
   const getProductsHelper = async () => {
-    setProductIsLoading(true);
-    const data = await getAllProducts();
-    setProductIsLoading(false);
+    if(limit === 1){
+      setProductIsLoading(true);
+    }else{
+      setIsLoadingMore(true);
+    }
+    const data = await getAllProducts(limit * MAX_PRODUCT);
+    if(limit === 1){
+      setProductIsLoading(false);
+    }else{
+      setIsLoadingMore(false);
+    }
     if (data?.error) {
       console.log(data.error)
-      console.log('----------Error Line 8 Home Screen----------');
+      console.log('----------Error Line 90 Home Screen----------');
       return;
     }
-    setProducts(data);
+    if(data?.products?.length === products.length){
+      setIsEnd(true);
+      return;
+    }
+    if(limit === 1){
+      setProducts(data);
+    }else {
+      const temp = data?.products.slice((limit-1) * MAX_PRODUCT, data?.products?.length);
+      setProducts({products: temp});
+    }
   }
+
+  const handleLoadMore = async() => {
+    if(isEnd === false){
+      setLimit(limit + 1);
+    }
+  };
+
+
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }) => {
+    const paddingToBottom = 30;
+    return layoutMeasurement.height + contentOffset.y >=
+      contentSize.height - paddingToBottom;
+  };
 
   return (
     <SafeAreaView
@@ -109,7 +141,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         {/* <Text
               style={{
                 color: theme.colors.secondary,
-                marginVertical: normalize(8),
+                marginVertical: normalize(10),
                 fontSize: theme.fontSize.paragraph
               }}
             >
@@ -170,6 +202,13 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             onRefresh={onRefresh}
           />
         }
+  
+        onScroll={({nativeEvent}) => {
+          if (isCloseToBottom(nativeEvent)) {
+            handleLoadMore();
+          }
+        }}
+        // onThre={0.5}
       // onScroll={event => {
       //   setContentVerticalOffset(event.nativeEvent.contentOffset.y);
       // }}
@@ -205,7 +244,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
                 width: normalize(20),
                 elevation: 2,
                 position: "absolute",
-                right:-normalize(8),
+                right:-normalize(10),
                 backgroundColor: theme.colors.primary,
                 borderRadius: normalize(20),
                 alignItems: "center", justifyContent: "center",
@@ -301,19 +340,21 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
               width: width / 2.24,
               height: normalize(220),
               key: 'imageLoader1',
-              borderRadius: normalize(10),
+              borderRadius: normalize(7),
               marginRight: normalize(10)
             },
             {
               width: width / 2.24,
               height: normalize(220),
               key: 'imageLoader2',
-              marginRight: normalize(10),
+              marginRight: normalize(7),
               borderRadius: normalize(10),
             },
           ]}
           isLoading={productIsLoading}
-        ></SkeletonContent>
+        >
+
+        </SkeletonContent>
         <SkeletonContent
           containerStyle={{ width: '100%', flexDirection: "row" }}
           layout={[
@@ -321,14 +362,14 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
               width: width / 2.24,
               height: normalize(220),
               key: 'imageLoader1',
-              borderRadius: normalize(10),
+              borderRadius: normalize(7),
               marginRight: normalize(10)
             },
             {
               width: width / 2.24,
               height: normalize(220),
               key: 'imageLoader2',
-              marginRight: normalize(10),
+              marginRight: normalize(7),
               borderRadius: normalize(10),
             },
           ]}
@@ -352,6 +393,38 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             )}
           </View>
         </SkeletonContent>
+        <SkeletonContent
+          containerStyle={{ width: '100%', flexDirection: "row", alignSelf: "center" }}
+          layout={[
+            {
+              width: width / 2.2,
+              height: normalize(220),
+              key: 'imageLoader11',
+              borderRadius: normalize(10),
+              marginRight: normalize(6)
+            },
+            {
+              width: width / 2.2,
+              height: normalize(220),
+              key: 'imageLoader21',
+              marginRight: normalize(10),
+              borderRadius: normalize(7),
+            },
+          ]}
+          isLoading={isLoadingMore}
+        ></SkeletonContent>
+        {/* {isEnd === true && 
+          <Text
+            style={{
+              marginVertical: normalize(5),
+              textAlign: "center",
+              fontSize: theme.fontSize.medium,
+              color: theme.colors.disabled
+            }}
+          >
+
+          </Text>
+        } */}
         <Footer
         />
         <View

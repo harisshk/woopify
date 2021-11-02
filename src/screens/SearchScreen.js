@@ -135,7 +135,7 @@ function SearchScreen({ navigation }) {
                     <Text
                         style={{
                             fontSize: theme.fontSize.medium,
-                            color: theme.colors.disabledButton,
+                            color: theme.colors.secondary,
                             textAlign: "center",
                             marginVertical: normalize(20)
                         }}
@@ -147,7 +147,7 @@ function SearchScreen({ navigation }) {
                     <Text
                         style={{
                             fontSize: theme.fontSize.medium,
-                            color: theme.colors.disabledButton,
+                            color: theme.colors.secondary,
                             textAlign: "center"
                         }}
                     >
