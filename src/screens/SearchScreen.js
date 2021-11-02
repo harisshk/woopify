@@ -77,7 +77,6 @@ function SearchScreen({ navigation }) {
                         flex: 1
                     }}
                 >
-
                     <TextInput
                         disabledButton={isLoading}
                         style={{
@@ -95,13 +94,14 @@ function SearchScreen({ navigation }) {
                         onChangeText={(text) => {
                             setQuery(text);
                         }}
-                        // onSubmitEditing={searchHandler}
+                        onSubmitEditing={searchHandler}
                     />
                     <TouchableOpacity
                         style={{
                             position: "absolute",
                             right: normalize(20),
-                            top: normalize(29)
+                            top: normalize(29),
+                            zIndex: 1
                         }}
                         onPress={()=>{
                             searchHandler(query)
@@ -127,7 +127,7 @@ function SearchScreen({ navigation }) {
                 refreshControl={
                     <RefreshControl
                         refreshing={isLoading}
-                        onRefresh={searchHandler}
+                        onRefresh={()=>{}}
                     />
                 }
             >

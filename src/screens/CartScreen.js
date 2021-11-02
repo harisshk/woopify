@@ -573,7 +573,7 @@ function CartScreen({ navigation, setCart, customer }) {
 
                 <View
                     style={{
-                        height: height / 1.5
+                        height: height / 1.55
                     }}
                 >
                     {isLoading === false && cartItem?.lineItems?.length === 0 &&
@@ -599,7 +599,7 @@ function CartScreen({ navigation, setCart, customer }) {
                         style={{
                             marginVertical: normalize(10),
                             // flex: 1,
-                            height: '90%',
+                            height: '95%',
                         }}
                         refreshControl={
                             <RefreshControl
@@ -738,7 +738,7 @@ function CartScreen({ navigation, setCart, customer }) {
                         style={{
                             elevation: 2,
                             borderTopWidth: 2,
-                            borderTopColor: "#f5f5f5",
+                            borderTopColor: "#f5f5f5"
                         }}
                     >
                         <View
