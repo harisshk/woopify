@@ -104,77 +104,147 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
 
     const addToCartListener = async (quantity) => {
         if(!image.uri){
-            Toast.show('Add Image', Toast.SHORT);
-            addToCartRef?.current?.show();
-            return;
+            // Toast.show('Add Image', Toast.SHORT);
+            // addToCartRef?.current?.show();
+            // return;
         }else {
-            addToCartRef?.current?.hide();
+            // addToCartRef?.current?.hide();
         }
-        setCartIsLoading(true);
-        const response = await uploadImage(image);
-        const { data } = response;
-        if (data?.success === true) {
-            Toast.showWithGravity ('Image Uploaded Successfully...', Toast.SHORT, Toast.TOP);
-            const { asset } = data;
-            let checkoutExists = await AsyncStorage.getItem('checkoutId');
 
-            if (checkoutExists === null) {
-                client.checkout.create().then(async (checkout) => {
-                    await AsyncStorage.setItem('checkoutId', JSON.stringify(checkout.id));
-                    /**
-                     * Rest API Id to StoreFront API ID
-                     */
-                    const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
-                    // const variantId = product.variants[variantChosen < 0 ? 0 : variantChosen].id;
-                    const lineItemsToAdd = [
-                        {
-                            variantId: variantId,
-                            //variantId: product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].id,
-                            quantity: quantity,
-                        }
-                    ];
-                    client.checkout.addLineItems(checkout.id, lineItemsToAdd).then((checkout) => {
-                        const cart = {
-                            cart: { count: checkout?.lineItems?.length }
-                        }
-                        setCart({ ...cart });
-                        Toast.show('Added to Cart');
-                        setCartIsLoading(false);
-                    })
-                    setCartIsLoading(false);
-                    return;
-                });
+        addToCartRef?.current?.hide();
+        setCartIsLoading(true);
+        var data = {};
+        if(image.uri){
+            const response = await uploadImage(image);
+            data = response?.data; 
+        }else{
+            data = {
+                success: true,
+                noImage: true
+            };
+        }
+        if (data?.success === true) {
+            if(data?.noImage === true){
+
+            }else{
+                Toast.showWithGravity ('Image Uploaded Successfully...', Toast.SHORT, Toast.TOP);
             }
-            checkoutExists = await AsyncStorage.getItem('checkoutId');
-            const checkoutId = JSON.parse(checkoutExists);
-            /**
-             * Rest API Id to StoreFront API ID
-             */
-            const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
-            const lineItemsToAdd = [{
-                variantId: variantId,
-                quantity: quantity,
-                customAttributes: [
-                    { key: "Your Photo", value: asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
-                    { key: "Preview", value: asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
-                    { key: "_pplr_preview", value: 'Preview' },
-                    // { key: "", value: "" }
-                ]
-            }];
-            client.checkout.addLineItems(checkoutId, lineItemsToAdd).then((checkout) => {
-                const cart = {
-                    cart: { count: checkout?.lineItems?.length }
+            if(data?.noImage === true){
+                let checkoutExists = await AsyncStorage.getItem('checkoutId');
+    
+                if (checkoutExists === null) {
+                    client.checkout.create().then(async (checkout) => {
+                        await AsyncStorage.setItem('checkoutId', JSON.stringify(checkout.id));
+                        /**
+                         * Rest API Id to StoreFront API ID
+                         */
+                        const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
+                        // const variantId = product.variants[variantChosen < 0 ? 0 : variantChosen].id;
+                        const lineItemsToAdd = [
+                            {
+                                variantId: variantId,
+                                //variantId: product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].id,
+                                quantity: quantity,
+                            }
+                        ];
+                        client.checkout.addLineItems(checkout.id, lineItemsToAdd).then((checkout) => {
+                            const cart = {
+                                cart: { count: checkout?.lineItems?.length }
+                            }
+                            setCart({ ...cart });
+                            Toast.show('Added to Cart');
+                            setCartIsLoading(false);
+                        })
+                        setCartIsLoading(false);
+                        return;
+                    });
                 }
-                setCart({ ...cart });
-                setCartIsLoading(false);
-                Toast.show('Added to Cart');
-            }).catch(error => {
-                setCartIsLoading(false);
-                console.log('----------------Line 114-----------------');
-                console.log(error);
-            });
+                checkoutExists = await AsyncStorage.getItem('checkoutId');
+                const checkoutId = JSON.parse(checkoutExists);
+                /**
+                 * Rest API Id to StoreFront API ID
+                 */
+                const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
+                const lineItemsToAdd = [{
+                    variantId: variantId,
+                    quantity: quantity,
+            
+                }];
+                
+                client.checkout.addLineItems(checkoutId, lineItemsToAdd).then((checkout) => {
+                    const cart = {
+                        cart: { count: checkout?.lineItems?.length }
+                    }
+                    setCart({ ...cart });
+                    setCartIsLoading(false);
+                    Toast.show('Added to Cart');
+                }).catch(error => {
+                    setCartIsLoading(false);
+                    console.log('----------------Line 114-----------------');
+                    console.log(error);
+                });
+            }else{
+                const { asset } = data;
+                let checkoutExists = await AsyncStorage.getItem('checkoutId');
+    
+                if (checkoutExists === null) {
+                    client.checkout.create().then(async (checkout) => {
+                        await AsyncStorage.setItem('checkoutId', JSON.stringify(checkout.id));
+                        /**
+                         * Rest API Id to StoreFront API ID
+                         */
+                        const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
+                        // const variantId = product.variants[variantChosen < 0 ? 0 : variantChosen].id;
+                        const lineItemsToAdd = [
+                            {
+                                variantId: variantId,
+                                //variantId: product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].id,
+                                quantity: quantity,
+                            }
+                        ];
+                        client.checkout.addLineItems(checkout.id, lineItemsToAdd).then((checkout) => {
+                            const cart = {
+                                cart: { count: checkout?.lineItems?.length }
+                            }
+                            setCart({ ...cart });
+                            Toast.show('Added to Cart');
+                            setCartIsLoading(false);
+                        })
+                        setCartIsLoading(false);
+                        return;
+                    });
+                }
+                checkoutExists = await AsyncStorage.getItem('checkoutId');
+                const checkoutId = JSON.parse(checkoutExists);
+                /**
+                 * Rest API Id to StoreFront API ID
+                 */
+                const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
+                const lineItemsToAdd = [{
+                    variantId: variantId,
+                    quantity: quantity,
+                    customAttributes: [
+                        { key: "Your Photo", value: asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
+                        { key: "Preview", value: asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
+                        { key: "_pplr_preview", value: 'Preview' },
+                        // { key: "", value: "" }
+                    ]
+                }];
+                client.checkout.addLineItems(checkoutId, lineItemsToAdd).then((checkout) => {
+                    const cart = {
+                        cart: { count: checkout?.lineItems?.length }
+                    }
+                    setCart({ ...cart });
+                    setCartIsLoading(false);
+                    Toast.show('Added to Cart');
+                }).catch(error => {
+                    setCartIsLoading(false);
+                    console.log('----------------Line 114-----------------');
+                    console.log(error);
+                });
+            };
+            
         } else {
-            console.log(response);
             Toast.show('Something went wrong ...', Toast.SHORT);
             setCartIsLoading(false);
             return;
