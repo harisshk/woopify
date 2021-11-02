@@ -83,7 +83,6 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
         const data = await getProductInfo(product.id);
         if (data?.errors) {
             Toast.show('Something went wrong');
-            console.log(data);
             console.log('---------------------Product Screen Line 68-------------------------------');
             setIsLoading(false);
             return;

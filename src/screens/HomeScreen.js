@@ -64,7 +64,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
 
   const getProductsHelper = async () => {
     setProductIsLoading(true);
-    let data = await getAllProducts();
+    const data = await getAllProducts();
     setProductIsLoading(false);
     if (data?.error) {
       console.log(data.error)

@@ -171,7 +171,6 @@ function OrderScreen({ navigation, customer }) {
                     </Text>
                 </View>
             }
-            {console.log(orders[0])}
             <FlatList
                 data={orders}
                 style={{

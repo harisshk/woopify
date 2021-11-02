@@ -25,7 +25,6 @@ function StepperCounter({ max, min, curr, setCurr, policy }) {
                     borderBottomLeftRadius: normalize(8)
                 }}
                 onPress={() => {
-                    console.log(policy)
                     if (max >= curr || policy === "deny") {
                         setCurr(curr + 1);
                     }

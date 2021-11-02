@@ -167,7 +167,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                 const cart = {
                     cart: { count: checkout?.lineItems?.length }
                 }
-                console.log(checkout)
                 setCart({ ...cart });
                 setCartIsLoading(false);
                 Toast.show('Added to Cart');

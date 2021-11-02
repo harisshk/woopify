@@ -225,7 +225,6 @@ function RegisterScreen({navigation, setCustomer}) {
             let response = await createNewCustomer(body);
             if(response?.errors){
                 const {errors} = response;
-                console.log(response)
                 if(errors?.email){
                     Toast.show(`Email ${errors.email[0]}`);
                     setInput({
