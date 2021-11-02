@@ -19,4 +19,4 @@ export const client = Client.buildClient({
 });
 
 
-export const API_ENDPOINT = `https://1c29-106-51-88-144.ngrok.io`;
+export const API_ENDPOINT = `https://shopify-connect-api.herokuapp.com`;

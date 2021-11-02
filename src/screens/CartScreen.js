@@ -557,6 +557,7 @@ function CartScreen({ navigation, setCart, customer }) {
                         onPress={() => {
                             navigation.goBack();
                         }}
+                        
                     >
                         <Text
                             style={{
@@ -617,6 +618,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                         flexDirection: "row",
                                         marginVertical: normalize(5)
                                     }}
+                                    disabled={true}
                                 >
                                     <Image
                                         style={{

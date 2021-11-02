@@ -113,7 +113,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
         setCartIsLoading(true);
         const response = await uploadImage(image);
         const { data } = response;
-        if (data.success === true) {
+        if (data?.success === true) {
             Toast.showWithGravity ('Image Uploaded Successfully...', Toast.SHORT, Toast.TOP);
             const { asset } = data;
             let checkoutExists = await AsyncStorage.getItem('checkoutId');
@@ -174,7 +174,9 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                 console.log(error);
             });
         } else {
+            console.log(response);
             Toast.show('Something went wrong ...', Toast.SHORT);
+            setCartIsLoading(false);
             return;
         }
         
