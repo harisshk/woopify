@@ -65,15 +65,15 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
   }
 
   const getProductsHelper = async () => {
-    if(limit === 1){
+    if (limit === 1) {
       setProductIsLoading(true);
-    }else{
+    } else {
       setIsLoadingMore(true);
     }
     const data = await getAllProducts(limit * MAX_PRODUCT);
-    if(limit === 1){
+    if (limit === 1) {
       setProductIsLoading(false);
-    }else{
+    } else {
       setIsLoadingMore(false);
     }
     if (data?.error) {
@@ -81,20 +81,28 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
       console.log('----------Error Line 90 Home Screen----------');
       return;
     }
-    if(data?.products?.length === products.length){
+    if (data?.products?.length === products.length) {
       setIsEnd(true);
       return;
     }
-    if(limit === 1){
+    if (limit === 1) {
       setProducts(data);
-    }else {
-      const temp = data?.products.slice((limit-1) * MAX_PRODUCT, data?.products?.length);
-      setProducts({products: temp});
+    } else {
+      if (data?.products?.length < (limit - 1) * MAX_PRODUCT) {
+        setIsEnd(true);
+        return;
+      }
+      const temp = data?.products.slice((limit - 1) * MAX_PRODUCT, data?.products?.length);
+      if (data?.products?.length <= products.length + temp.length) {
+        setIsEnd(true);
+      }
+      setProducts({ products: temp });
+
     }
   }
 
-  const handleLoadMore = async() => {
-    if(isEnd === false){
+  const handleLoadMore = async () => {
+    if (isEnd === false) {
       setLimit(limit + 1);
     }
   };
@@ -116,7 +124,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
       <View
         style={{
           // flex:1
-          elevation:1,
+          elevation: 1,
           shadowColor: theme.colors.primary,
           shadowOpacity: 1
         }}
@@ -153,7 +161,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           navigation.navigate('SearchScreen')
         }}
         style={{
-          
+
         }}
       >
         <View
@@ -202,13 +210,15 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             onRefresh={onRefresh}
           />
         }
-  
-        onScroll={({nativeEvent}) => {
+
+        scrollEventThrottle={16}
+
+        onScroll={({ nativeEvent }) => {
           if (isCloseToBottom(nativeEvent)) {
             handleLoadMore();
           }
         }}
-        // onThre={0.5}
+      // onThre={0.5}
       // onScroll={event => {
       //   setContentVerticalOffset(event.nativeEvent.contentOffset.y);
       // }}
@@ -221,7 +231,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         > */}
 
 
-          {/* <TouchableOpacity
+        {/* <TouchableOpacity
             style={{
               flex: 1,
             }}
@@ -334,7 +344,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             productIsLoading && {
               marginVertical: normalize(30)
             },
-            { width: '100%', flexDirection: "row"}]}
+            { width: '100%', flexDirection: "row" }]}
           layout={[
             {
               width: width / 2.24,

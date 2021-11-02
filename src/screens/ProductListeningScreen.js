@@ -8,20 +8,18 @@ import {
     Text,
     TouchableOpacity,
     Dimensions,
-    Image
+    Image,
+    FlatList
 } from 'react-native';
 import base64 from 'react-native-base64';
 import { Gallery } from 'react-native-gallery-view';
-import { FlatList } from 'react-native-gesture-handler';
 import normalize from 'react-native-normalize';
 import { connect } from 'react-redux';
 import { CustomHeader } from '../components/CustomHeader';
 import SubHeading from '../components/SubHeading';
-import { setProducts } from '../redux/action/products';
 import { getProductInfo } from '../services/products';
 import { theme } from '../utils/theme';
 import ActionSheet from 'react-native-actions-sheet';
-import { Picker } from '@react-native-picker/picker';
 import { client } from '../services';
 import Toast from 'react-native-simple-toast';
 import { setCart } from '../redux/action/cart';
@@ -381,7 +379,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                         {options.map((option, index) => {
                             return (
                                 <View
-                                    key={index}
+                                    key={index + option?.name}
                                 >
                                     <Text
                                         style={{
@@ -465,7 +463,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                         >
                             Product Description
                         </Text>
-                        {product?.body_html?.replace(/<\/?[^>]+(>|$)/g, "").split(".").map(str => {
+                        {product?.body_html?.replace(/<\/?[^>]+(>|$)/g, "").split(".").map((str,index) => {
                             if (str.length > 0) {
                                 return (
                                     <Text
@@ -476,6 +474,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                             marginVertical: normalize(6),
                                             fontWeight: theme.fontWeight.medium
                                         }}
+                                        key={index+""}
                                     >
                                         * {str}.
                                     </Text>

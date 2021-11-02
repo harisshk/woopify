@@ -24,7 +24,10 @@ function OrderScreen({ navigation, customer }) {
     }
     useEffect(async () => {
         getOrders();
-    }, [isFocussed, status]);
+        return () => {
+            setStatus("any");
+        }
+    }, [status]);
 
     const getOrders = async () => {
         setIsLoading(true);
@@ -48,6 +51,25 @@ function OrderScreen({ navigation, customer }) {
                     justifyContent: "space-between"
 
                 }}>
+                <View>
+                <TouchableOpacity
+                    onPress={()=> {
+                        navigation.goBack();
+                    }}
+                    style={{
+                        paddingVertical: normalize(10),
+                    }}
+                >
+                    <Text
+                        style={{
+                            color: theme.colors.unfocused,
+                            fontWeight: theme.fontWeight.bold,
+                            fontSize: theme.fontSize.medium
+                        }}
+                    >
+                        Go Back
+                    </Text>
+                </TouchableOpacity>
                 <Text
                     style={{
                         fontWeight: theme.fontWeight.medium,
@@ -56,6 +78,8 @@ function OrderScreen({ navigation, customer }) {
                 >
                     My Orders
                 </Text>
+                
+                </View>
                 <Menu
                     visible={statusMenu}
                     onDismiss={() => {
@@ -126,28 +150,28 @@ function OrderScreen({ navigation, customer }) {
                         width: '90%',
                         height: normalize(120),
                         marginVertical: normalize(5),
-                        key: 'OrderScreen1',
+                        key: 'OrderScreen2',
                         alignSelf: "center"
                     },
                     {
                         width: '90%',
                         height: normalize(120),
                         marginVertical: normalize(5),
-                        key: 'OrderScreen1',
+                        key: 'OrderScreen3',
                         alignSelf: "center"
                     },
                     {
                         width: '90%',
                         height: normalize(120),
                         marginVertical: normalize(5),
-                        key: 'OrderScreen1',
+                        key: 'OrderScreen4',
                         alignSelf: "center"
                     },
                     {
                         width: '90%',
                         height: normalize(120),
                         marginVertical: normalize(5),
-                        key: 'OrderScreen1',
+                        key: 'OrderScreen5',
                         alignSelf: "center"
                     },
                 ]}
@@ -185,25 +209,27 @@ function OrderScreen({ navigation, customer }) {
                 }
                 renderItem={({ item, index }) => {
                     return (
-                        item?.shipping_address && <View
+                        item?.shipping_address && 
+                        <View
                             style={[{
-                                // backgroundColor: "#bbbbfa",
-                                backgroundColor: theme.colors.white,
-                                padding: normalize(10),
-                                borderRadius: normalize(10),
-                                elevation: 2,
-                                marginVertical: normalize(5),
-                                flexDirection: "row",
-                                flex: 1,
-                                borderWidth: 2,
-                                borderColor: theme.colors.white,
-                                shadowOpacity: .1,
-                                shadowColor: theme.colors.secondary
-                            },
-                            index + 1 === orders.length && orders.length > 3 && {
-                                marginBottom: normalize(25)
-                            }
+                                    // backgroundColor: "#bbbbfa",
+                                    backgroundColor: theme.colors.white,
+                                    padding: normalize(10),
+                                    borderRadius: normalize(10),
+                                    elevation: 2,
+                                    marginVertical: normalize(5),
+                                    flexDirection: "row",
+                                    flex: 1,
+                                    borderWidth: 2,
+                                    borderColor: theme.colors.white,
+                                    shadowOpacity: .1,
+                                    shadowColor: theme.colors.secondary
+                                },
+                                index + 1 === orders.length && orders.length > 3 && {
+                                    marginBottom: normalize(25)
+                                }
                             ]}
+                            key={item.id}
                         >
                             <TouchableOpacity
                                 onPress={() => {
