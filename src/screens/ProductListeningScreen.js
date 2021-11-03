@@ -287,7 +287,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                         if (product.variants[i].option1 === option1) {
                             option2.push(product.variants[i].option2);
                             option3.push(product.variants[i].option3);
-
                         }
                     }
                     optionAvailable.push(option2);
@@ -437,17 +436,61 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                         >
                             {product?.title}
                         </Text>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                marginBottom: normalize(15),
+                                justifyContent: "space-between",
+                                marginTop: normalize(8)
+                            }}
+                        >
                         <Text
                             style={{
                                 fontSize: theme.fontSize.title,
                                 fontWeight: theme.fontWeight.normal,
                                 lineHeight: theme.lineHeight.title,
                                 color: theme.colors.primary,
-                                marginBottom: normalize(15)
                             }}
                         >
                             $ {product?.variants[selectedVariantIndex]?.price}
                         </Text>
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: "row",
+                                alignItems: 'center',
+                                justifyContent: "center",
+                                backgroundColor: theme.colors.primary,
+                                height: '100%',
+                                padding: normalize(10),
+                                borderRadius: normalize(5),
+                                elevation: 2
+                            }}
+                            onPress={()=>{
+                                navigation.navigate('BottomTab', {
+                                    screen: 'CartScreen'
+                                });
+                            }}
+                        >
+                        <Image
+                            source={require('../assets/images/bag-outline.png')}
+                            style={{
+                                width: normalize(20),
+                                height: normalize(20)
+                            }}
+                            resizeMode="center"
+                        />  
+                        <Text
+                            style={{
+                                fontSize: theme.fontSize.paragraph,
+                                marginTop: normalize(2),
+                                marginLeft: normalize(5)
+                            }}
+                        >
+                            MY CART
+                        </Text> 
+                        </TouchableOpacity>   
+                        </View>
                         {options.map((option, index) => {
                             return (
                                 <View

@@ -510,6 +510,11 @@ function CartScreen({ navigation, setCart, customer }) {
                                                     addressActionRef.current?.hide();
                                                     navigation.navigate('AddAddressScreen', { toUpdateAddress: true, address: item })
                                                 }}
+                                                style={{
+                                                    // backgroundColor: "red",
+                                                    padding: normalize(10),
+                                                    alignSelf: "center"
+                                                }}
                                             >
 
                                                 <Image
