@@ -164,7 +164,7 @@ function SearchScreen({ navigation }) {
                 >
                     {products.map((product) =>
                         <ProductView01
-                            isFromCategory={true}
+                            isFromCategory={false}
                             key={product.id}
                             item={product}
                             navigation={navigation}
