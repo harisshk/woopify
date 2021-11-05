@@ -131,14 +131,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
             }
             if(data?.noImage === true){
                 let checkoutExists = await AsyncStorage.getItem('checkoutId');
-    
                 if (checkoutExists === null) {
                     const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
-                    // const variantId = product.variants[variantChosen < 0 ? 0 : variantChosen].id;
                     const lineItemsToAdd = [
                         {
                             variantId: variantId,
-                            //variantId: product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].id,
                             quantity: quantity,
                         }
                     ];
