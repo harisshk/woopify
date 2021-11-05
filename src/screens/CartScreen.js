@@ -42,7 +42,7 @@ function CartScreen({ navigation, setCart, customer }) {
                 ];
                 setEditCartLoading(true);
                 let checkout = await client.checkout.updateLineItems(checkoutId, lineItemsToUpdate)
-                let data = Object.assign({}, { checkout: checkout })
+                let data = Object.assign({}, { checkout: checkout });
                 setCartItem({ ...data.checkout });
                 setEditCartLoading(false);
             } catch (error) {
@@ -117,13 +117,17 @@ function CartScreen({ navigation, setCart, customer }) {
             lastName: address?.last_name,
             phone: address?.phone,
             province: address?.province,
-            zip: address?.zip
+            zip: address?.zip,
         };
         try {
             client.checkout.updateShippingAddress(checkoutId, shippingAddress).then(checkout => {
                 navigation.navigate('CheckoutScreen', { uri: cartItem.webUrl });
                 addressActionRef.current?.hide();
             });
+            // client.checkout.fetch(checkoutId).then((checkout) => {
+            //     // Do something with the checkout
+            //     console.log(checkout);
+            //   });
         } catch (error) {
             console.log(error);
             console.log('----------------CartScreen Line 134----------------------');

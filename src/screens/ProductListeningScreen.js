@@ -133,28 +133,17 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                 let checkoutExists = await AsyncStorage.getItem('checkoutId');
     
                 if (checkoutExists === null) {
-                    client.checkout.create().then(async (checkout) => {
+                    const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
+                    // const variantId = product.variants[variantChosen < 0 ? 0 : variantChosen].id;
+                    const lineItemsToAdd = [
+                        {
+                            variantId: variantId,
+                            //variantId: product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].id,
+                            quantity: quantity,
+                        }
+                    ];
+                    client.checkout.create({email: customer?.email,lineItems: lineItemsToAdd}).then(async (checkout) => {
                         await AsyncStorage.setItem('checkoutId', JSON.stringify(checkout.id));
-                        /**
-                         * Rest API Id to StoreFront API ID
-                         */
-                        const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
-                        // const variantId = product.variants[variantChosen < 0 ? 0 : variantChosen].id;
-                        const lineItemsToAdd = [
-                            {
-                                variantId: variantId,
-                                //variantId: product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].id,
-                                quantity: quantity,
-                            }
-                        ];
-                        client.checkout.addLineItems(checkout.id, lineItemsToAdd).then((checkout) => {
-                            const cart = {
-                                cart: { count: checkout?.lineItems?.length }
-                            }
-                            setCart({ ...cart });
-                            Toast.show('Added to Cart');
-                            setCartIsLoading(false);
-                        })
                         setCartIsLoading(false);
                         return;
                     });
