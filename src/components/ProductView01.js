@@ -44,7 +44,7 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                     flex:1,
                 }}
                 resizeMode="contain"
-                source={{ uri: item.images[0].src }}
+                source={{ uri:item?.images ? item?.images[0]?.src : item?.featured_image?.url }}
             />
             <Text
 
@@ -67,7 +67,7 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                         color: theme.colors.primary
                     }}
                 >
-                    ${item?.variants[0]?.price}
+                    ${item?.variants[0]?.price || item?.price}
                 </Text>
             }
         </TouchableOpacity>

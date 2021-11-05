@@ -1,7 +1,7 @@
 
 import Client from 'shopify-buy';
 
-const store = "petinpic";
+export const store = "petinpic";
 export const API_URL = `https://${store}.myshopify.com/admin/api/2021-07`;
 
 // `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`;

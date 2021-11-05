@@ -4,7 +4,7 @@ import base64 from 'react-native-base64';
 import normalize from 'react-native-normalize'
 import ProductView01 from '../components/ProductView01';
 import { client } from '../services';
-import { getProductInfo } from '../services/products';
+import { getProductInfo, searchProductsByQuery } from '../services/products';
 import { theme } from '../utils/theme'
 
 function SearchScreen({ navigation }) {
@@ -21,19 +21,23 @@ function SearchScreen({ navigation }) {
             return;
         }
         setIsLoading(true);
-        const query = {
-            query: text,
-        };
-        const graphqlProducts = await client.product.fetchQuery(query);
+        // const query = {
+        //     query: text,
+        // };
+        // const graphqlProducts = await client.product.fetchQuery(query);
         let temp = [];
-        for(let i = 0; i < graphqlProducts.length; i++){
-            const product = graphqlProducts[i];
-            const productIdArray = await base64.decode(product.id).split("/");
-            const productId = productIdArray[productIdArray.length - 1];
-            const data = await getProductInfo(productId);
-            temp.push(data.product);
-        }
-        setProducts([...temp]);
+        // for(let i = 0; i < graphqlProducts.length; i++){
+            // const product = graphqlProducts[i];
+            // const productIdArray = await base64.decode(product.id).split("/");
+            // const productId = productIdArray[productIdArray.length - 1];
+            // const data = await getProductInfo(productId);
+            // temp.push(data.product);
+        // }
+        // setProducts([...temp]);
+        const response = await searchProductsByQuery(text);
+        const { resources } = response;
+        const { results } = resources;
+        setProducts([...results.products]);
         setIsLoading(false);
     }
 
@@ -92,9 +96,12 @@ function SearchScreen({ navigation }) {
                         maxLength={32}
                         value={query}
                         onChangeText={(text) => {
+
                             setQuery(text);
                         }}
-                        onSubmitEditing={searchHandler}
+                        onSubmitEditing={() => {
+                            searchHandler(query)
+                        }}
                     />
                     <TouchableOpacity
                         style={{
