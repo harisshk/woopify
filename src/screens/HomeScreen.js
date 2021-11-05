@@ -14,6 +14,8 @@ import SkeletonContent from 'react-native-skeleton-content-nonexpo';
 import { client } from '../services';
 import Footer from '../components/Footer';
 const { width } = Dimensions.get('window');
+import NetInfo from "@react-native-community/netinfo";
+
 
 const HomeScreen = ({ categories, setCategories, navigation, products, setProducts, cart }) => {
   const [refreshing, setRefreshing] = useState(false);
@@ -119,6 +121,17 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     const paddingToBottom = 30;
     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
   };
+  
+  
+  useEffect(()=>{
+    const unsubscribe = NetInfo.addEventListener(state => {
+      console.log("Connection type", state.type);
+      console.log("Is connected?", state.isConnected);
+      if(state.isConnected === false){
+        navigation.navigate('NetworkIssueScreen');
+      }
+    });
+  });
 
   return (
     <SafeAreaView

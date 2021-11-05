@@ -16,6 +16,8 @@ import EditProfileScreen from '../screens/EditProfileScreen';
 import SearchScreen from '../screens/SearchScreen';
 import ProductListeningScreen from '../screens/ProductListeningScreen';
 import OrdersScreen from '../screens/OrdersScreen';
+import SettingScreen from '../screens/SettingScreen';
+import NetworkIssueScreen from '../screens/NetworkIssueScreen';
 
 const MainNavigator = createStackNavigator();
 
@@ -34,6 +36,18 @@ const HomeNavigator = () => {
                 options={{ headerShown: false }} 
                 name="BottomTab" 
                 component={BottomTab} 
+            />
+            <MainNavigator.Screen 
+                options={{ headerShown: false }} 
+                name="SettingScreen" 
+                component={SettingScreen} 
+            />
+             <MainNavigator.Screen 
+                options={{ headerShown: false, 
+                    gestureEnabled: false, }} 
+                name="NetworkIssueScreen" 
+                
+                component={NetworkIssueScreen} 
             />
             <MainNavigator.Screen 
                 options={({ route }) => ({

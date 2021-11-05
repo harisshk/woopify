@@ -473,6 +473,26 @@ const Profile = ({ navigation, customer, cart }) => {
               borderBottomColor: "#e3e3e3",
               paddingBottom: normalize(10)
             }}
+            onPress={()=>{
+              navigation.navigate('SettingScreen');
+            }}
+          >
+            <Text
+              style={{
+                fontSize: theme.fontSize.paragraph,
+                color: theme.colors.secondary
+              }}
+            >
+              Store Policy
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              marginVertical: normalize(10),
+              borderBottomWidth: 2,
+              borderBottomColor: "#e3e3e3",
+              paddingBottom: normalize(10)
+            }}
             onPress={logoutHandler}
           >
             <Text
