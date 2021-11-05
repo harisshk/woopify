@@ -48,12 +48,6 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
    * @returns void
    */
   const getCategoriesHelper = async () => {
-    // client.collection.fetchAllWithProducts().then((collections) => {
-    //   // Do something with the collections
-    //   let data = Object.assign({}, { collections: collections })
-    //   console.log(data);
-    //   setCategories({ categories: data.collections })
-    // });
     setCategoryIsLoading(true);
     const data = await getAllCategories();
     setCategoryIsLoading(false);
@@ -125,8 +119,6 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
   
   useEffect(()=>{
     const unsubscribe = NetInfo.addEventListener(state => {
-      console.log("Connection type", state.type);
-      console.log("Is connected?", state.isConnected);
       if(state.isConnected === false){
         navigation.navigate('NetworkIssueScreen');
       }

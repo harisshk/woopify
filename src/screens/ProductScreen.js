@@ -338,7 +338,6 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
             //     }
             // }
             // const data = await createCheckout(body);
-            // console.log(data);
             // return;
 
 

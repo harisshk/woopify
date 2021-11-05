@@ -28,8 +28,6 @@ import { uploadImage } from '../services/asset';
 import StepperCounter from '../components/StepperCounter';
 import Footer from '../components/Footer';
 
-
-
 Array.prototype.insert = function (i, ...rest) {
     return this.slice(0, i).concat(rest, this.slice(i));
 }
