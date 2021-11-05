@@ -649,14 +649,12 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                 }
                 {
                     isLoading === false && <Footer />
-                }
-                
+                }     
                 <View
                     style={{
                         height: normalize(50)
                     }}
                 />
-
                 <ActionSheet
                     ref={addToCartRef}
                     drawUnderStatusBar={true}
@@ -762,9 +760,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                     </View>
                 </ActionSheet>
             </ScrollView>
-
-
-
         </SafeAreaView>
     )
 }

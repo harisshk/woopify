@@ -27,7 +27,7 @@ function CartScreen({ navigation, setCart, customer }) {
     const [checkoutId, setCheckoutId] = useState(null);
     const [totalStock, setTotalStock] = useState(0);
     const [policy, setPolicy] = useState(null);
-    
+
     const [refreshing, setRefreshing] = useState(true);
     const onRefresh = () => {
         setRefreshing(true);
@@ -121,13 +121,9 @@ function CartScreen({ navigation, setCart, customer }) {
         };
         try {
             client.checkout.updateShippingAddress(checkoutId, shippingAddress).then(checkout => {
-                navigation.navigate('CheckoutScreen', { uri: cartItem.webUrl });
+                navigation.navigate('CheckoutScreen', { uri: cartItem?.webUrl });
                 addressActionRef.current?.hide();
             });
-            // client.checkout.fetch(checkoutId).then((checkout) => {
-            //     // Do something with the checkout
-            //     console.log(checkout);
-            //   });
         } catch (error) {
             console.log(error);
             console.log('----------------CartScreen Line 134----------------------');
@@ -251,58 +247,14 @@ function CartScreen({ navigation, setCart, customer }) {
                     >
                         Choose Shipping Address
                     </Text>
-                    {/* <ScrollView
-                        showsVerticalScrollIndicator={false}
+                    <View>
+                        <FlatList
+                            style={{
+                                // height: '100%'
+                            }}
+                            data={customer.addresses}
 
-                        contentContainerStyle={{
-                            // flex: 1,
-                            backgroundColor: "red",
-                            height: normalize(300)
-                        }}
-                        style={{
-                            backgroundColor: "red",
-                            height: normalize(300),
-                            // flex:1
-                        }}
-                    >
-                        {customer.addresses.length === 0 ?
-                            <View
-                                style={{
-                                    justifyContent: "center",
-                                    alignContent: "center",
-                                    alignItems: "center",
-                                    height: '100%'
-                                }}
-                            >
-                                <Text
-                                    style={{
-                                        fontSize: theme.fontSize.subheading,
-                                        fontWeight: theme.fontWeight.thin
-                                    }}
-                                >
-                                    No Address Found
-                                </Text>
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        navigation.navigate('AddAddressScreen', { toUpdateAddress: false });
-                                        addressActionRef.current?.hide();
-                                    }}
-                                >
-
-                                    <Text
-                                        style={{
-                                            color: theme.colors.primary,
-                                            textDecorationLine: "underline",
-                                            marginTop: normalize(14),
-                                            fontSize: theme.fontSize.subheading,
-                                        }}
-                                    >
-                                        Add Address to Continue.
-                                    </Text>
-                                </TouchableOpacity>
-                            </View>
-                            :
-                            customer.addresses.map((item,index) => {
+                            renderItem={({ item, index }) => {
                                 return (
                                     <TouchableOpacity
                                         style={{
@@ -318,138 +270,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                         onPress={() => {
                                             shippingAddressHandler(item);
                                         }}
-                                        key={index}
-                                    >
-                                        <View
-                                            style={{
-                                                flex: .8
-                                            }}
-                                        >
-                                            <Text
-                                                style={{
-                                                    fontSize: theme.fontSize.paragraph,
-                                                    fontWeight: theme.fontWeight.medium,
-                                                    lineHeight: theme.lineHeight.medium
-                                                }}
-                                            >
-                                                {item.name},
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontSize: theme.fontSize.paragraph,
-                                                    fontWeight: theme.fontWeight.normal,
-                                                    lineHeight: theme.lineHeight.paragraph
-                                                }}
-                                            >
-                                                {item.address1}, {item.address2},
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontSize: theme.fontSize.paragraph,
-                                                    fontWeight: theme.fontWeight.normal,
-                                                    lineHeight: theme.lineHeight.paragraph
-                                                }}
-                                            >
-                                                {item.city}, {item.province},
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontSize: theme.fontSize.paragraph,
-                                                    fontWeight: theme.fontWeight.normal,
-                                                    lineHeight: theme.lineHeight.paragraph
-                                                }}
-                                            >
-                                                {item.zip}, {item.country}.
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontSize: theme.fontSize.paragraph,
-                                                    fontWeight: theme.fontWeight.medium,
-                                                    lineHeight: theme.lineHeight.paragraph,
-                                                    marginTop: normalize(5),
-                                                    color: theme.colors.primary
-                                                }}
-                                            >
-                                                {item?.address?.default === true && "(Default Address)"}
-                                            </Text>
-                                        </View>
-                                        <View
-                                            style={{
-                                                flex: .2
-                                            }}
-                                        >
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    addressActionRef.current?.hide();
-                                                    navigation.navigate('AddAddressScreen', { toUpdateAddress: true, address: item })
-                                                }}
-                                            >
-
-                                                <Image
-                                                    source={require('../assets/images/edit.png')}
-                                                    style={{
-                                                        padding: normalize(1),
-                                                        height: normalize(20),
-                                                        width: normalize(20),
-                                                        marginLeft: normalize(20)
-                                                    }}
-                                                />
-                                            </TouchableOpacity>
-                                        </View>
-                                    </TouchableOpacity>
-
-                                )
-                            })}
-                        <TouchableOpacity
-                            onPress={() => {
-                                navigation.navigate('AddAddressScreen', { toUpdateAddress: false });
-                                addressActionRef.current?.hide();
-                            }}
-                        >
-
-                            <Text
-                                style={{
-                                    color: theme.colors.primary,
-                                    textDecorationLine: "underline",
-                                    marginTop: normalize(14),
-                                    fontSize: theme.fontSize.subheading,
-                                    textAlign: "center"
-                                }}
-                            >
-                                Add Address to Continue.
-                            </Text>
-                        </TouchableOpacity>
-                    </ScrollView> */}
-                    
-                    <View
-                        style={{
-                            // backgroundColor: "red",
-                            // height: 320
-                        }}
-                    >
-                    <FlatList
-                        style={{
-                            // height: '100%'
-                        }}
-                        data={customer.addresses}
-
-                        renderItem={({item,index}) => {
-                            return(
-<TouchableOpacity
-                                        style={{
-                                            backgroundColor: theme.colors.imageBackground,
-                                            padding: normalize(12),
-                                            borderRadius: normalize(12),
-                                            flexDirection: "row",
-                                            marginVertical: normalize(5),
-                                            elevation: normalize(5),
-                                            alignItems: "center",
-                                            minHeight: normalize(120)
-                                        }}
-                                        onPress={() => {
-                                            shippingAddressHandler(item);
-                                        }}
-                                        key={index}
+                                        key={item.id}
                                     >
                                         <View
                                             style={{
@@ -533,10 +354,10 @@ function CartScreen({ navigation, setCart, customer }) {
                                             </TouchableOpacity>
                                         </View>
                                     </TouchableOpacity>
-                            )
-                        }}
-                        keyExtractor={(item,index) => index}
-                    />
+                                )
+                            }}
+                            keyExtractor={(item, index) => item.id}
+                        />
                     </View>
                 </ScrollView>
             </ActionSheet>
@@ -566,7 +387,7 @@ function CartScreen({ navigation, setCart, customer }) {
                         onPress={() => {
                             navigation.goBack();
                         }}
-                        
+
                     >
                         <Text
                             style={{
@@ -603,142 +424,142 @@ function CartScreen({ navigation, setCart, customer }) {
                         </View>
                     }
                     <View>
-                    <FlatList
-                        data={cartItem.lineItems}
-                        style={{
-                            marginVertical: normalize(10),
-                            // flex: 1,
-                            height: '95%',
-                        }}
-                        refreshControl={
-                            <RefreshControl
-                                refreshing={refreshing}
-                                onRefresh={onRefresh}
-                            />
-                        }
-                        showsVerticalScrollIndicator={false}
-                        renderItem={({ item }) => {
-                            return (
-                                <TouchableOpacity
-                                    style={{
-                                        flex: 1,
-                                        width: '98%',
-                                        alignSelf: "center",
-                                        flexDirection: "row",
-                                        marginVertical: normalize(5)
-                                    }}
-                                    disabled={true}
-                                >
-                                    <Image
-                                        style={{
-                                            height: normalize(95),
-                                            width: '100%',
-                                            padding: 2,
-                                            flex: .56,
-                                            marginRight: normalize(5),
-                                            borderRadius: normalize(10)
-                                        }}
-                                        resizeMode={"center"}
-                                        source={{ uri: item.variant?.image?.src }}
-                                    />
-                                    <View
+                        <FlatList
+                            data={cartItem.lineItems}
+                            style={{
+                                marginVertical: normalize(10),
+                                // flex: 1,
+                                height: '95%',
+                            }}
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                />
+                            }
+                            showsVerticalScrollIndicator={false}
+                            renderItem={({ item }) => {
+                                return (
+                                    <TouchableOpacity
                                         style={{
                                             flex: 1,
-                                            marginHorizontal: normalize(5),
-                                            justifyContent: "space-around"
+                                            width: '98%',
+                                            alignSelf: "center",
+                                            flexDirection: "row",
+                                            marginVertical: normalize(5)
                                         }}
+                                        disabled={true}
                                     >
-                                        <Text
+                                        <Image
                                             style={{
-                                                fontSize: theme.fontSize.paragraph
+                                                height: normalize(95),
+                                                width: '100%',
+                                                padding: 2,
+                                                flex: .56,
+                                                marginRight: normalize(5),
+                                                borderRadius: normalize(10)
                                             }}
-                                            numberOfLines={2}
-                                        >
-                                            {item.title}
-                                        </Text>
-                                        <Text
-                                            style={{
-                                                color: theme.colors.placeholder
-                                            }}
-                                        >
-                                            {item.variant.title}
-                                        </Text>
-
+                                            resizeMode={"center"}
+                                            source={{ uri: item.variant?.image?.src }}
+                                        />
                                         <View
                                             style={{
-                                                flexDirection: "row"
+                                                flex: 1,
+                                                marginHorizontal: normalize(5),
+                                                justifyContent: "space-around"
                                             }}
                                         >
                                             <Text
                                                 style={{
-                                                    fontWeight: theme.fontWeight.medium,
+                                                    fontSize: theme.fontSize.paragraph
                                                 }}
+                                                numberOfLines={2}
                                             >
-                                                Quantity {item.quantity}
+                                                {item.title}
                                             </Text>
-                                            <TouchableOpacity
-                                                onPress={async () => {
-                                                    const variantId = base64.decode(item.variant.id + "").split("/");
-                                                    const variant = await getProductByVariant(variantId[variantId.length - 1]);
-                                                    const { inventory_quantity, inventory_policy} = variant.variant;
-                                                    setPolicy(inventory_policy);
-                                                    setTotalStock(inventory_quantity);
-                                                    editActionRef.current?.setModalVisible(true);
-                                                    // setTotalStock([...newStockCount]);
-                                                    setSelectedStock(item?.quantity || 1);
-                                                    setEditItem(item);
-                                                }}
+                                            <Text
                                                 style={{
-                                                    alignItems: "center",
+                                                    color: theme.colors.placeholder
                                                 }}
-                                                disabled={editCartLoading}
                                             >
-                                                {editCartLoading ?
-                                                    <ActivityIndicator
-                                                        color={theme.colors?.secondary}
-                                                        style={{
-                                                            marginLeft: normalize(12),
-                                                        }}
-                                                    /> :
-                                                    <Text
-                                                        style={{
-                                                            fontWeight: theme.fontWeight.normal,
-                                                            marginLeft: normalize(10),
-                                                            color: theme.colors.secondary,
-                                                        }}
-                                                    >
-                                                        Edit
-                                                    </Text>
-                                                }
-                                            </TouchableOpacity>
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    removeItemFromCart(item);
+                                                {item.variant.title}
+                                            </Text>
+
+                                            <View
+                                                style={{
+                                                    flexDirection: "row"
                                                 }}
-                                                disabled={editCartLoading}
                                             >
-                                                {editCartLoading === false &&
-                                                    <Text
-                                                        style={{
-                                                            fontWeight: theme.fontWeight.thin,
-                                                            marginLeft: normalize(10),
-                                                            color: "red"
-                                                        }}
-                                                    >
-                                                        Remove
-                                                    </Text>
-                                                }
-                                            </TouchableOpacity>
+                                                <Text
+                                                    style={{
+                                                        fontWeight: theme.fontWeight.medium,
+                                                    }}
+                                                >
+                                                    Quantity {item.quantity}
+                                                </Text>
+                                                <TouchableOpacity
+                                                    onPress={async () => {
+                                                        const variantId = base64.decode(item.variant.id + "").split("/");
+                                                        const variant = await getProductByVariant(variantId[variantId.length - 1]);
+                                                        const { inventory_quantity, inventory_policy } = variant.variant;
+                                                        setPolicy(inventory_policy);
+                                                        setTotalStock(inventory_quantity);
+                                                        editActionRef.current?.setModalVisible(true);
+                                                        // setTotalStock([...newStockCount]);
+                                                        setSelectedStock(item?.quantity || 1);
+                                                        setEditItem(item);
+                                                    }}
+                                                    style={{
+                                                        alignItems: "center",
+                                                    }}
+                                                    disabled={editCartLoading}
+                                                >
+                                                    {editCartLoading ?
+                                                        <ActivityIndicator
+                                                            color={theme.colors?.secondary}
+                                                            style={{
+                                                                marginLeft: normalize(12),
+                                                            }}
+                                                        /> :
+                                                        <Text
+                                                            style={{
+                                                                fontWeight: theme.fontWeight.normal,
+                                                                marginLeft: normalize(10),
+                                                                color: theme.colors.secondary,
+                                                            }}
+                                                        >
+                                                            Edit
+                                                        </Text>
+                                                    }
+                                                </TouchableOpacity>
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        removeItemFromCart(item);
+                                                    }}
+                                                    disabled={editCartLoading}
+                                                >
+                                                    {editCartLoading === false &&
+                                                        <Text
+                                                            style={{
+                                                                fontWeight: theme.fontWeight.thin,
+                                                                marginLeft: normalize(10),
+                                                                color: "red"
+                                                            }}
+                                                        >
+                                                            Remove
+                                                        </Text>
+                                                    }
+                                                </TouchableOpacity>
+                                            </View>
                                         </View>
-                                    </View>
-                                    <View style={{ flex: .4, alignSelf: 'center' }}>
-                                        <Text style={{ textAlign: "right", fontSize: theme.fontSize.medium }}>$ {item?.variant?.price}</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            )
-                        }}
-                        keyExtractor={item => item.id}
-                    />
+                                        <View style={{ flex: .4, alignSelf: 'center' }}>
+                                            <Text style={{ textAlign: "right", fontSize: theme.fontSize.medium }}>$ {item?.variant?.price}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            }}
+                            keyExtractor={item => item.id}
+                        />
                     </View>
                 </View>
 
@@ -793,13 +614,13 @@ function CartScreen({ navigation, setCart, customer }) {
                                     fontSize: theme.fontSize.medium
                                 }}
                             >
-                                PROCEED CHECKOUT
+                                PROCEED TO CHECKOUT
                             </Text>
                         </TouchableOpacity>
                     </View>
                 }
             </View>
-            
+
         </SafeAreaView>
     )
 }
