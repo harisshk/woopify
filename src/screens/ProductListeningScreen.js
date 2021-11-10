@@ -167,7 +167,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     setCartIsLoading(false);
                     navigation.navigate('BottomTab', {
                         screen: 'CartScreen',
-                        
                         params: { previous_screen: route?.name, params: route?.params }
                     }, 'CartScreen');
                     Toast.show('Added to Cart');
@@ -736,6 +735,48 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         }}
                     >
                         {
+                            !image?.uri && 
+                            <><Text
+                                style={{
+                                    fontSize: theme.fontSize.medium,
+                                    fontWeight: theme.fontWeight.normal,
+                                    lineHeight: theme.lineHeight.medium
+                                }}
+                            >
+                                PHOTO GUIDE
+                            
+
+                            </Text>
+                            <Text
+                            style={{
+                                fontSize: theme.fontSize.paragraph,
+                                fontWeight: theme.fontWeight.medium,
+                                lineHeight: theme.lineHeight.medium
+                            }}
+                        >
+                            Natural Lighting
+                        </Text>
+                        <Text
+                            style={{
+                                fontSize: theme.fontSize.paragraph,
+                                fontWeight: theme.fontWeight.medium,
+                                lineHeight: theme.lineHeight.medium
+                            }}
+                        >
+                            Not blurry
+                        </Text>
+                        <Text
+                            style={{
+                                fontSize: theme.fontSize.paragraph,
+                                fontWeight: theme.fontWeight.medium,
+                                lineHeight: theme.lineHeight.medium
+                            }}
+                        >
+                            Good Quality
+                        </Text>
+                        </>
+                        }
+                        {
                             <TouchableOpacity
                                 style={{
                                     backgroundColor: theme.colors.secondary,
@@ -786,6 +827,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                             uploadImageHandler();
                                         }}
                                     >
+                                        
                                         <Text
                                             style={{
                                                 fontSize: theme.fontSize.medium,
