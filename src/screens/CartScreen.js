@@ -584,7 +584,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                     fontSize: theme.fontSize.medium,
                                 }}
                             >
-                                Total Amount
+                                Sub Total
                             </Text>
                             <Text
                                 style={{
@@ -592,7 +592,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                     fontWeight: theme.fontWeight.bold
                                 }}
                             >
-                                ${cartItem.paymentDue}
+                                ${cartItem?.lineItemsSubtotalPrice?.amount}
                             </Text>
                         </View>
                         <TouchableOpacity

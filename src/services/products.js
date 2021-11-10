@@ -3,7 +3,7 @@ import { ACCESS_PASSWORD, API_URL, store } from ".";
 
 export const getAllProducts = async (limit) => {
     try {
-        const response = await fetch(`${API_URL}/products.json?status=active&published_status=published&limit=${limit}`, {
+        const response = await fetch(`${API_URL}/products.json?status=active&published_status=published`, {
             method: 'GET', // *GET, POST, PUT, DELETE, etc.
             headers: {
                 'Content-Type': 'application/json',

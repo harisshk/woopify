@@ -70,12 +70,16 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     } else {
       setIsLoadingMore(true);
     }
-    const data = await getAllProducts(limit * MAX_PRODUCT);
-    if (limit === 1) {
-      setProductIsLoading(false);
-    } else {
-      setIsLoadingMore(false);
-    }
+    const data = await getAllProducts();
+    setProducts(data);
+    setIsEnd(true);setIsLoadingMore(false);
+    setProductIsLoading(false);
+    return;
+    // if (limit === 1) {
+    //   setProductIsLoading(false);
+    // } else {
+    //   setIsLoadingMore(false);
+    // }
     if (data?.error) {
       console.log(data.error)
       console.log('----------Error Line 90 Home Screen----------');
