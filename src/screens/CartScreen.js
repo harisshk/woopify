@@ -16,6 +16,7 @@ import base64 from 'react-native-base64';
 import StepperCounter from '../components/StepperCounter';
 import { EDIT } from '../constant/icon';
 import { icons } from '../constant';
+import CheckBox from '@react-native-community/checkbox';
 
 function CartScreen({ navigation, setCart, customer, route }) {
     const [cartItem, setCartItem] = useState({});
@@ -29,6 +30,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
     const [checkoutId, setCheckoutId] = useState(null);
     const [totalStock, setTotalStock] = useState(0);
     const [policy, setPolicy] = useState(null);
+    const [isDefault, setIsDefault] = useState(false);
 
     const [refreshing, setRefreshing] = useState(true);
     const onRefresh = () => {
@@ -412,7 +414,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
 
                 <View
                     style={{
-                        height: height / 1.55
+                        height: height / 1.93
                     }}
                 >
                     {isLoading === false && cartItem?.lineItems?.length === 0 &&
@@ -577,9 +579,11 @@ function CartScreen({ navigation, setCart, customer, route }) {
                         style={{
                             elevation: 2,
                             borderTopWidth: 2,
-                            borderTopColor: "#f5f5f5"
+                            borderTopColor: theme.colors.disabledButton,
+                            paddingTop: normalize(13)
                         }}
                     >
+                        
                         <View
                             style={{
                                 flexDirection: "row",
@@ -591,7 +595,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                     fontSize: theme.fontSize.medium,
                                 }}
                             >
-                                Sub Total
+                                Subtotal:
                             </Text>
                             <Text
                                 style={{
@@ -602,6 +606,51 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                 ${cartItem?.lineItemsSubtotalPrice?.amount}
                             </Text>
                         </View>
+                        <View
+                            style={{
+                                marginVertical: normalize(8)
+                            }}
+                        >
+                        <Text
+                            style={{
+                                marginVertical: normalize(10),
+                                fontWeight: theme.fontWeight.medium,
+                                fontSize: theme.fontSize.paragraph
+                            }}
+                        >
+                            Taxes, shipping and discounts codes calculated at checkout
+                        </Text>
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                            }}
+                        >
+                            <CheckBox
+                                value={isDefault}
+                                onValueChange={() => {
+                                    setIsDefault((curr) => !curr);
+                                }} 
+                                style={{
+                                    borderRadius: normalize(20),
+                                
+                                }}
+                                
+                                tintColor={theme.colors.secondary}
+                                onCheckColor={theme.colors.primary}
+                                onTintColor={theme.colors.primary}
+                            />
+                            <Text
+                                style={{
+                                    fontSize: theme.fontSize.medium,
+                                    lineHeight: theme.lineHeight.medium,
+                                    marginLeft: normalize(10)
+                                }}
+                            >
+                                I agree with terms and conditions
+                            </Text>
+                        </View>
+                        </View>
                         <TouchableOpacity
                             style={{
                                 height: normalize(55),
@@ -609,11 +658,15 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                 justifyContent: "center",
                                 backgroundColor: theme.colors.secondary,
                                 width: '100%',
-                                borderRadius: normalize(12),
-                                marginTop: normalize(15),
+                                borderRadius: normalize(6),
+                                marginTop: normalize(5),
                                 alignItems: "center",
                             }}
                             onPress={() => {
+                                if(isDefault === false){
+                                    Alert.alert('Agree T&C', 'You must agree with the terms and conditions of sales to check out.')
+                                    return;
+                                }
                                 addressActionRef.current?.show();
                             }}
                         >
