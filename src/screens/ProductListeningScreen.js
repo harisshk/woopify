@@ -156,7 +156,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 const lineItemsToAdd = [{
                     variantId: variantId,
                     quantity: quantity,
-
                 }];
 
                 client.checkout.addLineItems(checkoutId, lineItemsToAdd).then((checkout) => {
@@ -736,17 +735,27 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     >
                         {
                             !image?.uri && 
-                            <><Text
+                            <View
+                                style={{
+                                    borderColor: theme.colors.secondary,
+                                    borderWidth: 1,
+                                    width: '90%',
+                                    padding: normalize(10),
+                                    borderRadius: normalize(5)
+                                }}
+                            >
+                            <Text
                                 style={{
                                     fontSize: theme.fontSize.medium,
                                     fontWeight: theme.fontWeight.normal,
                                     lineHeight: theme.lineHeight.medium,
-                                    marginVertical: normalize(12)
+                                    marginVertical: normalize(12),
+                                    textAlign: "center"
                                 }}
                             >
                                 PHOTO GUIDE
                             </Text>
-                            <Text
+                        <Text
                             style={{
                                 fontSize: theme.fontSize.paragraph,
                                 fontWeight: theme.fontWeight.medium,
@@ -754,6 +763,17 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             }}
                         >
                             Natural Lighting
+                        </Text>
+                        <Text
+                            style={{
+                                fontSize: theme.fontSize.paragraph,
+                                fontWeight: theme.fontWeight.medium,
+                                lineHeight: theme.lineHeight.medium,
+                                color: theme.colors.primary,
+                                marginVertical: normalize(10)
+                            }}
+                        >
+                            Min Width 1000px and Min Height 1000px
                         </Text>
                         <Text
                             style={{
@@ -773,7 +793,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         >
                             Good Quality
                         </Text>
-                        </>
+                        </View>
                         }
                         {
                             <TouchableOpacity
