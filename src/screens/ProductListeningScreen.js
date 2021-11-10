@@ -144,7 +144,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                         return;
                     });
                 }
-                checkoutExists = await AsyncStorage.getItem('checkoutId');
                 const checkoutId = JSON.parse(checkoutExists);
                 /**
                  * Rest API Id to StoreFront API ID
@@ -199,7 +198,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                         return;
                     });
                 }
-                checkoutExists = await AsyncStorage.getItem('checkoutId');
                 const checkoutId = JSON.parse(checkoutExists);
                 /**
                  * Rest API Id to StoreFront API ID

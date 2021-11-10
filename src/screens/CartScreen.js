@@ -420,7 +420,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                     fontSize: theme.fontSize.heading,
                                     fontWeight: theme.fontWeight.medium
                                 }}
-                            > Oops !!! No Cart Items found.</Text>
+                            > Oops !!! No Items found :(</Text>
                         </View>
                     }
                     <View>

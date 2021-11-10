@@ -130,7 +130,8 @@ function SearchScreen({ navigation }) {
                 style={{
                     padding: normalize(15)
                 }}
-                
+                showsHorizontalScrollIndicator={false}
+                showsVerticalScrollIndicator={false}
                 refreshControl={
                     <RefreshControl
                         refreshing={isLoading}
@@ -178,7 +179,11 @@ function SearchScreen({ navigation }) {
                         />
                     )}
                 </View>
-
+                <View
+                    style={{
+                        height: normalize(20)
+                    }}
+                />
             </ScrollView>
         </SafeAreaView>
     )
