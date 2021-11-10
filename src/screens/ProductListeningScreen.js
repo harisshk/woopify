@@ -27,11 +27,13 @@ import { uploadImage } from '../services/asset';
 import StepperCounter from '../components/StepperCounter';
 import Footer from '../components/Footer';
 import { icons } from '../constant';
+import LightBox from 'react-native-lightbox-v2';
+
 
 Array.prototype.insert = function (i, ...rest) {
     return this.slice(0, i).concat(rest, this.slice(i));
 }
-export const ProductListeningScreen = ({ navigation, route, setCart, customer }) => {
+export const ProductListeningScreen = ({ navigation, route, setCart, customer, navigator }) => {
     const [productType, setProductType] = useState('');
     const [product, setProduct] = useState({ ...route?.params?.product });
     const [isLoading, setIsLoading] = useState(true);
@@ -161,6 +163,9 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                     }
                     setCart({ ...cart });
                     setCartIsLoading(false);
+                    navigation.navigate('BottomTab', {
+                        screen: 'CartScreen'
+                    });
                     Toast.show('Added to Cart');
                 }).catch(error => {
                     setCartIsLoading(false);
@@ -191,8 +196,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                 cart: { count: checkout?.lineItems?.length }
                             }
                             setCart({ ...cart });
-                            Toast.show('Added to Cart');
                             setCartIsLoading(false);
+                            navigation.navigate('BottomTab', {
+                                screen: 'CartScreen'
+                            });
+                            Toast.show('Added to Cart');
                         })
                         setCartIsLoading(false);
                         return;
@@ -219,6 +227,10 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                     }
                     setCart({ ...cart });
                     setCartIsLoading(false);
+                    setCartIsLoading(false);
+                    navigation.navigate('BottomTab', {
+                        screen: 'CartScreen'
+                    });
                     Toast.show('Added to Cart');
                 }).catch(error => {
                     setCartIsLoading(false);
@@ -226,7 +238,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                     console.log(error);
                 });
             };
-
         } else {
             Toast.show('Something went wrong ...', Toast.SHORT);
             setCartIsLoading(false);
@@ -439,8 +450,38 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                             >
                                 $ {product?.variants[selectedVariantIndex]?.price}
                             </Text>
-                            <TouchableOpacity
+                            {
+                                product?.variants[selectedVariantIndex]?.inventory_quantity < 1 && product?.variants[selectedVariantIndex]?.inventory_policy !== "deny" ?
+                                <TouchableOpacity
                                 style={{
+                                    flexDirection: "row",
+                                    alignItems: 'center',
+                                    justifyContent: "center",
+                                    height: '100%',
+                                    padding: normalize(10),
+                                    borderRadius: normalize(5),
+                                    elevation: 2,
+                                    borderWidth: 1,
+                                    borderColor: theme.colors.notification
+                                }}
+                                disabled={true}
+                        
+                            >
+                    
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.paragraph,
+                                        marginTop: normalize(2),
+                                        marginLeft: normalize(5),
+                                        color: theme.colors.notification
+                                    }}
+                                >
+                                    OUT OF STOCK
+                                </Text>
+                            </TouchableOpacity>
+                            :
+                            <TouchableOpacity
+                                style={[{
                                     flexDirection: "row",
                                     alignItems: 'center',
                                     justifyContent: "center",
@@ -449,14 +490,23 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                     padding: normalize(10),
                                     borderRadius: normalize(5),
                                     elevation: 2
-                                }}
+                                },
+                                cartIsLoading === true && {
+                                    backgroundColor: theme.colors.disabled
+                                }    
+                            ]}
                                 onPress={() => {
-                                    navigation.navigate('BottomTab', {
-                                        screen: 'CartScreen'
-                                    });
+                                    // navigation.navigate('BottomTab', {
+                                    //     screen: 'CartScreen'
+                                    // });
+
+                                    addToCartRef.current?.show();
                                 }}
+                                disabled={cartIsLoading}
                             >
-                                <Image
+                                {
+                                    cartIsLoading === true ? 
+                                    <ActivityIndicator color={theme.colors.disabledButton} /> : <Image
                                     source={icons?.BAG_OUTLINE}
                                     style={{
                                         width: normalize(20),
@@ -464,16 +514,26 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                     }}
                                     resizeMode="center"
                                 />
+}
                                 <Text
-                                    style={{
+                                    style={[{
                                         fontSize: theme.fontSize.paragraph,
                                         marginTop: normalize(2),
                                         marginLeft: normalize(5)
-                                    }}
+                                    }
+                                    ,
+                                    cartIsLoading === true && 
+                                    {
+                                        color: theme.colors.disabledButton
+                                    }
+                                    ]}
                                 >
-                                    MY CART
+                                    {
+                                        cartIsLoading === true ? `Loading...` : `CUSTOMIZE`
+                                    }
                                 </Text>
                             </TouchableOpacity>
+                            }
                         </View>
                         {options.map((option, index) => {
                             return (
@@ -582,7 +642,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                 )
                             }
                         })}
-                        {product?.variants[selectedVariantIndex]?.inventory_quantity < 1
+                        {/* {product?.variants[selectedVariantIndex]?.inventory_quantity < 1
                             && product?.variants[selectedVariantIndex]?.inventory_policy !== "deny"
                             ? <TouchableOpacity
                                 disabled={true}
@@ -638,11 +698,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                             lineHeight: theme.lineHeight.medium
                                         }}
                                     >
-                                        ADD TO CART
+                                        Customize 
                                     </Text>
                                 }
                             </TouchableOpacity>
-                        }
+                        } */}
                     </View>
                 }
                 {
@@ -657,66 +717,81 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                     ref={addToCartRef}
                     drawUnderStatusBar={true}
                     containerStyle={{
-                        height: Dimensions.get('screen').height - normalize(300)
+                        height: Dimensions.get('screen').height / 1.2
                     }}
                 >
                     <View
                         style={{
                             width: '100%',
+                            alignItems: "center",
+                            justifyContent: "center",
+                            height: '100%',
                         }}
                     >
                         {
-
                             <TouchableOpacity
                                 style={{
                                     backgroundColor: theme.colors.secondary,
                                     borderRadius: normalize(7),
                                     elevation: 4,
-                                    // padding: normalize(15),
                                     width: "90%",
                                     alignSelf: "center",
                                     marginVertical: normalize(15)
                                 }}
-                                onPress={() => {
-                                    uploadImageHandler();
-                                }}
+                                
+                                disabled={true}
                             >
                                 {image?.uri ?
                                     <>
-                                        <Image
-                                            source={{ uri: image?.uri }}
-                                            style={{
-                                                height: Dimensions.get('screen').height - normalize(615),
-                                                width: '100%',
-                                                padding: normalize(2),
-                                                borderRadius: normalize(2),
-                                            }}
-                                        />
-                                        <Text
-                                            style={{
-                                                color: theme.colors.white,
-                                                textAlign: "center",
-                                                marginVertical: normalize(10),
-                                                lineHeight: theme.lineHeight.medium,
-                                                fontSize: theme.fontSize.medium,
+                                        <LightBox navigator={navigator}>
+                                            <Image
+                                                source={{ uri: image?.uri }}
+                                                style={{
+                                                    height: Dimensions.get('screen').height / 2.7,
+                                                    width: '100%',
+                                                    padding: normalize(2),
+                                                    borderRadius: normalize(2),
+                                                }}
+                                            />
+                                        </LightBox>
+                                        
+                                        <TouchableOpacity
+                                            onPress={() => {
+                                                uploadImageHandler();
                                             }}
                                         >
-                                            Remove and Re-Upload
-                                        </Text>
+                                            <Text
+                                                style={{
+                                                    color: theme.colors.white,
+                                                    textAlign: "center",
+                                                    marginVertical: normalize(10),
+                                                    lineHeight: theme.lineHeight.medium,
+                                                    fontSize: theme.fontSize.medium,
+                                                }}
+                                            >
+                                                Remove and Re-Upload
+                                            </Text>
+                                        </TouchableOpacity>
                                     </>
                                     :
-                                    <Text
-                                        style={{
-                                            fontSize: theme.fontSize.medium,
-                                            lineHeight: theme.lineHeight.medium,
-                                            fontWeight: theme.fontWeight.medium,
-                                            textAlign: "center",
-                                            color: theme.colors.white,
-                                            marginVertical: normalize(10)
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            uploadImageHandler();
                                         }}
                                     >
-                                        UPLOAD IMAGE
-                                    </Text>
+                                        <Text
+                                            style={{
+                                                fontSize: theme.fontSize.medium,
+                                                lineHeight: theme.lineHeight.medium,
+                                                fontWeight: theme.fontWeight.medium,
+                                                textAlign: "center",
+                                                color: theme.colors.white,
+                                                marginVertical: normalize(10)
+                                            }}
+                                        >
+                                            UPLOAD IMAGE
+                                        </Text>
+                                    </TouchableOpacity>
                                 }
                             </TouchableOpacity>
                         }
@@ -730,7 +805,9 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                 marginBottom: normalize(15),
 
                             }}
-                        >Choose Quantity</Text>
+                        >
+                            Choose Quantity
+                        </Text>
                         <TouchableOpacity
                             onPress={() => {
                                 // addToCartRef.current?.hide();

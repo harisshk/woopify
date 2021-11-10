@@ -15,19 +15,19 @@ function StepperCounter({ max, min, curr, setCurr, policy }) {
             }}
         >
             <TouchableOpacity
+                onPress={() => {
+                    if (curr >= 2) {
+                        setCurr(curr - 1);
+                    }
+                }}
                 style={{
                     backgroundColor: theme.colors.secondary,
                     alignSelf: "center",
                     height: normalize(50),
                     justifyContent: "center",
-                    flex: 1,
-                    borderTopLeftRadius: normalize(8),
+                    flex: 1, borderTopLeftRadius: normalize(8),
                     borderBottomLeftRadius: normalize(8)
-                }}
-                onPress={() => {
-                    if (max >= curr || policy === "deny") {
-                        setCurr(curr + 1);
-                    }
+
                 }}
             >
                 <Text
@@ -38,7 +38,7 @@ function StepperCounter({ max, min, curr, setCurr, policy }) {
                         fontWeight: theme.fontWeight.bold
                     }}
                 >
-                    +
+                    -
                 </Text>
             </TouchableOpacity>
             <View
@@ -60,11 +60,6 @@ function StepperCounter({ max, min, curr, setCurr, policy }) {
                 </Text>
             </View>
             <TouchableOpacity
-                onPress={() => {
-                    if (curr >= 2) {
-                        setCurr(curr - 1);
-                    }
-                }}
                 style={{
                     backgroundColor: theme.colors.secondary,
                     alignSelf: "center",
@@ -73,6 +68,11 @@ function StepperCounter({ max, min, curr, setCurr, policy }) {
                     flex: 1,
                     borderTopRightRadius: normalize(8),
                     borderBottomRightRadius: normalize(8)
+                }}
+                onPress={() => {
+                    if (max >= curr || policy === "deny") {
+                        setCurr(curr + 1);
+                    }
                 }}
             >
                 <Text
@@ -83,10 +83,11 @@ function StepperCounter({ max, min, curr, setCurr, policy }) {
                         fontWeight: theme.fontWeight.bold
                     }}
                 >
-                    -
+                    +
                 </Text>
             </TouchableOpacity>
-            
+
+
         </View>
     )
 }
