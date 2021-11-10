@@ -12,6 +12,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import OrdersScreen from '../screens/OrdersScreen';
 import normalize from 'react-native-normalize';
 import CartScreen from '../screens/CartScreen';
+import { icons } from '../constant/index';
 const Tab = createBottomTabNavigator();
 
 const TabBarCustomButton = (props) => {
@@ -36,7 +37,6 @@ const TabBarCustomButton = (props) => {
                     alignItems: "center",
                     borderRadius: normalize(12),
                     elevation: 2,
-                    // backgroundColor: accessibilityState.selected ? theme.colors.bottomTabActiveBg : theme.colors.bottomTabBgColor,
                 }}
                 activeOpacity={1}
                 onPress={onPress}
@@ -81,49 +81,13 @@ const BottomTab = () => {
             }}
             initialRouteName="HomeScreen"
         >
-            {/* <Tab.Screen
-                name="OrdersScreen"
-                component={OrdersScreen}
-                options={{
-                    tabBarIcon: ({ focused }) => (
-                        focused === true ?
-                            <Image
-                                source={require('../assets/images/history.png')}
-                                resizeMode="contain"
-                                style={{
-                                    width: normalize(25),
-                                    height: normalize(25),
-                                    tintColor: focused ? theme.colors.primary : theme.colors.inactiveTabIcons
-                                }}
-                            />
-                            :
-                            <Image
-                                source={require('../assets/images/history-outline.png')}
-                                resizeMode="contain"
-                                style={{
-                                    width: normalize(22),
-                                    height: normalize(22),
-                                    tintColor: focused ? theme.colors.primary : theme.colors.inactiveTabIcons
-                                }}
-                            />
-                    ),
-                    tabBarButton: (props) => (
-                        <TabBarCustomButton
-                            {...props}
-                            name={'Orders'}
-                        />
-                    ),
-                    headerShown: false,
-                    tabBarShowLabel: false,
-                }}
-            /> */}
             <Tab.Screen
                 name="HomeScreen"
                 component={HomeScreen}
                 options={{
                     tabBarIcon: ({ focused }) => (
                         focused === true ? <Image
-                            source={require('../assets/images/home.png')}
+                            source={icons?.HOME}
                             resizeMode="contain"
                             style={{
                                 width: normalize(23),
@@ -132,7 +96,7 @@ const BottomTab = () => {
                             }}
                         /> :
                             <Image
-                                source={require('../assets/images/home-outline.png')}
+                                source={icons?.HOME_OUTLINE}
                                 resizeMode="contain"
                                 style={{
                                     width:normalize(22),
@@ -158,7 +122,7 @@ const BottomTab = () => {
                     tabBarIcon: ({ focused }) => (
                         focused === true ?
                             <Image
-                                source={require('../assets/images/bag.png')}
+                                source={icons?.BAG}
                                 resizeMode="contain"
                                 style={{
                                     width: normalize(25),
@@ -168,7 +132,7 @@ const BottomTab = () => {
                             />
                             :
                             <Image
-                                source={require('../assets/images/bag-outline.png')}
+                                source={icons?.BAG_OUTLINE}
                                 resizeMode="contain"
                                 style={{
                                     width: normalize(22),
@@ -195,7 +159,7 @@ const BottomTab = () => {
                     tabBarIcon: ({ focused }) => (
                         focused === true ?
                             <Image
-                                source={require('../assets/images/user.png')}
+                                source={icons?.USER}
                                 resizeMode="contain"
                                 style={{
                                     width: normalize(22),
@@ -205,7 +169,7 @@ const BottomTab = () => {
                             />
                             :
                             <Image
-                                source={require('../assets/images/user-outline.png')}
+                                source={icons?.USER_OUTLINE}
                                 resizeMode="contain"
                                 style={{
                                     width: normalize(22),

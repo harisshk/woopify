@@ -484,7 +484,6 @@ function RegisterScreen({navigation, setCustomer}) {
                         style={{
                             borderRadius: normalize(10)
                         }}
-
                         maxLength={20}
                     />
                     <Text

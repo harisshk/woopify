@@ -15,6 +15,7 @@ import { client } from '../services';
 import Footer from '../components/Footer';
 const { width } = Dimensions.get('window');
 import NetInfo from "@react-native-community/netinfo";
+import { icons, images } from '../constant';
 
 
 const HomeScreen = ({ categories, setCategories, navigation, products, setProducts, cart }) => {
@@ -149,7 +150,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
               PetInPick
             </Text> */}
         <Image
-          source={{ uri: `https://cdn.shopify.com/s/files/1/0602/9036/7736/files/1280x720-new-pnp_190x@2x.png?v=1634032473` }}
+          source={images?.LOGO}
           style={{
             height: normalize(40),
             width: '100%',
@@ -195,7 +196,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           </Text>
         </View>
         <Image
-          source={require('../assets/images/search.png')}
+          source={icons?.SEARCH}
           style={{
             padding: 1,
             height: normalize(23),

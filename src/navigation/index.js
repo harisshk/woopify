@@ -24,7 +24,6 @@ const MainNavigator = createStackNavigator();
 const HomeNavigator = () => {
     return (
         <MainNavigator.Navigator
-            // initialRouteName={"BottomTab"}
             initialRouteName={"SplashScreen"}
         >
             <MainNavigator.Screen 
@@ -42,11 +41,12 @@ const HomeNavigator = () => {
                 name="SettingScreen" 
                 component={SettingScreen} 
             />
-             <MainNavigator.Screen 
-                options={{ headerShown: false, 
-                    gestureEnabled: false, }} 
-                name="NetworkIssueScreen" 
-                
+            <MainNavigator.Screen 
+                options={{ 
+                    headerShown: false, 
+                    gestureEnabled: false, 
+                }} 
+                name="NetworkIssueScreen"   
                 component={NetworkIssueScreen} 
             />
             <MainNavigator.Screen 
@@ -63,7 +63,7 @@ const HomeNavigator = () => {
                 name="SearchScreen" 
                 component={SearchScreen} 
             />
-             <MainNavigator.Screen 
+            <MainNavigator.Screen 
                 options={({ route }) => ({
                     headerShown :false
                 })} 
@@ -74,8 +74,6 @@ const HomeNavigator = () => {
                 options={({ route }) => ({
                     title: '',
                     headerShown: false
-                    // headerBackTitle:"Back"
-                    // headerBackTitleVisible: false
                 })} 
                 name="ProductScreen" 
                 component={ProductScreen} 
@@ -84,8 +82,6 @@ const HomeNavigator = () => {
                 options={({ route }) => ({
                     title: '',
                     headerShown: false
-                    // headerBackTitle:"Back"
-                    // headerBackTitleVisible: false
                 })} 
                 name="ProductListeningScreen" 
                 component={ProductListeningScreen} 
@@ -95,7 +91,6 @@ const HomeNavigator = () => {
                     title: '',
                     headerBackTitle:"Back",
                     headerShown :false
-                    // headerBackTitleVisible: false
                 })} 
                 name="CartScreen" 
                 component={CartScreen} 
@@ -105,7 +100,6 @@ const HomeNavigator = () => {
                     title: '',
                     headerBackTitle:"Back",
                     headerShown :false
-                    // headerBackTitleVisible: false
                 })} 
                 name="CheckoutScreen" 
                 component={CheckoutScreen} 
@@ -115,7 +109,6 @@ const HomeNavigator = () => {
                     title: 'Order Tracking',
                     headerBackTitle:"Back",
                     headerShown :false
-                    // headerBackTitleVisible: false
                 })} 
                 name="OrderTrackingScreen" 
                 component={OrderTrackingScreen} 
@@ -141,7 +134,7 @@ const HomeNavigator = () => {
                 name="RegisterScreen" 
                 component={RegisterScreen} 
             />
-             <MainNavigator.Screen 
+            <MainNavigator.Screen 
                 options={({ route }) => ({
                     headerShown :false
                 })} 

@@ -71,7 +71,7 @@ export const Gallery = ({ navigator, activeIndex, images, color = "black" }) => 
                                         borderRadius: normalize(15),
 
                                     }]}
-                                source={{ uri: item.src }}
+                                source={{ uri: item?.src }}
                             />
                         </TouchableOpacity>
                     )

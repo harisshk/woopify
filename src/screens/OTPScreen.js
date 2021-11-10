@@ -17,6 +17,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { connect } from 'react-redux';
 import { setCustomer } from '../redux/action/customer';
+import { images } from '../constant';
 
 
 function OTPScreen({ navigation, route, setCustomer }) {
@@ -99,7 +100,7 @@ function OTPScreen({ navigation, route, setCustomer }) {
                             alignItems: "center",
                             alignSelf: "center"
                         }}
-                        source={require('../assets/images/email-sent.png')}
+                        source={images?.EMAIL_OTP}
                     />
                     <Text
                         style={{

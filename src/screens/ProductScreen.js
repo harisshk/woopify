@@ -886,14 +886,14 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
                                             width: normalize(20),
                                         }}
                                     /> */}
-                                    <Image
+                                    {/* <Image
                                         source={require('../assets/images/down-arrow.png')}
                                         style={{
                                             height: normalize(24),
                                             width: normalize(20),
                                             marginLeft: normalize(10)
                                         }}
-                                    />
+                                    /> */}
                                 </TouchableOpacity>
                             }
                         >
@@ -946,14 +946,14 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
                                     >
                                         {product.variants[variantChosen].option1}
                                     </Text>
-                                    <Image
+                                    {/* <Image
                                         source={require('../assets/images/down-arrow.png')}
                                         style={{
                                             height: normalize(24),
                                             width: normalize(20),
                                             marginLeft: normalize(10)
                                         }}
-                                    />
+                                    /> */}
                                 </TouchableOpacity>
                             }
                         >

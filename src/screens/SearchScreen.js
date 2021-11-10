@@ -3,6 +3,7 @@ import { SafeAreaView, Text, View, TouchableOpacity, Image, TextInput, ScrollVie
 import base64 from 'react-native-base64';
 import normalize from 'react-native-normalize'
 import ProductView01 from '../components/ProductView01';
+import { icons } from '../constant';
 import { client } from '../services';
 import { getProductInfo, searchProductsByQuery } from '../services/products';
 import { theme } from '../utils/theme'
@@ -67,7 +68,7 @@ function SearchScreen({ navigation }) {
                     }}
                 >
                     <Image
-                        source={require('../assets/images/left-arrow.png')}
+                        source={icons?.BACK}
                         resizeMode="contain"
                         style={{
                             width: normalize(25),
@@ -116,7 +117,7 @@ function SearchScreen({ navigation }) {
                         disabled={isLoading}
                     >
                         <Image
-                            source={require('../assets/images/search.png')}
+                            source={icons?.SEARCH}
                             style={{
                                 padding: 1,
                                 height: normalize(23),

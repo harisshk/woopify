@@ -17,6 +17,7 @@ import { theme } from '../utils/theme';
 import { isValidEmail } from '../utils/validation/email';
 import Toast from 'react-native-simple-toast';
 import SubHeading from '../components/SubHeading';
+import { images } from '../constant';
 
 
 function LoginScreen({navigation}) {
@@ -102,7 +103,6 @@ function LoginScreen({navigation}) {
                 <ScrollView
                     style={{
                         flex: 1,
-
                     }}
                     contentContainerStyle={{
                         flexGrow: 1,
@@ -118,7 +118,8 @@ function LoginScreen({navigation}) {
                             alignItems: "center",
                             alignSelf: "center"
                         }}
-                        source={require('../assets/images/send-email.png')}
+                        source={images?.LOGO}
+                        resizeMode="contain"
                     />
                     <Text
                         style={{

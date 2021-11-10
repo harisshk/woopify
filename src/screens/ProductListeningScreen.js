@@ -27,6 +27,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { uploadImage } from '../services/asset';
 import StepperCounter from '../components/StepperCounter';
 import Footer from '../components/Footer';
+import { icons } from '../constant';
 
 Array.prototype.insert = function (i, ...rest) {
     return this.slice(0, i).concat(rest, this.slice(i));
@@ -457,7 +458,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                 }}
                             >
                                 <Image
-                                    source={require('../assets/images/bag-outline.png')}
+                                    source={icons?.BAG_OUTLINE}
                                     style={{
                                         width: normalize(20),
                                         height: normalize(20)
@@ -682,7 +683,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                 {image?.uri ?
                                     <>
                                         <Image
-                                            source={{ uri: (image.uri) }}
+                                            source={{ uri: image?.uri }}
                                             style={{
                                                 height: Dimensions.get('screen').height - normalize(615),
                                                 width: '100%',

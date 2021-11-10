@@ -5,6 +5,7 @@ import { List } from 'react-native-paper';
 import { deleteAddress, getCustomerById } from '../services/customer';
 import { theme } from '../utils/theme';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
+import { icons } from '../constant';
 
 
 function AddressView({ navigation, address, canEdit, customer, setCustomer }) {
@@ -113,7 +114,7 @@ function AddressView({ navigation, address, canEdit, customer, setCustomer }) {
                             }}
                         >
                             <Image
-                                source={require('../assets/images/edit.png')}
+                                source={icons?.EDIT}
                                 style={{
                                     padding: normalize(1),
                                     height: normalize(20),
@@ -131,7 +132,7 @@ function AddressView({ navigation, address, canEdit, customer, setCustomer }) {
                                 }}
                             >
                             <Image
-                                source={require('../assets/images/delete.png')}
+                                source={icons?.DELETE}
                                 style={{
                                     padding: normalize(1),
                                     height: normalize(22),

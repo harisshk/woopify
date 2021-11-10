@@ -14,6 +14,8 @@ import { connect } from 'react-redux';
 import { getProductByVariant } from '../services/products';
 import base64 from 'react-native-base64';
 import StepperCounter from '../components/StepperCounter';
+import { EDIT } from '../constant/icon';
+import { icons } from '../constant';
 
 function CartScreen({ navigation, setCart, customer }) {
     const [cartItem, setCartItem] = useState({});
@@ -343,7 +345,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                             >
 
                                                 <Image
-                                                    source={require('../assets/images/edit.png')}
+                                                    source={icons?.EDIT}
                                                     style={{
                                                         padding: normalize(1),
                                                         height: normalize(20),

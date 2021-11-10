@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Image, TouchableOpacity, Text } from 'react-native';
 import normalize from 'react-native-normalize';
+import { icons } from '../constant';
 import { theme } from '../utils/theme';
 export const CustomHeader = ({ navigation, title }) => {
     return (
@@ -21,7 +22,7 @@ export const CustomHeader = ({ navigation, title }) => {
                 }}
             >
                 <Image
-                    source={require('../assets/images/left-arrow.png')}
+                    source={icons?.BACK}
                     resizeMode="contain"
                     style={{
                         width: normalize(25),

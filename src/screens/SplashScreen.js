@@ -9,6 +9,7 @@ import { getCustomerById } from '../services/customer';
 import { theme } from '../utils/theme';
 import normalize from 'react-native-normalize';
 import Footer from '../components/Footer';
+import { images } from '../constant';
 
 const SplashScreen = ({ navigation, setCustomer, setCart }) => {
   useEffect(async () => {
@@ -55,7 +56,7 @@ const SplashScreen = ({ navigation, setCustomer, setCart }) => {
       }}
     >
       <Image
-        source={{ uri: `https://cdn.shopify.com/s/files/1/0602/9036/7736/files/1280x720-new-pnp_190x@2x.png?v=1634032473` }}
+        source={images?.LOGO}
         style={{
           height: normalize(52),
           width: '100%',

@@ -8,6 +8,7 @@ import { theme } from '../utils/theme';
 import { Menu, Divider } from 'react-native-paper';
 import { connect } from 'react-redux';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
+import { icons } from '../constant';
 
 
 function OrderScreen({ navigation, customer }) {
@@ -91,7 +92,8 @@ function OrderScreen({ navigation, customer }) {
                         }}
                             style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.secondary, height: normalize(45), paddingHorizontal: normalize(15), borderRadius: normalize(4), elevation: 2 }}
                         >
-                            <Image source={require('../assets/images/expand-arrow.png')}
+                            <Image 
+                                source={icons?.EXPAND_ARROW}
                                 style={{
                                     height: normalize(15),
                                     width: normalize(15), marginRight: normalize(10)

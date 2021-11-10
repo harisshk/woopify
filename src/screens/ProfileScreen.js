@@ -1,10 +1,18 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useState } from 'react';
-import { View, Text, SafeAreaView, TouchableOpacity, ScrollView, RefreshControl, Image } from 'react-native';
+import { 
+  View, 
+  Text, 
+  SafeAreaView, 
+  TouchableOpacity, 
+  ScrollView, 
+  RefreshControl, 
+  Image 
+} from 'react-native';
 import normalize from 'react-native-normalize';
-// import { List } from 'react-native-paper';
 import { connect } from 'react-redux';
 import Footer from '../components/Footer';
+import { icons } from '../constant';
 import { theme } from '../utils/theme';
 
 
@@ -147,7 +155,7 @@ const Profile = ({ navigation, customer, cart }) => {
 
               >
                 <Image
-                  source={require('../assets/images/edit.png')}
+                  source={icons?.EDIT}
                   style={{
                     padding: normalize(1),
                     height: normalize(20),

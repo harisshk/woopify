@@ -1,16 +1,27 @@
-import React, { useState } from 'react'
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native'
-import normalize from 'react-native-normalize'
-// import { Checkbox } from 'react-native-paper'
+import React, { useState } from 'react';
+import { 
+    KeyboardAvoidingView, 
+    SafeAreaView, 
+    ScrollView, 
+    Text, 
+    View, 
+    TouchableOpacity, 
+    ActivityIndicator 
+} from 'react-native';
+import normalize from 'react-native-normalize';
 import CheckBox from '@react-native-community/checkbox';
-
-import { addNewAddress, getCustomerById, updateAddress, updateCustomerProfile } from '../services/customer'
+import { 
+    addNewAddress, 
+    getCustomerById, 
+    updateAddress, 
+    updateCustomerProfile 
+} from '../services/customer'
 import { theme } from '../utils/theme';
 import Toast from 'react-native-simple-toast'
 import { connect } from 'react-redux'
 import { setCustomer } from '../redux/action/customer';
-import { TextInput } from 'react-native-paper'
-import { CustomHeader } from '../components/CustomHeader'
+import { TextInput } from 'react-native-paper';
+import { CustomHeader } from '../components/CustomHeader';
 
 
 function AddAddressScreen({ navigation, customer, setCustomer, route }) {
