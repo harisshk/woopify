@@ -236,7 +236,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     setCartIsLoading(false);
                     navigation.navigate('BottomTab', {
                         screen: 'CartScreen',
-                        
                         params: { previous_screen: route?.name, params: route?.params }
                     }, 'CartScreen');
                     Toast.show('Added to Cart');
