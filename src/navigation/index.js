@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStackNavigator } from "@react-navigation/stack";
-import BottomTab from './BottomTab'
+import BottomTab from './BottomTab';
 import SplashScreen from '../screens/SplashScreen';
 import CategoriesProductScreen from '../screens/CategoriesProductScreen';
 import ProductScreen from '../screens/ProductScreen';

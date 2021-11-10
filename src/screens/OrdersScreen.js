@@ -326,7 +326,8 @@ function OrderScreen({ navigation, customer }) {
                                         }
                                     ]}
                                     
-                                >{item.fulfillment_status || "Processing"}
+                                >
+                                    {item.fulfillment_status === "fulfilled" && "Delivered" || "Processing"}
                                 </Text>
                             </TouchableOpacity>
                             <View

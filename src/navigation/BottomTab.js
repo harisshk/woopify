@@ -5,14 +5,13 @@ import {
     Text,
     TouchableOpacity
 } from 'react-native';
-import { createBottomTabNavigator, BottomTabBar } from "@react-navigation/bottom-tabs"
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from '../screens/HomeScreen';
-import { theme } from '../utils/theme';
 import ProfileScreen from '../screens/ProfileScreen';
-import OrdersScreen from '../screens/OrdersScreen';
-import normalize from 'react-native-normalize';
 import CartScreen from '../screens/CartScreen';
+import normalize from 'react-native-normalize';
 import { icons } from '../constant/index';
+import { theme } from '../utils/theme';
 const Tab = createBottomTabNavigator();
 
 const TabBarCustomButton = (props) => {
