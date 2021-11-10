@@ -9,7 +9,6 @@ import {
     TouchableOpacity,
     Dimensions,
     Image,
-    FlatList
 } from 'react-native';
 import base64 from 'react-native-base64';
 import { Gallery } from 'react-native-gallery-view';
@@ -404,7 +403,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                 showsVerticalScrollIndicator={false}
             >
                 {isLoading === true ?
-                    <ActivityIndicator color="black" />
+                        <></>
                     :
                     <View>{
                         variantImages?.length > 0 &&
@@ -490,12 +489,13 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                     >
                                         {option.name}
                                     </Text>
-                                    <FlatList
-                                        horizontal
+                                    <View
                                         style={{
-                                            marginVertical: normalize(10)
+                                            flexDirection: "row",
+                                            flexWrap: "wrap",
                                         }}
-                                        renderItem={({ item, subIndex }) => {
+                                    >
+                                        {option.values.map(item => {
                                             return (
                                                 <TouchableOpacity
                                                     onPress={() => {
@@ -513,11 +513,13 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                                     style={[
                                                         {
                                                             padding: normalize(6),
+                                                            marginVertical: normalize(7),
                                                             marginRight: normalize(5),
-                                                            borderRadius: normalize(1),
+                                                            borderRadius: normalize(2),
                                                             elevation: 1,
                                                             borderColor: theme.colors.unfocused,
-                                                            borderWidth: 1
+                                                            borderWidth: 1,
+
                                                         },
                                                         index !== 0 && !availableOptions[index]?.includes(item) && {
                                                             display: 'none'
@@ -529,6 +531,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                                         },
                                                     ]
                                                     }
+                                                    key={item}
                                                     disabled={index !== 0 && !availableOptions[index]?.includes(item)}
                                                 >
                                                     <Text
@@ -547,10 +550,8 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                                                     </Text>
                                                 </TouchableOpacity>
                                             )
-                                        }}
-                                        data={option.values}
-                                        keyExtractor={item => item}
-                                    />
+                                        })}
+                                    </View>
                                 </View>
                             )
                         })}
@@ -646,7 +647,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer })
                 }
                 {
                     isLoading === false && <Footer />
-                }     
+                }
                 <View
                     style={{
                         height: normalize(50)
