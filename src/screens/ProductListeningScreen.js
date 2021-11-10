@@ -740,12 +740,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                 style={{
                                     fontSize: theme.fontSize.medium,
                                     fontWeight: theme.fontWeight.normal,
-                                    lineHeight: theme.lineHeight.medium
+                                    lineHeight: theme.lineHeight.medium,
+                                    marginVertical: normalize(12)
                                 }}
                             >
                                 PHOTO GUIDE
-                            
-
                             </Text>
                             <Text
                             style={{
