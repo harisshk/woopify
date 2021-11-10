@@ -1,5 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState, createRef } from 'react';
+import React, { 
+    useEffect, 
+    useState, 
+    createRef 
+} from 'react';
 import {
     ActivityIndicator,
     SafeAreaView,
@@ -42,10 +46,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
     const [variantImages, setVariantImages] = useState([]);
     const [cartIsLoading, setCartIsLoading] = useState(false);
     const [selectedStock, setSelectedStock] = useState(1);
-
-
     const addToCartRef = createRef();
-
 
     const getProductInfoHelper = async () => {
 
@@ -104,6 +105,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
     }
 
     const addToCartListener = async (quantity) => {
+        
         if (!image.uri) {
             // Toast.show('Add Image', Toast.SHORT);
             // addToCartRef?.current?.show();
@@ -164,8 +166,10 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     setCart({ ...cart });
                     setCartIsLoading(false);
                     navigation.navigate('BottomTab', {
-                        screen: 'CartScreen'
-                    });
+                        screen: 'CartScreen',
+                        
+                        params: { previous_screen: route?.name, params: route?.params }
+                    }, 'CartScreen');
                     Toast.show('Added to Cart');
                 }).catch(error => {
                     setCartIsLoading(false);
@@ -198,8 +202,10 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             setCart({ ...cart });
                             setCartIsLoading(false);
                             navigation.navigate('BottomTab', {
-                                screen: 'CartScreen'
-                            });
+                                screen: 'CartScreen',
+                                
+                                params: { previous_screen: route?.name, params: route?.params }
+                            }, 'CartScreen');
                             Toast.show('Added to Cart');
                         })
                         setCartIsLoading(false);
@@ -229,8 +235,10 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     setCartIsLoading(false);
                     setCartIsLoading(false);
                     navigation.navigate('BottomTab', {
-                        screen: 'CartScreen'
-                    });
+                        screen: 'CartScreen',
+                        
+                        params: { previous_screen: route?.name, params: route?.params }
+                    }, 'CartScreen');
                     Toast.show('Added to Cart');
                 }).catch(error => {
                     setCartIsLoading(false);

@@ -179,9 +179,11 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                         >
                             <Text
                                 style={{
-                                    fontWeight: theme.fontWeight.bold
+                                    fontWeight: theme.fontWeight.bold,
+                                    fontSize: theme.fontSize.medium,
+                                    color: theme.colors.secondary
                                 }}
-                            >{"<  "}Go Back</Text>
+                            >Back</Text>
                         </TouchableOpacity>
                         <Text
                             style={{
@@ -192,7 +194,7 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                                 fontSize: theme.fontSize.subheading,
                             }}
                         >
-                            Welcome Buddy !!!
+                            My Profile
                         </Text>
                         <Text
                             style={{

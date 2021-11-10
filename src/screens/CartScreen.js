@@ -17,7 +17,7 @@ import StepperCounter from '../components/StepperCounter';
 import { EDIT } from '../constant/icon';
 import { icons } from '../constant';
 
-function CartScreen({ navigation, setCart, customer }) {
+function CartScreen({ navigation, setCart, customer, route }) {
     const [cartItem, setCartItem] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [editItem, setEditItem] = useState(null);
@@ -387,9 +387,16 @@ function CartScreen({ navigation, setCart, customer }) {
                     </Text>
                     <TouchableOpacity
                         onPress={() => {
-                            navigation.goBack();
+                            try{
+                                navigation.navigate(route?.params?.previous_screen, route?.params?.params);
+                            }   
+                            catch(error){
+                                navigation.goBack();
+                            }
                         }}
-
+                        style={{
+                            padding: normalize(10)
+                        }}
                     >
                         <Text
                             style={{
@@ -398,7 +405,7 @@ function CartScreen({ navigation, setCart, customer }) {
                                 color: theme.colors.primary
                             }}
                         >
-                            Continue Shopping
+                            Back
                         </Text>
                     </TouchableOpacity>
                 </View>

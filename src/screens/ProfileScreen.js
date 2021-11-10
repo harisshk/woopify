@@ -17,7 +17,7 @@ import { theme } from '../utils/theme';
 
 
 
-const Profile = ({ navigation, customer, cart }) => {
+const Profile = ({ navigation, customer, cart, route }) => {
 
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
@@ -193,7 +193,7 @@ const Profile = ({ navigation, customer, cart }) => {
               marginTop: normalize(10)
             }}
           >
-            <View style={{ alignItems: "center" }}>
+            {/* <View style={{ alignItems: "center" }}>
               <Text
                 style={{
                   fontSize: theme.fontSize.paragraph,
@@ -219,9 +219,9 @@ const Profile = ({ navigation, customer, cart }) => {
                   Last Order
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
 
-            <View style={{ alignItems: "center" }}>
+            {/* <View style={{ alignItems: "center" }}>
               <Text
                 style={{
                   fontSize: theme.fontSize.paragraph,
@@ -241,7 +241,7 @@ const Profile = ({ navigation, customer, cart }) => {
               >
                 {customer?.orders_count || 0}
               </Text>
-            </View>
+            </View> */}
 
           </View>
         </View>
@@ -443,6 +443,11 @@ const Profile = ({ navigation, customer, cart }) => {
             }}
             onPress={() => {
               navigation.navigate('CartScreen')
+              navigation.navigate('BottomTab', {
+                screen: 'CartScreen',
+                
+                params: { previous_screen: route?.name, params: route?.params }
+            }, 'CartScreen');
             }}
           >
             <Text
