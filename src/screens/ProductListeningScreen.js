@@ -13,6 +13,7 @@ import {
     TouchableOpacity,
     Dimensions,
     Image,
+    Alert,
 } from 'react-native';
 import base64 from 'react-native-base64';
 import { Gallery } from 'react-native-gallery-view';
@@ -30,7 +31,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { uploadImage } from '../services/asset';
 import StepperCounter from '../components/StepperCounter';
 import Footer from '../components/Footer';
-import { icons } from '../constant';
+import { icons, images } from '../constant';
 import LightBox from 'react-native-lightbox-v2';
 
 
@@ -359,13 +360,26 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
 
     const uploadImageHandler = async () => {
         try {
+            if(imageIsLoading === true){
+                return;
+            }
+            setImageIsLoading(true);
             const options = {
                 // cropping: true,
                 includeBase64: true,
                 mediaType: "photo",
-                multiple: false
+                multiple: false,
             };
             const image = await ImagePicker.openPicker(options);
+            setImageIsLoading(false);
+            if(image?.width >= 1000 && image?.height >= 1000){
+            }else{
+                setImage({
+                    uri: '',
+                })
+                Alert.alert('Image Size',` Min Width 1000px and Min Height 1000px `)
+                return;
+            }
             const upload = {
                 attachment: image?.data,
                 customer: customer?.id,
@@ -375,14 +389,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
             setImage({
                 ...upload
             });
-            // const response = await uploadImage(upload);
-            // const { data } = response;
-            // if(data.success === true){
-            //     Toast.show('Image Uploaded Successfully...', Toast.SHORT);
-
-            // }else{
-            //     Toast.show('Something went wrong ...', Toast.SHORT);
-            // }
         } catch (error) {
             setImageIsLoading(false);
             console.log(error);
