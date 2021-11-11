@@ -167,36 +167,6 @@ function CartScreen({ navigation, setCart, customer, route }) {
                         setCurr={setSelectedStock}
                         policy={policy}
                     />
-                    {/* <Picker
-                        selectedValue={selectedStock}
-                        color={theme.colors.primary}
-                        style={{
-                            backgroundColor: theme.colors.primary,
-                            width: '90%',
-                            borderRadius: normalize(12),
-                            alignSelf: "center",
-                            height: '70%',
-                        }}
-                        itemStyle={{
-                            fontSize: theme.fontSize.medium,
-                            fontWeight: "bold"
-                        }}
-                        onValueChange={(itemValue, itemIndex) =>
-                            setSelectedStock(itemValue)
-                        }>
-                        {totalStock.map(item => {
-                            return (
-                                <Picker.Item
-                                    key={item.value}
-                                    label={item.label}
-                                    value={item.value}
-                                    color={theme.colors.white}
-
-                                />
-                            )
-                        })}
-                    </Picker> */}
-
                     <TouchableOpacity
                         onPress={() => {
                             updateQuantity(parseInt(selectedStock));
