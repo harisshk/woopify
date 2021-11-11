@@ -123,7 +123,6 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 Toast.show('Phone Number Field is Missing');
                 return;
             }
-            console.log(dialCode+""+phone)
             const body = {
                 customer: {
                     first_name: first_name,
@@ -133,7 +132,6 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
             }
             const response = await updateCustomerProfile(customer.id, body);
             if (response?.errors) {
-                console.log(response)
                 Toast.show('Something Went Wrong');
                 setInput({
                     ...input,

@@ -428,13 +428,12 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         <></>
                     :
                     <View>
-                        {console.log(variantImages[0])}
                         {
                         variantImages?.length > 0 &&
-                        <Gallery
-                            images={variantImages}
-                            borderColor={theme.colors.primary}
-                        />
+                            <Gallery
+                                images={variantImages}
+                                borderColor={theme.colors.primary}
+                            />
                         }
                         <Text
                             style={{
