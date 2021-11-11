@@ -461,17 +461,48 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                         disabled={true}
                                     >
                                         <Image
-                                            style={{
+                                            style={[{
                                                 height: normalize(95),
                                                 width: '100%',
                                                 padding: 2,
                                                 flex: .56,
                                                 marginRight: normalize(5),
                                                 borderRadius: normalize(10)
-                                            }}
+                                            }
+                                            // ,item?.customAttributes[1]?.value && {
+                                            //     position: "absolute",
+                                            //     width: normalize(60),
+                                            //     zIndex: 1,
+                                            //     height: normalize(60),
+                                            //     borderRadius: normalize(160),
+                                            //     left: normalize(50),
+                                            //     top: normalize(-10)
+                                            // }
+                                        ]}
                                             resizeMode={"center"}
                                             source={{ uri: item.variant?.image?.src }}
                                         />
+                                        {/* {console.log(item?.customAttributes[1].value)} */}
+                                        {/* {item?.customAttributes[1]?.value &&
+                                            <Image
+                                            style={{
+                                                height: normalize(75),
+                                                padding: 2,
+                                                // flex: .56,
+                                                marginRight: normalize(5),
+                                                borderRadius: normalize(6),
+                                                // backgroundColor: theme.colors.black,
+                                                position: "absolute",
+                                                zIndex: 1,
+                                                width: normalize(75),
+                                                
+                                            }}
+                                            resizeMode={"center"}
+                                            source={{ uri: item?.customAttributes[1].value }}
+                                        />
+                                        } */}
+                                        
+                                        
                                         <View
                                             style={{
                                                 flex: 1,
@@ -505,7 +536,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                                         fontWeight: theme.fontWeight.medium,
                                                     }}
                                                 >
-                                                    Quantity {item.quantity}
+                                                    Qty {item.quantity}
                                                 </Text>
                                                 <TouchableOpacity
                                                     onPress={async () => {
