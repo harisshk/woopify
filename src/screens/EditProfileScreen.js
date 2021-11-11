@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { SafeAreaView, Text, View, TouchableOpacity, Alert, KeyboardAvoidingView, ScrollView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, Text, View, TouchableOpacity, Alert, KeyboardAvoidingView, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import normalize from 'react-native-normalize';
 import { ActivityIndicator, TextInput } from 'react-native-paper';
 import { connect } from 'react-redux';
@@ -7,6 +7,10 @@ import { updateCustomerProfile } from '../services/customer';
 import { theme } from '../utils/theme';
 import Toast from 'react-native-simple-toast'
 import { setCustomer } from '../redux/action/customer';
+import RNPickerSelect from 'react-native-picker-select';
+import { getCountryDialCode } from '../services/asset';
+
+
 function EditProfileScreen({ navigation, customer, setCustomer }) {
     const [input, setInput] = useState({
         first_name: {
@@ -16,11 +20,32 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
             value: customer?.last_name, error: ''
         },
         phone: {
-            value: customer?.phone, error: ''
+            value: customer?.phone?.substring(customer?.phone?.charAt(1) == "1" ? 2 :3), error: ''
+        },
+        dialCode: {
+            value: customer?.phone?.substring(0, customer?.phone?.charAt(1) == "1" ? 2 : 3), error: ''
         },
         isLoading: false,
         isChanged: false
     });
+
+    const [countries, setCountries] = useState([]);
+    const [countriesLoader, setCountriesLoader] = useState(true);
+
+    useEffect(async() => {
+        const response = await getCountryDialCode();
+        const { data } = response;
+        setCountries([...data?.countries?.map(item => {
+            return({
+                label: item?.flag + " " + item?.dialCode + " " + item?.country,
+                value: item?.dialCode
+            })
+        })]);
+        setCountriesLoader(false);
+        return () => {
+            
+        }
+    }, [])
 
     const changeText = (field, value) => {
         setInput({
@@ -42,6 +67,15 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
             const first_name = input.first_name.value.trim();
             const last_name = input.last_name.value.trim();
             const phone = input.phone?.value?.trim();
+            const dialCode = input.dialCode?.value;
+            if(dialCode.length >= 4 || dialCode.length === 0){
+                Toast.show('Choose Dial Code');
+                setInput({
+                    ...input,
+                    isLoading: false,
+                });
+                return;
+            }
             if (!first_name) {
                 setInput({
                     ...input,
@@ -82,12 +116,12 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 customer: {
                     first_name: first_name,
                     last_name: last_name,
-                    phone: phone
+                    phone: dialCode+phone
                 }
             }
             const response = await updateCustomerProfile(customer.id, body);
-            setCustomer(response);
             if (response?.errors) {
+                console.log(response)
                 Toast.show('Something Went Wrong');
                 setInput({
                     ...input,
@@ -96,6 +130,7 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 })
                 return;
             } else {
+                setCustomer(response);
                 Toast.show('Profile Updated');
             }
             setInput({
@@ -110,7 +145,6 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 ...input,
                 isLoading: false
             });
-            setIsLoading(false);
         }
     }
 
@@ -153,6 +187,8 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 }}
                 behavior="padding"
             >
+                {
+    console.log(input.dialCode,'-')}
                 <ScrollView>
                     {/* <View
                 style={{
@@ -250,21 +286,65 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                                 error={input.last_name.error}
                                 maxLength={35}
                             />
-                            <TextInput
-                                value={input.phone.value}
-                                label={"Phone Number"}
-                                onChangeText={text => {
-                                    changeText('phone', text);
-                                }}
+                            <View
                                 style={{
-                                    borderRadius: normalize(12),
-                                    marginVertical: normalize(10),
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    alignContent: "center",
                                 }}
-                                keyboardType="phone-pad"
-                                autoCompleteType={"tel"}
-                                error={input.phone.error}
-                                maxLength={13}
-                            />
+                            >
+                                {countriesLoader === false ?
+                                    <RNPickerSelect
+                                        onValueChange={(value) => {
+                                            setInput({
+                                                ...input,
+                                                isChanged: true,
+                                                dialCode: {
+                                                    ...input.dialCode,
+                                                    value: value
+                                                }
+                                            });
+                                        }}
+                                        value={input?.dialCode?.value}
+                                        items={countries}
+                                        placeholder={{
+                                            label: 'Dial Code',
+                                            value: 'Dial Code',
+                                            key: 'dialCode',
+                                            color: theme.colors.primary,
+                                        }}
+                                        style={{ ...pickerSelectStyles }}
+                                        
+                                    />
+                                    :
+                                    <View
+                                        style={{
+                                            width: '27%',
+                                            borderColor: theme.colors.secondary,
+                                            borderRadius: normalize(7),
+                                            borderWidth: 1,
+                                            height: normalize(57),
+                                            marginRight: normalize(10)
+                                        }}
+                                    />
+                                } 
+                                <TextInput
+                                    value={input.phone.value}
+                                    label={"Phone Number"}
+                                    onChangeText={text => {
+                                        changeText('phone', text);
+                                    }}
+                                    style={{
+                                        borderRadius: normalize(12),
+                                        marginVertical: normalize(10),
+                                        width: '69%'
+                                    }}
+                                    keyboardType="phone-pad"
+                                    autoCompleteType={"tel"}
+                                    error={input.phone.error}
+                                    maxLength={10}
+                                />
+                            </View>
                             <TouchableOpacity
                                 style={[
                                     input.isChanged === false || input.isLoading === true ? {
@@ -332,6 +412,25 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
         </SafeAreaView>
     )
 }
+
+const pickerSelectStyles = StyleSheet.create({
+    inputIOS: {
+        fontSize: normalize(15),
+        // paddingTop: normalize(10),
+        paddingHorizontal: normalize(10),
+        // paddingBottom: normalize(12),
+        borderWidth: normalize(1),
+        borderColor: theme.colors.secondary,
+        borderRadius: normalize(4),
+        backgroundColor: theme.colors.white,
+        color: theme.colors.secondary,
+        width: Dimensions.get('screen').width / 3.8, 
+        marginTop: normalize(14),
+        marginRight: normalize(5),
+        paddingVertical: normalize(15)
+        // height: 
+    },
+});
 
 const mapStateToProps = (state) => ({
     customer: state.customer

@@ -202,7 +202,7 @@ function RegisterScreen({navigation, setCustomer}) {
                 Toast.show('All Fields are required');
                 return;
             }
-            if (!last_name || !first_name || !phone) {
+            if (!last_name || !first_name) {
                 setInput({
                     ...input,
                     isLoading: false
@@ -497,7 +497,7 @@ function RegisterScreen({navigation, setCustomer}) {
                     >
                         {input.lastName.error}
                     </Text>
-                    <TextInput
+                    {/* <TextInput
                         value={input.mobileNumber.value}
                         label={"Mobile Number"}
                         onChangeText={text => {
@@ -514,8 +514,8 @@ function RegisterScreen({navigation, setCustomer}) {
                             borderRadius: normalize(10)
                         }}
                         maxLength={10}
-                    />
-                    <Text
+                    /> */}
+                    {/* <Text
                         style={{
                             marginBottom: normalize(10),
                             marginTop: normalize(5),
@@ -525,7 +525,7 @@ function RegisterScreen({navigation, setCustomer}) {
                         }}
                     >
                         {input.mobileNumber.error}
-                    </Text>
+                    </Text> */}
                     <TextInput
                         value={input.password.value}
                         label={"Enter your Password"}
@@ -593,7 +593,8 @@ function RegisterScreen({navigation, setCustomer}) {
                             }, {
                                 padding: normalize(12),
                                 borderRadius: normalize(12),
-                                alignItems: "center"
+                                alignItems: "center",
+                                marginTop: normalize(15)
                             }]}
                         disabled={input.isLoading || !input.isVerified}
                         onPress={registerCustomerHandler}
