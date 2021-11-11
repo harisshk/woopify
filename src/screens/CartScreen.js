@@ -198,7 +198,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
                 ref={addressActionRef}
                 drawUnderStatusBar={true}
                 containerStyle={{
-                    height: height / 1.34,
+                    height: height / 1.32,
                 }}
                 extraScroll={true}
                 nestedScrollEnabled={true}
@@ -206,7 +206,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
                 <ScrollView
                     style={{
                         padding: normalize(10),
-                        height: '97%',
+                        height: '98%',
                         margin: normalize(10)
                     }}
                     showsVerticalScrollIndicator={false}
@@ -222,6 +222,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
                         Choose Shipping Address
                     </Text>
                     <View>
+                        
                         <FlatList
                             style={{
                                 // height: '100%'
@@ -332,6 +333,34 @@ function CartScreen({ navigation, setCart, customer, route }) {
                             }}
                             keyExtractor={(item, index) => item.id}
                         />
+
+
+                        <TouchableOpacity
+                            onPress={()=>{
+                                addressActionRef?.current?.hide();
+                                navigation.navigate('AddAddressScreen',{toUpdateAddress: false});
+                            }}
+                            style={{
+                                padding: normalize(10),
+                                // borderWidth: 1,
+                                borderRadius: normalize(3),
+                                backgroundColor: theme.colors.primary,
+                                width: "99%",
+                                alignSelf: "center",
+
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    fontSize: theme.fontSize.medium,
+                                    fontWeight: theme.fontWeight.medium,
+                                    lineHeight: theme.lineHeight.medium,
+                                    textAlign: "center"
+                                }}
+                            >
+                                Add New Address
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </ScrollView>
             </ActionSheet>
