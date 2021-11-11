@@ -6,9 +6,11 @@ import {
     TouchableOpacity
 } from 'react-native';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import HomeScreen from '../screens/HomeScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import CartScreen from '../screens/CartScreen';
+import {
+    CartScreen,
+    ProfileScreen,
+    HomeScreen
+} from '../screens/index'
 import normalize from 'react-native-normalize';
 import { icons } from '../constant/index';
 import { theme } from '../utils/theme';

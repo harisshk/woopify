@@ -20,7 +20,7 @@ import NetworkIssueScreen from './NetworkIssueScreen';
 import HomeScreen from './HomeScreen';
 import ProfileScreen from './ProfileScreen';
 
-export default {
+export {
     SplashScreen,
     CategoriesProductScreen,
     ProductScreen,
@@ -37,6 +37,7 @@ export default {
     ProductListeningScreen,
     OrdersScreen,
     NetworkIssueScreen,
+
 
     HomeScreen,
     ProfileScreen,
