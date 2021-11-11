@@ -427,12 +427,15 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 {isLoading === true ?
                         <></>
                     :
-                    <View>{
+                    <View>
+                        {console.log(variantImages[0])}
+                        {
                         variantImages?.length > 0 &&
                         <Gallery
                             images={variantImages}
                             borderColor={theme.colors.primary}
-                        />}
+                        />
+                        }
                         <Text
                             style={{
                                 fontSize: theme.fontSize.title,

@@ -703,12 +703,13 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
                 >
                     {
                         variantImages.length > 0 && variantIsLoading === false &&
-                        <Gallery
-                            images={variantImages}
-                            activeIndex={0}
-                            navigator={navigator}
-                            borderColor={theme.colors.primary}
-                        />
+                        <></>
+                        // <Gallery
+                        //     images={variantImages}
+                        //     activeIndex={0}
+                        //     navigator={navigator}
+                        //     borderColor={theme.colors.primary}
+                        // />
                     }
                     <View
                         style={{

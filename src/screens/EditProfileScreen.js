@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { SafeAreaView, Text, View, TouchableOpacity, Alert, KeyboardAvoidingView, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import normalize from 'react-native-normalize';
 import { ActivityIndicator, TextInput } from 'react-native-paper';
@@ -9,9 +9,20 @@ import Toast from 'react-native-simple-toast'
 import { setCustomer } from '../redux/action/customer';
 import RNPickerSelect from 'react-native-picker-select';
 import { getCountryDialCode } from '../services/asset';
+import {Picker} from '@react-native-picker/picker';
+
 
 
 function EditProfileScreen({ navigation, customer, setCustomer }) {
+    const pickerRef = useRef();
+    function open() {
+        pickerRef.current.focus();
+    }
+
+    function close() {
+        pickerRef.current.blur();
+    }
+      
     const [input, setInput] = useState({
         first_name: {
             value: customer?.first_name, error: ''
@@ -112,11 +123,12 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 Toast.show('Phone Number Field is Missing');
                 return;
             }
+            console.log(dialCode+""+phone)
             const body = {
                 customer: {
                     first_name: first_name,
                     last_name: last_name,
-                    phone: dialCode+phone
+                    phone: dialCode+""+phone
                 }
             }
             const response = await updateCustomerProfile(customer.id, body);
@@ -303,6 +315,16 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                                         style={{ ...pickerSelectStyles }}
                                         
                                     />
+                                    // <Picker
+                                    //     ref={pickerRef}
+                                    //     selectedValue={input?.dialCode?.value}
+                                    //     onValueChange={(itemValue, itemIndex) =>
+                                    //         setSelectedLanguage(itemValue)
+                                    //     }>
+                                    //     <Picker.Item label="Java" value="java" />
+                                    //     <Picker.Item label="JavaScript" value="js" />
+                                    // </Picker>
+                                    // <></>
                                     :
                                     <View
                                         style={{
@@ -311,9 +333,13 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                                             borderRadius: normalize(7),
                                             borderWidth: 1,
                                             height: normalize(57),
-                                            marginRight: normalize(10)
+                                            marginRight: normalize(10),
+                                            justifyContent: "center",
+                                            alignItems: "center"
                                         }}
-                                    />
+                                    >
+                                        <ActivityIndicator color={theme.colors.primary} />
+                                    </View>
                                 } 
                                 <TextInput
                                     value={input.phone.value}
