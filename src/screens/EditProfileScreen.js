@@ -187,20 +187,7 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 }}
                 behavior="padding"
             >
-                {
-    console.log(input.dialCode,'-')}
                 <ScrollView>
-                    {/* <View
-                style={{
-                    height: normalize(200),
-                    backgroundColor:"#A3861C",
-                    borderRadius: normalize(50),
-                    position: "absolute",
-                    top: 0,
-                    right: -50,
-                    width: '50%'
-                }}
-            /> */}
                     <View
                         style={{
                             flex: 1
@@ -396,17 +383,6 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    {/* <View
-                style={{
-                    height: normalize(170),
-                    backgroundColor: "#A3861C",
-                    borderRadius: normalize(35),
-                    position: "absolute",
-                    bottom: -17,
-                    left: -45,
-                    width: '50%'
-                }}
-            /> */}
                 </ScrollView>
             </KeyboardAvoidingView>
         </SafeAreaView>
