@@ -591,8 +591,8 @@ function RegisterScreen({navigation, setCustomer}) {
                             } : {
                                 backgroundColor: theme.colors.secondary,
                             }, {
-                                padding: normalize(12),
-                                borderRadius: normalize(12),
+                                padding: normalize(14),
+                                borderRadius: normalize(7),
                                 alignItems: "center",
                                 marginTop: normalize(15)
                             }]}
