@@ -14,7 +14,7 @@ import { TextInput } from 'react-native-paper';
 import Footer from '../components/Footer';
 import { verifyEmail } from '../services/customer';
 import { theme } from '../utils/theme';
-import { isValidEmail } from '../utils/validation/email';
+import { isValidEmail } from '../utils/validation/index';
 import Toast from 'react-native-simple-toast';
 import SubHeading from '../components/SubHeading';
 import { images } from '../constant';

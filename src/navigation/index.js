@@ -25,7 +25,7 @@ import {
 
 const MainNavigator = createStackNavigator();
 
-const HomeNavigator = () => {
+const MainNavigation = () => {
     return (
         <MainNavigator.Navigator
             initialRouteName={"SplashScreen"}
@@ -59,7 +59,7 @@ const HomeNavigator = () => {
             />
 
             <MainNavigator.Screen 
-                options={({ route }) => ({
+                options={() => ({
                     headerShown :false
                 })} 
                 name="CategoriesProductScreen" 
@@ -67,7 +67,7 @@ const HomeNavigator = () => {
             />
 
             <MainNavigator.Screen 
-                options={({ route }) => ({
+                options={() => ({
                     headerShown :false
                 })} 
                 name="SearchScreen" 
@@ -75,7 +75,7 @@ const HomeNavigator = () => {
             />
 
             <MainNavigator.Screen 
-                options={({ route }) => ({
+                options={() => ({
                     headerShown :false
                 })} 
                 name="OrdersScreen" 
@@ -83,7 +83,7 @@ const HomeNavigator = () => {
             />
 
             <MainNavigator.Screen 
-                options={({ route }) => ({
+                options={() => ({
                     title: '',
                     headerShown: false
                 })} 
@@ -182,4 +182,4 @@ const HomeNavigator = () => {
     )
 }
 
-export default HomeNavigator;
+export default MainNavigation;

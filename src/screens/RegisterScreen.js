@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
-import { KeyboardAvoidingView, SafeAreaView, ScrollView, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { 
+    KeyboardAvoidingView, 
+    SafeAreaView, 
+    ScrollView, 
+    View, 
+    Text, 
+    TouchableOpacity, 
+    ActivityIndicator 
+} from 'react-native';
 import { theme } from '../utils/theme';
 import normalize from 'react-native-normalize';
-import { isValidEmail } from '../utils/validation/email';
-import { createNewCustomer, sendOTPViaEmail } from '../services/customer';
+import { isValidEmail } from '../utils/validation/index';
+import { 
+    createNewCustomer, 
+    sendOTPViaEmail 
+} from '../services/customer';
 import Toast from 'react-native-simple-toast';
 import { TextInput } from 'react-native-paper';
 import Footer from '../components/Footer';

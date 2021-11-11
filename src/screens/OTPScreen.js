@@ -30,18 +30,6 @@ function OTPScreen({ navigation, route, setCustomer }) {
     const verifyOTPHandler = async () => {
         try {
             setIsLoading(true);
-            // const error = isValidOtp(input.otp.value.trim());
-            // if (error === true) {
-            //     setInput({
-            //         ...input,
-            //         otp: {
-            //             value: '',
-            //             error: "Invalid OTP"
-            //         }
-            //     });
-            //     setIsLoading(false);
-            //     return;
-            // }
             if (correctOtp === input.otp.value.trim()) {
                 await AsyncStorage.setItem("user", JSON.stringify(customer));
                 setCustomer({ customer: customer });
@@ -49,8 +37,6 @@ function OTPScreen({ navigation, route, setCustomer }) {
                     index: 0,
                     routes: [{ name: 'BottomTab' }],
                 });
-                // navigation.navigate("SplashScreen");
-                // Toast.show("Let's move in");
             } else {
                 setInput({
                     ...input,
