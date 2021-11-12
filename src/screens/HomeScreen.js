@@ -16,6 +16,9 @@ import Footer from '../components/Footer';
 const { width } = Dimensions.get('window');
 import NetInfo from "@react-native-community/netinfo";
 import { icons, images } from '../constant';
+import Carousel from 'react-native-banner-carousel';
+import BannerView from '../components/BannerView';
+
 
 
 const HomeScreen = ({ categories, setCategories, navigation, products, setProducts, cart }) => {
@@ -30,6 +33,20 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
   const [isEnd, setIsEnd] = useState(false);
   const MAX_PRODUCT = 10;
 
+  const banners = [
+    {
+      src: images?.BANNER_1,
+      text1: `Pet Lover's Favorite`,
+      text2: `Best gift = Happiness`,
+      screen: `ViewProductsScreen`
+    }, {
+      src: images?.BANNER_2,
+      text1: `Real Fun Just Started`,
+      text2: `Surprise Your Pet`,
+      screen: `ViewProductsScreen`
+    }
+  ];
+
   const onRefresh = () => {
     setRefreshing(true);
     getCategoriesHelper();
@@ -37,7 +54,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     setRefreshing(false);
   }
   useEffect(() => {
-    // getCategoriesHelper();
+    getCategoriesHelper();
     getProductsHelper();
     return () => {
       setContentVerticalOffset(0);
@@ -72,41 +89,10 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     }
     const data = await getAllProducts();
     setProducts(data);
-    setIsEnd(true);setIsLoadingMore(false);
+    setIsEnd(true);
+    setIsLoadingMore(false);
     setProductIsLoading(false);
     return;
-    // if (limit === 1) {
-    //   setProductIsLoading(false);
-    // } else {
-    //   setIsLoadingMore(false);
-    // }
-    if (data?.error) {
-      console.log(data.error)
-      console.log('----------Error Line 90 Home Screen----------');
-      return;
-    }
-    if (data?.products?.length === products.length) {
-      setIsEnd(true);
-      return;
-    }
-    if (limit === 1) {
-      setProducts(data);
-    } else {
-      if (data?.products?.length < ((limit - 1) * MAX_PRODUCT)) {
-        setIsEnd(true);
-        return;
-      }
-      const temp = data?.products?.slice((limit - 1) * MAX_PRODUCT, data?.products?.length);
-      if (!temp) {
-        setIsEnd(true);
-        return;
-      }
-      if (data?.products?.length <= products.length + temp.length) {
-        setIsEnd(true);
-      }
-      setProducts({ products: temp });
-
-    }
   }
 
   const handleLoadMore = async () => {
@@ -120,14 +106,15 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     const paddingToBottom = 30;
     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
   };
-  
-  
-  useEffect(()=>{
+
+
+  useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
-      if(state.isConnected === false){
+      if (state.isConnected === false) {
         navigation.navigate('NetworkIssueScreen');
       }
     });
+
   });
 
   return (
@@ -145,14 +132,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           shadowOpacity: 1
         }}
       >
-        {/* <Text
-              style={{
-                fontSize: theme.fontSize.title,
-                fontWeight: theme.fontWeight.medium
-              }}
-            >
-              PetInPick
-            </Text> */}
+
         <Image
           source={images?.LOGO}
           style={{
@@ -162,61 +142,12 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           }}
           resizeMode="contain"
         />
-        {/* <Text
-              style={{
-                color: theme.colors.secondary,
-                marginVertical: normalize(10),
-                fontSize: theme.fontSize.paragraph
-              }}
-            >
-              Welcome !
-            </Text> */}
-      </View>
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate('SearchScreen')
-        }}
-        style={{
 
-        }}
-      >
-        <View
-          style={{
-            backgroundColor: theme.colors.bottomTabActiveBg,
-            padding: normalize(15),
-            marginBottom: normalize(10),
-            borderRadius: normalize(8),
-            width: "90%",
-            alignSelf: "center",
-          }}
-        >
-          <Text
-            style={{
-              fontWeight: theme.fontWeight.medium,
-              fontSize: theme.fontSize.paragraph
-            }}
-          >
-            Search...
-          </Text>
-        </View>
-        <Image
-          source={icons?.SEARCH}
-          style={{
-            padding: 1,
-            height: normalize(23),
-            width: normalize(23),
-            position: "absolute",
-            right: normalize(35),
-            top: normalize(13)
-          }}
-        />
-      </TouchableOpacity>
+      </View>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
-          // padding: normalize(15),
-          paddingHorizontal: normalize(15),
-          paddingBottom: normalize(15),
           flex: 1,
         }}
         ref={listRef}
@@ -234,269 +165,118 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             handleLoadMore();
           }
         }}
-      // onThre={0.5}
-      // onScroll={event => {
-      //   setContentVerticalOffset(event.nativeEvent.contentOffset.y);
-      // }}
+
       >
-        {/* <View
+        <Carousel
+          autoplay
+          autoplayTimeout={5000}
+          loop
+          index={0}
+          pageSize={width}
+        >
+          {
+            banners.map((image, index) => {
+              return (
+                <BannerView
+                  key={index + ""}
+                  item={image?.src}
+                  text1={image?.text1}
+                  text2={image?.text2}
+                  navigation={navigation}
+                  screen={image?.screen}
+                />
+              )
+            })
+          }
+
+        </Carousel>
+        <Image
+          source={images?.HELPER_1}
           style={{
+            height: normalize(200),
             width: '100%',
-            flexDirection: "row"
+            backgroundColor: theme.colors.backgroundColor,
           }}
-        > */}
-
-
-        {/* <TouchableOpacity
-            style={{
-              flex: 1,
-            }}
-            onPress={() => {
-              navigation.navigate('CartScreen');
-            }}
-          >
-            <Image
-              source={{ uri: "https://user-images.githubusercontent.com/54505967/132634830-0cbb53d4-7ed9-456f-be7a-8429fc514a15.png" }}
-              resizeMode="contain"
-              style={{
-                width: normalize(30),
-                height: normalize(35),
-                alignSelf: "flex-end",
-              }}
-            />
-            <View
-              style={{
-                height: normalize(20),
-                width: normalize(20),
-                elevation: 2,
-                position: "absolute",
-                right:-normalize(10),
-                backgroundColor: theme.colors.primary,
-                borderRadius: normalize(20),
-                alignItems: "center", justifyContent: "center",
-                top: -normalize(3)
-              }}
-            >
-              <Text
-                style={{
-                  color: theme.colors.white,
-                  textAlign: "center",
-                  fontWeight: theme.fontWeight.medium
-                }}
-              >
-                {cart?.count || 0}
-              </Text>
-            </View>
-          </TouchableOpacity> */}
-        {/* </View> */}
-
-        {/* <SubHeading>
-
-          Collections
-        </SubHeading> */}
-
-        {/* <SkeletonContent
-          containerStyle={{ width: '100%', flexDirection: "row" }}
-          isLoading={categoryIsLoading}
-          layout={[
-            {
-              width: normalize(70),
-              height: normalize(70),
-              key: 'imageLoader1',
-              borderRadius: normalize(80),
-              marginRight: normalize(10)
-            },
-            {
-              width: normalize(70),
-              height: normalize(70),
-              key: 'imageLoader2',
-              marginRight: normalize(10),
-              borderRadius: normalize(80),
-            },
-            {
-              width: normalize(70),
-              height: normalize(70),
-              key: 'imageLoader3',
-              borderRadius: normalize(80),
-              marginRight: normalize(10),
-            },
-            {
-              width: normalize(70),
-              height: normalize(70),
-              key: 'imageLoader4',
-              marginRight: normalize(10),
-              borderRadius: normalize(80),
-            },
-          ]}
-        >
-          <FlatList
-            horizontal
-            data={categories}
-            style={{
-              marginBottom: normalize(7)
-            }}
-            showsHorizontalScrollIndicator={false}
-            renderItem={({ item }) =>
-              <CategoryHomeScreen
-                item={item}
-                navigation={navigation}
-              />
-            }
-            keyExtractor={(item) => item.id}
-          />
-        </SkeletonContent> */}
-
-        {/* <SubHeading>
-          All Products
-        </SubHeading> */}
-        {/* <View
+          resizeMode="contain"
+        />
+        <Text
           style={{
-            height: normalize(20),
-            width: '100%'
+            fontSize: theme.fontSize.subheading,
+            lineHeight: theme.lineHeight.heading,
+            textAlign: "center"
           }}
-        /> */}
-        <SkeletonContent
-          containerStyle={[
-            productIsLoading && {
-              marginVertical: normalize(30)
-            },
-            { width: '100%', flexDirection: "row" }]}
-          layout={[
-            {
-              width: width / 2.24,
-              height: normalize(220),
-              key: 'imageLoader1',
-              borderRadius: normalize(7),
-              marginRight: normalize(10)
-            },
-            {
-              width: width / 2.24,
-              height: normalize(220),
-              key: 'imageLoader2',
-              marginRight: normalize(7),
-              borderRadius: normalize(10),
-            },
-          ]}
-          isLoading={productIsLoading}
         >
-
-        </SkeletonContent>
-        <SkeletonContent
-          containerStyle={{ width: '100%', flexDirection: "row" }}
-          layout={[
-            {
-              width: width / 2.24,
-              height: normalize(220),
-              key: 'imageLoader1',
-              borderRadius: normalize(7),
-              marginRight: normalize(10)
-            },
-            {
-              width: width / 2.24,
-              height: normalize(220),
-              key: 'imageLoader2',
-              marginRight: normalize(7),
-              borderRadius: normalize(10),
-            },
-          ]}
-          isLoading={productIsLoading}
-        >
-          <View
-            style={{
-              flexWrap: "wrap",
-              width: '100%',
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            {products.map((product) =>
-              <ProductView01
-                key={product.id}
-                item={product}
-
-                navigation={navigation}
-              />
-            )}
-          </View>
-        </SkeletonContent>
-        {isLoadingMore === true && 
-          <View
-            style={{
-              marginVertical: normalize(15)
-            }}
-          >
-            <ActivityIndicator size={"large"} color={theme.colors.primary} />
-          </View>
+          Specially Curated Collection
+        </Text>
+        <View
+          style={{
+            height: normalize(5),
+            backgroundColor: theme.colors.primary,
+            width: normalize(50),
+            alignSelf: "center",
+            marginTop: normalize(10)
+          }}
+        />
+        
+        {
+          categories.map(item => {
+            return(
+              <CategoryHomeScreen
+              key={item.id}
+              item={item}
+              navigation={navigation}
+            />
+            )
+          })
         }
-        {/* {isEnd === true && 
-          <Text
-            style={{
-              marginVertical: normalize(5),
-              textAlign: "center",
-              fontSize: theme.fontSize.medium,
-              color: theme.colors.disabled
-            }}
-          >
 
-          </Text>
-        } */}
-        <Footer
+        <Text
+          style={{
+            fontSize: theme.fontSize.subheading,
+            lineHeight: theme.lineHeight.heading,
+            textAlign: "center"
+          }}
+        >
+          New Arrivals
+        </Text>
+        <View
+          style={{
+            height: normalize(5),
+            backgroundColor: theme.colors.primary,
+            width: normalize(50),
+            alignSelf: "center",
+            marginTop: normalize(10)
+          }}
         />
         <View
           style={{
-            height: normalize(20)
-          }} />
-
-      </ScrollView>
-      {/* {contentVerticalOffset > CONTENT_OFFSET_THRESHOLD && (
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            bottom: normalize(15),
-            backgroundColor: theme.colors.bottomTabActiveBg,
-            padding: normalize(12),
-            borderRadius: normalize(20),
-            right: normalize(30),
-            elevation: 2
-          }}
-          onPress={() => {
-            navigation.navigate('CartScreen');
+            flexWrap: "wrap",
+            width: '100%',
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: normalize(15)
           }}
         >
-          <Image
-            source={{ uri: "https://user-images.githubusercontent.com/54505967/132634830-0cbb53d4-7ed9-456f-be7a-8429fc514a15.png" }}
-            resizeMode="contain"
-            style={{
-              width: normalize(30),
-              height: normalize(30),
-              alignSelf: "flex-end",
-            }}
-          />
-          <View
-            style={{
-              height: normalize(20),
-              width: normalize(20),
-              elevation: 2,
-              position: "absolute",
-              right: 0,
-              backgroundColor: theme.colors.primary,
-              borderRadius: normalize(20),
-              alignItems: "center", justifyContent: "center",
-              top: -1
-            }}
-          >
-            <Text
-              style={{
-                color: theme.colors.white,
-                textAlign: "center",
-                fontWeight: theme.fontWeight.medium
-              }}
-            >
-              {cart?.count || 0}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      )} */}
+          {products.map((product, index) =>
+            index <= 6 && 
+            <ProductView01
+              key={product.id}
+              item={product}
+              navigation={navigation}
+            />
+          )}
+        </View>
+
+        <Footer
+        />
+
+        <View
+          style={{
+            height: normalize(20)
+          }}
+        />
+
+      </ScrollView>
     </SafeAreaView>
   )
 }

@@ -16,9 +16,11 @@ import ProductListeningScreen from './ProductListeningScreen';
 import OrdersScreen from './OrdersScreen';
 import SettingScreen from './SettingScreen';
 import NetworkIssueScreen from './NetworkIssueScreen';
+import ViewProductsScreen from './ViewProductsScreen';
 
 import HomeScreen from './HomeScreen';
 import ProfileScreen from './ProfileScreen';
+
 
 export {
     SplashScreen,
@@ -37,6 +39,7 @@ export {
     ProductListeningScreen,
     OrdersScreen,
     NetworkIssueScreen,
+    ViewProductsScreen,
 
 
     HomeScreen,

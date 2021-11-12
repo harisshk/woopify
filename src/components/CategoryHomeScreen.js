@@ -7,32 +7,39 @@ function CategoryHomeScreen({item , navigation}) {
     return (
         <TouchableOpacity key={item.id}
             style={{
-                marginRight: normalize(20),
+                marginVertical: normalize(10),
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
+                flex:1,
             }}
             onPress={()=>{
                 navigation.navigate('CategoriesProductScreen',{category : item});
             }}
         >
             <Image
-                source={{ uri: item?.image?.src }}
+                source={{ uri: item?.image?.src  || `https://cdn.shopify.com/s/files/1/0602/9036/7736/files/human-ls-dog_1512x.jpg?v=1635328680`}}
                 style={{
                     padding: normalize(2),
-                    height: normalize(65),
-                    width: normalize(65),
-                    borderRadius: normalize(65),
-                    backgroundColor: theme.colors.secondary,
+                    height: normalize(200),
+                    width:'100%',
+                    backgroundColor: theme.colors.disabledButton,
                 }}
+                resizeMode="contain"
             />
             <Text
                 style={{
-                    fontSize: theme.fontSize.paragraph,
-                    lineHeight: theme.fontSize.paragraph,
+                    fontSize: theme.fontSize.subheading,
+                    lineHeight: theme.fontSize.subheading,
                     color: theme.colors.secondary,
-                    marginTop: normalize(10)
+                    position: "absolute",
+                    bottom: normalize(14),
+                    fontWeight: theme.fontWeight.medium,
+                    zIndex:1
                 }}
-            >{item.title.substring(0, 6)}{item.title.length > 6 && "..."}</Text>
+                numberOfLines={1}
+            >
+                {item.title}
+            </Text>
         </TouchableOpacity>
     )
 }

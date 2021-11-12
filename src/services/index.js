@@ -2,6 +2,8 @@
 import Client from 'shopify-buy';
 
 export const store = "petinpic";
+
+export const AWS_URL = `petnpic`
 export const API_URL = `https://${store}.myshopify.com/admin/api/2021-07`;
 
 // `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`;

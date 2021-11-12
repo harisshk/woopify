@@ -19,7 +19,8 @@ import {
     ProductListeningScreen,
     OrdersScreen,
     SettingScreen,
-    NetworkIssueScreen
+    NetworkIssueScreen,
+    ViewProductsScreen
 } from '../screens/index';
 
 
@@ -47,6 +48,11 @@ const MainNavigation = () => {
                 options={{ headerShown: false }} 
                 name="SettingScreen" 
                 component={SettingScreen} 
+            />
+            <MainNavigator.Screen 
+                options={{ headerShown: false }} 
+                name="ViewProductsScreen" 
+                component={ViewProductsScreen} 
             />
 
             <MainNavigator.Screen 

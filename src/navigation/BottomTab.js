@@ -9,7 +9,8 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
     CartScreen,
     ProfileScreen,
-    HomeScreen
+    HomeScreen,
+    SearchScreen
 } from '../screens/index'
 import normalize from 'react-native-normalize';
 import { icons } from '../constant/index';
@@ -110,6 +111,40 @@ const BottomTab = () => {
                         <TabBarCustomButton
                             {...props}
                             name={' Shop'}
+                        />
+                    ),
+                    headerShown: false,
+                    tabBarShowLabel: false,
+                }}
+            />
+            <Tab.Screen
+                name="SearchScreen"
+                component={SearchScreen}
+                options={{
+                    tabBarIcon: ({ focused }) => (
+                        focused === true ? <Image
+                            source={icons?.SEARCH}
+                            resizeMode="contain"
+                            style={{
+                                width: normalize(23),
+                                height: normalize(23),
+                                tintColor: focused ? theme.colors.primary : theme.colors.inactiveTabIcons
+                            }}
+                        /> :
+                            <Image
+                                source={icons?.SEARCH}
+                                resizeMode="contain"
+                                style={{
+                                    width:normalize(22),
+                                    height: normalize(22),
+                                    tintColor: focused ? theme.colors.primary : theme.colors.inactiveTabIcons
+                                }}
+                            />
+                    ),
+                    tabBarButton: (props) => (
+                        <TabBarCustomButton
+                            {...props}
+                            name={' Search'}
                         />
                     ),
                     headerShown: false,
