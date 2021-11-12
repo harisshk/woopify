@@ -367,6 +367,11 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                 Add New Address
                             </Text>
                         </TouchableOpacity>
+                        <View
+                            style={{
+                                height: normalize(25)
+                            }}
+                        ></View>
                     </View>
                 </ScrollView>
             </ActionSheet>
