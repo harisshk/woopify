@@ -575,8 +575,20 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
-                                        <View style={{ flex: .4, alignSelf: 'center' }}>
-                                            <Text style={{ textAlign: "right", fontSize: theme.fontSize.medium }}>$ {item?.variant?.price}</Text>
+                                        <View 
+                                            style={{ 
+                                                flex: .4, 
+                                                alignSelf: 'center' 
+                                            }}
+                                        >
+                                            <Text 
+                                                style={{ 
+                                                    textAlign: "right", 
+                                                    fontSize: theme.fontSize.medium 
+                                                }}
+                                            >
+                                                $ {item?.variant?.price}
+                                            </Text>
                                         </View>
                                     </TouchableOpacity>
                                 )
