@@ -1,9 +1,24 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Picker } from '@react-native-picker/picker';
 import { useIsFocused } from '@react-navigation/native';
-import React, { createRef, useEffect, useState } from 'react'
-import { ActivityIndicator, Alert, Dimensions, FlatList, Image, RefreshControl, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import normalize from 'react-native-normalize'
+import React, { 
+    createRef, 
+    useEffect, 
+    useState 
+} from 'react';
+import { 
+    ActivityIndicator, 
+    Alert, 
+    Dimensions, 
+    FlatList, 
+    Image, 
+    RefreshControl, 
+    SafeAreaView, 
+    ScrollView, 
+    Text, 
+    TouchableOpacity,
+    View 
+} from 'react-native';
+import normalize from 'react-native-normalize';
 import { client } from '../services';
 import { theme } from '../utils/theme';
 const { height } = Dimensions.get('screen');
@@ -14,7 +29,6 @@ import { connect } from 'react-redux';
 import { getProductByVariant } from '../services/products';
 import base64 from 'react-native-base64';
 import StepperCounter from '../components/StepperCounter';
-import { EDIT } from '../constant/icon';
 import { icons } from '../constant';
 import CheckBox from '@react-native-community/checkbox';
 
@@ -54,7 +68,6 @@ function CartScreen({ navigation, setCart, customer, route }) {
                 console.log(error);
                 console.log('-------------------------------------CartScreen Line No 44-----------------------------------------------');
             }
-
         }
     };
 
@@ -78,11 +91,9 @@ function CartScreen({ navigation, setCart, customer, route }) {
             setEditCartLoading(false);
             Alert.alert('Error', 'Something went wrong')
         }
-
     }
 
     useEffect(async () => {
-
         getCartItem();
         return () => {
             setIsLoading(true);
@@ -144,7 +155,6 @@ function CartScreen({ navigation, setCart, customer, route }) {
                 flex: 1,
                 backgroundColor: theme.colors.background
             }}
-
         >
             <ActionSheet
                 ref={editActionRef}
@@ -228,7 +238,6 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                 // height: '100%'
                             }}
                             data={customer.addresses}
-
                             renderItem={({ item, index }) => {
                                 return (
                                     <TouchableOpacity
@@ -316,7 +325,6 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                                     alignSelf: "center"
                                                 }}
                                             >
-
                                                 <Image
                                                     source={icons?.EDIT}
                                                     style={{
@@ -342,12 +350,10 @@ function CartScreen({ navigation, setCart, customer, route }) {
                             }}
                             style={{
                                 padding: normalize(10),
-                                // borderWidth: 1,
                                 borderRadius: normalize(3),
                                 backgroundColor: theme.colors.primary,
                                 width: "99%",
                                 alignSelf: "center",
-
                             }}
                         >
                             <Text
@@ -413,7 +419,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
 
                 <View
                     style={{
-                        height: height / 1.93
+                        height:Dimensions.get('screen').height <= 650 ? height / 2.3 : height / 2.001,
                     }}
                 >
                     {isLoading === false && cartItem?.lineItems?.length === 0 &&
@@ -430,7 +436,9 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                     fontSize: theme.fontSize.heading,
                                     fontWeight: theme.fontWeight.medium
                                 }}
-                            > Oops !!! No Items found :(</Text>
+                            >
+                                Oops !!! No products in Cart :(
+                            </Text>
                         </View>
                     }
                     <View>
@@ -438,7 +446,6 @@ function CartScreen({ navigation, setCart, customer, route }) {
                             data={cartItem.lineItems}
                             style={{
                                 marginVertical: normalize(10),
-                                // flex: 1,
                                 height: '95%',
                             }}
                             refreshControl={
@@ -469,40 +476,11 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                                 marginRight: normalize(5),
                                                 borderRadius: normalize(10)
                                             }
-                                            // ,item?.customAttributes[1]?.value && {
-                                            //     position: "absolute",
-                                            //     width: normalize(60),
-                                            //     zIndex: 1,
-                                            //     height: normalize(60),
-                                            //     borderRadius: normalize(160),
-                                            //     left: normalize(50),
-                                            //     top: normalize(-10)
-                                            // }
+                                            
                                         ]}
                                             resizeMode={"center"}
                                             source={{ uri: item.variant?.image?.src }}
-                                        />
-                                        {/* {console.log(item?.customAttributes[1].value)} */}
-                                        {/* {item?.customAttributes[1]?.value &&
-                                            <Image
-                                            style={{
-                                                height: normalize(75),
-                                                padding: 2,
-                                                // flex: .56,
-                                                marginRight: normalize(5),
-                                                borderRadius: normalize(6),
-                                                // backgroundColor: theme.colors.black,
-                                                position: "absolute",
-                                                zIndex: 1,
-                                                width: normalize(75),
-                                                
-                                            }}
-                                            resizeMode={"center"}
-                                            source={{ uri: item?.customAttributes[1].value }}
-                                        />
-                                        } */}
-                                        
-                                        
+                                        /> 
                                         <View
                                             style={{
                                                 flex: 1,
@@ -525,7 +503,6 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                             >
                                                 {item.variant.title}
                                             </Text>
-
                                             <View
                                                 style={{
                                                     flexDirection: "row"

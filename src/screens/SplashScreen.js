@@ -80,7 +80,8 @@ const SplashScreen = ({ navigation, setCustomer, setCart }) => {
       <View
         style={{
           position: "absolute",
-          bottom: normalize(50)
+          bottom: normalize(50),
+          width: '90%',alignSelf: "center"
         }}
       >
         <Footer />

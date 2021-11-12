@@ -47,7 +47,7 @@ function SettingScreen({ navigation }) {
                 :
                 <View
                     style={{
-                        height: '88%'
+                        height: '75%'
                     }}
                 >
                 <FlatList
