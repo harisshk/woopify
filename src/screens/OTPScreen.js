@@ -231,7 +231,7 @@ function OTPScreen({ navigation, route, setCustomer }) {
                         }
                     </TouchableOpacity>
 
-                    <Footer />
+                    {/* <Footer /> */}
                 </ScrollView>
 
             </KeyboardAvoidingView>

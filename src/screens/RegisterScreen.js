@@ -619,7 +619,7 @@ function RegisterScreen({navigation, setCustomer}) {
                         >
                             REGISTER YOUR ACCOUNT</Text>
                     </TouchableOpacity>
-                    <Footer />
+                    {/* <Footer /> */}
                 </ScrollView>
             </KeyboardAvoidingView>
 

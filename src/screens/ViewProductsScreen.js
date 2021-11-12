@@ -48,8 +48,7 @@ function ViewProductsScreen({
                         />
                     )}
                 </View>
-                <Footer
-                />
+                
             </ScrollView>
         </SafeAreaView>
     )

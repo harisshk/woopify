@@ -518,7 +518,7 @@ const Profile = ({ navigation, customer, cart, route }) => {
             </Text>
           </TouchableOpacity>
         </View>
-        <Footer />
+        {/* <Footer /> */}
         <View
           style={{
             height: normalize(30)

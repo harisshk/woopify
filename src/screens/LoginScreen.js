@@ -253,7 +253,7 @@ function LoginScreen({navigation}) {
                             Create an account!
                         </SubHeading>
                     </TouchableOpacity>
-                    <Footer />
+                    {/* <Footer /> */}
                 </ScrollView>
 
             </KeyboardAvoidingView>

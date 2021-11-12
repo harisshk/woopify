@@ -65,8 +65,9 @@ const MainNavigation = () => {
             />
 
             <MainNavigator.Screen 
-                options={() => ({
-                    headerShown :false
+                options={({route}) => ({
+                    headerShown :false,
+                    title: route?.params?.category?.title
                 })} 
                 name="CategoriesProductScreen" 
                 component={CategoriesProductScreen} 

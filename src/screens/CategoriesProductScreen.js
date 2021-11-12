@@ -38,39 +38,7 @@ function CategoriesProduct({ navigation, route, setCart }) {
                 flex: 1
             }}
         >
-            <CustomHeader navigation={navigation} title={""} />
-            <View
-
-                style={{
-                    elevation: 2,
-                    shadowColor: theme.colors.primary
-
-                }}>
-                <Image
-                    source={{
-                        uri: category?.image?.src || `https://cdn.shopify.com/s/files/1/0602/9036/7736/files/human-ls-dog_1512x.jpg?v=1635328680`
-                    }}
-                    style={{
-                        height: normalize(180),
-                        width: '100%',
-                        alignSelf: "center",
-                        borderRadius: normalize(5),
-                        elevation: 1,
-                        backgroundColor: theme.colors.disabledButton
-                    }}
-                    resizeMode="center"
-                />
-                <SubHeading
-                    style={{
-                        alignItems: "center",
-                        justifyContent: "center",
-                        alignSelf: "center",
-                        fontSize: normalize(20),
-                    }}
-                >
-                    {route.params.category.title}
-                </SubHeading>
-            </View>
+            <CustomHeader navigation={navigation} title={route?.params?.category?.title} />
             <ScrollView
                 style={{
                     flex: 1,

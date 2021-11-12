@@ -306,9 +306,6 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           </Text>
         </TouchableOpacity>
 
-        <Footer
-        />
-
         <View
           style={{
             height: normalize(20)

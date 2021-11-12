@@ -13,7 +13,7 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                 if (true === isFromCategory) {
                     try{
                         const data = await getProductInfo(item.id);
-                        // navigation.navigate('ProductListeningScreen', { product: data?.product });
+                        navigation.navigate('ProductListeningScreen', { product: data?.product });
                     }catch(error){
                         Toast.show('Something went wrong');
                     }
