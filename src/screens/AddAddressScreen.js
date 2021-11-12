@@ -169,9 +169,10 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                         address
                     }
                 }
-                const response = await updateCustomerProfile(customer.id, body);
+                await updateCustomerProfile(customer.id, body);
                 const data = await getCustomerById(customer.id);
                 setCustomer({ ...data });
+                Toast.show('Added Successfully');
                 navigation.replace('AddressesScreen');
             }
 
@@ -301,6 +302,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                     isLoading: false
                 });
                 const data = await getCustomerById(customer.id);
+                Toast.show('Updated Successfully');
                 setCustomer({ ...data });
                 navigation.goBack();
             }
