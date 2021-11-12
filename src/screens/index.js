@@ -35,7 +35,6 @@ export {
     AddressesScreen,
     SettingScreen,
     EditProfileScreen,
-    SearchScreen,
     ProductListeningScreen,
     OrdersScreen,
     NetworkIssueScreen,
@@ -43,6 +42,7 @@ export {
 
 
     HomeScreen,
+    SearchScreen,
     ProfileScreen,
     CartScreen
 };
