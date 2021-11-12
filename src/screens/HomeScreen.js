@@ -267,6 +267,32 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           )}
         </View>
 
+        <TouchableOpacity
+          style={{
+            borderRadius: normalize(3),
+            borderColor: theme.colors.secondary,
+            borderWidth: 1,
+            width: normalize(200),
+            padding: normalize(7),
+            alignSelf: "center",
+            marginVertical: normalize(10)
+          }}
+          onPress={()=>{
+            navigation.navigate('ViewProductsScreen');
+          }}
+        >
+          <Text
+            style={{
+              fontSize: theme.fontSize.medium,
+              fontWeight: theme.fontWeight.medium,
+              lineHeight: theme.lineHeight.medium,
+              textAlign: "center"
+            }}
+          >
+            View More 
+          </Text>
+        </TouchableOpacity>
+
         <Footer
         />
 

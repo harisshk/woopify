@@ -12,10 +12,13 @@ function Footer() {
             marginVertical: normalize(8),
             color: "#9e9e9e",
             marginTop: normalize(20),
-            marginBottom: normalize(10)
+            marginBottom: normalize(10),
+            width: '90%',
+            alignSelf: "center",
+            lineHeight: theme.lineHeight.subheading
           }}
           > 
-            © Audy Global Enterprise 2021
+            © 2021 Pet N Pic All Rights Reserved by AGE | Made with ❤️ by AGE | Proudly Made In USA
         </Text>
     )
 }

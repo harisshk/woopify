@@ -5,6 +5,7 @@ import ProductView01 from '../components/ProductView01';
 import { connect } from 'react-redux';
 import normalize from 'react-native-normalize';
 import { CustomHeader } from '../components/CustomHeader';
+import Footer from '../components/Footer';
 
 function ViewProductsScreen({
     navigation,
@@ -47,6 +48,8 @@ function ViewProductsScreen({
                         />
                     )}
                 </View>
+                <Footer
+                />
             </ScrollView>
         </SafeAreaView>
     )
