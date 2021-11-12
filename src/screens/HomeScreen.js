@@ -258,7 +258,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           }}
         >
           {products.map((product, index) =>
-            index <= 6 && 
+            index <= 5 && 
             <ProductView01
               key={product.id}
               item={product}
