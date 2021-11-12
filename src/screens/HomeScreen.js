@@ -1,5 +1,18 @@
-import React, { useEffect, useState, useRef } from 'react';
-import { View, Text, SafeAreaView, FlatList, Image, TouchableOpacity, Dimensions, ScrollView, RefreshControl, TextInput, ActivityIndicator } from 'react-native';
+import React, { 
+  useEffect, 
+  useState, 
+  useRef 
+} from 'react';
+import { 
+  View, 
+  Text, 
+  SafeAreaView, 
+  Image, 
+  TouchableOpacity, 
+  Dimensions, 
+  ScrollView, 
+  RefreshControl, 
+} from 'react-native';
 import { connect } from 'react-redux';
 import { setCategories } from '../redux/action/categories';
 import { setProducts } from '../redux/action/products'
