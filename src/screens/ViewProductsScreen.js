@@ -40,7 +40,7 @@ function ViewProductsScreen({
                     }}
                 >
                     {products.map((product, index) =>
-                        index <= 6 &&
+                        
                         <ProductView01
                             key={product.id}
                             item={product}
