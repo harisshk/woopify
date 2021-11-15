@@ -149,7 +149,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         <Image
           source={images?.LOGO}
           style={{
-            height: normalize(40),
+            height: normalize(35),
             width: '100%',
             marginVertical: normalize(15)
           }}
