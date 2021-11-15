@@ -718,9 +718,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         } */}
                     </View>
                 }
-                {
-                    isLoading === false && <Footer />
-                }
                 <View
                     style={{
                         height: normalize(50)
