@@ -351,10 +351,13 @@ function CartScreen({ navigation, setCart, customer, route }) {
                             }}
                             style={{
                                 padding: normalize(10),
-                                borderRadius: normalize(3),
-                                backgroundColor: theme.colors.primary,
+                                borderRadius: normalize(5),
+                                backgroundColor: theme.colors.white,
                                 width: "99%",
                                 alignSelf: "center",
+                                borderWidth: 1,
+                                borderColor: theme.colors.disabled,
+                                marginTop: normalize(10)
                             }}
                         >
                             <Text
