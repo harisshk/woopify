@@ -141,8 +141,8 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         style={{
           // flex:1
           elevation: 1,
-          shadowColor: theme.colors.primary,
-          shadowOpacity: 1
+          // shadowColor: theme.colors.primary,
+          // shadowOpacity: 1
         }}
       >
 

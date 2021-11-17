@@ -11,6 +11,7 @@ import {
     Dimensions, 
     FlatList, 
     Image, 
+    Linking, 
     RefreshControl, 
     SafeAreaView, 
     ScrollView, 
@@ -664,15 +665,23 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                 onCheckColor={theme.colors.primary}
                                 onTintColor={theme.colors.primary}
                             />
-                            <Text
-                                style={{
-                                    fontSize: theme.fontSize.medium,
-                                    lineHeight: theme.lineHeight.medium,
-                                    marginLeft: normalize(10)
+                            <TouchableOpacity
+                                onPress={()=>{
+                                    Linking.openURL("https://petnpic.com/pages/terms-and-condition");
                                 }}
                             >
-                                I agree with terms and conditions
-                            </Text>
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.medium,
+                                        lineHeight: theme.lineHeight.medium,
+                                        marginLeft: normalize(10),
+                                        textDecorationLine: "underline"
+                                    }}
+                                >
+                                    I agree with terms and conditions
+                                </Text>
+                            </TouchableOpacity>
+                            
                         </View>
                         </View>
                         <TouchableOpacity

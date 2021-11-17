@@ -61,7 +61,7 @@ const TabBarCustomButton = (props) => {
                             fontSize: theme.fontSize.medium
                         }}
                     >
-                        {" "}{name}
+                        {/* {" "}{name} */}
                     </Text>
                 }
             </TouchableOpacity>
@@ -76,7 +76,7 @@ const BottomTab = () => {
             screenOptions={{
                 showLabel: false,
                 tabBarStyle: {
-                    backgroundColor: theme.colors.bottomTabBgColor,
+                    backgroundColor: theme.colors.white,
                     height: normalize(75)
                 },
 

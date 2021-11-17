@@ -73,7 +73,7 @@ export const theme = {
         disabledButton: "#EAEBEF",
         bottomTabBgColor: "#212121",
         bottomTabActiveBg: "#F8F8F8",
-        inactiveTabIcons: "white",
+        inactiveTabIcons: "black",
     },
     fontSize: {
         medium: normalize(18),

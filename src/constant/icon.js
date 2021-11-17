@@ -12,6 +12,7 @@ const BAG_OUTLINE = require('../assets/icons/bag-outline.png');
 const TRASH = require('../assets/icons/delete.png');
 const EDIT = require('../assets/icons/edit.png');
 const EXPAND_ARROW = require('../assets/icons/expand-arrow.png');
+const CUSTOMIZE = require('../assets/icons/customize.png')
 
 export default{
     HOME,
@@ -27,5 +28,6 @@ export default{
     BAG_OUTLINE,
     TRASH,
     EXPAND_ARROW,
-    EDIT
+    EDIT,
+    CUSTOMIZE
 };

@@ -22,14 +22,20 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                 navigation.navigate('ProductListeningScreen', { product: item });
             }}
             style={{
-                width: '47%',
+                width: '49%',
                 // margin: normalize(5),
                 // justifyContent: "center",
                 // padding: normalize(10),
                 alignSelf: "center",
                 height: normalize(260),
-                borderRadius: normalize(10),
+                borderRadius: normalize(2),
                 elevation: 2,
+                // borderWidth: 2,
+                // borderColor: "#e3e3e3",
+                marginVertical: normalize(2),
+                padding: normalize(12),
+                shadowColor: theme.colors.primary,
+                
                 // backgroundColor: "red"
             }}
         >
@@ -54,9 +60,9 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                     color: theme.colors.black,
                     fontSize: theme.fontSize.medium,
                 }}
-                numberOfLines={1}
+                numberOfLines={2}
             >
-                {item.title.substring(0, 15)} {item.title.length > 15 && "..."}
+                {item.title}
             </Text>
             {item?.variants &&
                 <Text

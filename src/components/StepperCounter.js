@@ -43,7 +43,7 @@ function StepperCounter({ max, min, curr, setCurr, policy }) {
             </TouchableOpacity>
             <View
                 style={{
-                    backgroundColor: theme.colors.primary,
+                    backgroundColor: theme.colors.disabledButton,
                     flex: 1,
                     height: normalize(50),
                     justifyContent: "center",
@@ -52,7 +52,7 @@ function StepperCounter({ max, min, curr, setCurr, policy }) {
             >
                 <Text
                     style={{
-                        color: theme.colors.white,
+                        color: theme.colors.black,
                         fontSize: theme.fontSize.subheading
                     }}
                 >

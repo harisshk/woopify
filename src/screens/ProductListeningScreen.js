@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { 
-    useEffect, 
-    useState, 
-    createRef 
+import React, {
+    useEffect,
+    useState,
+    createRef
 } from 'react';
 import {
     ActivityIndicator,
@@ -14,6 +14,7 @@ import {
     Dimensions,
     Image,
     Alert,
+    FlatList,
 } from 'react-native';
 import base64 from 'react-native-base64';
 import { Gallery } from 'react-native-gallery-view';
@@ -33,6 +34,7 @@ import StepperCounter from '../components/StepperCounter';
 import Footer from '../components/Footer';
 import { icons, images } from '../constant';
 import LightBox from 'react-native-lightbox-v2';
+import Icon from 'react-native-vector-icons/Entypo';
 
 
 Array.prototype.insert = function (i, ...rest) {
@@ -106,28 +108,32 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
     }
 
     const addToCartListener = async (quantity) => {
-        
-        if (!image.uri) {
-            // Toast.show('Add Image', Toast.SHORT);
-            // addToCartRef?.current?.show();
-            // return;
+        if (images.length <= 2) {
+            Toast.show('Add 3 Images to continue.', Toast.SHORT);
+            addToCartRef?.current?.show();
+            return;
         } else {
-            // addToCartRef?.current?.hide();
+            addToCartRef?.current?.hide();
         }
 
-        addToCartRef?.current?.hide();
+        // addToCartRef?.current?.hide();
         setCartIsLoading(true);
         var data = {};
-        if (image.uri) {
-            const response = await uploadImage(image);
-            data = response?.data;
+
+        if (images[0]?.uri) {
+            const response1 = await uploadImage(images[0]);
+            data1 = response1?.data;
+            const response2 = await uploadImage(images[1]);
+            data2 = response2?.data;
+            const response3 = await uploadImage(images[2]);
+            data3 = response3?.data;
         } else {
             data = {
                 success: true,
                 noImage: true
             };
         }
-        if (data?.success === true) {
+        if (data1?.success === true && data2.success === true && data3.success === true) {
             if (data?.noImage === true) {
 
             } else {
@@ -176,7 +182,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     console.log(error);
                 });
             } else {
-                const { asset } = data;
+                // const { asset } = data;
                 let checkoutExists = await AsyncStorage.getItem('checkoutId');
 
                 if (checkoutExists === null) {
@@ -202,7 +208,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             setCartIsLoading(false);
                             navigation.navigate('BottomTab', {
                                 screen: 'CartScreen',
-                                
+
                                 params: { previous_screen: route?.name, params: route?.params }
                             }, 'CartScreen');
                             Toast.show('Added to Cart');
@@ -220,9 +226,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     variantId: variantId,
                     quantity: quantity,
                     customAttributes: [
-                        { key: "Your Photo", value: asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
-                        { key: "Preview", value: asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
-                        { key: "_pplr_preview", value: 'Preview' },
+                        // { key: "Your Photo", value: asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
+                        { key: "Uploaded image 1", value: data1.asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
+                        { key: "Uploaded image 2", value: data2.asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
+                        { key: "Uploaded image 3", value: data3.asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
+                        // { key: "_pplr_preview", value: 'Preview' },
                         // { key: "", value: "" }
                     ]
                 }];
@@ -355,12 +363,12 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
     }
 
     const [availableOptions, setAvailableOptions] = useState([]);
-    const [image, setImage] = useState({});
+    const [images, setImages] = useState([]);
     const [imageIsLoading, setImageIsLoading] = useState(false);
 
     const uploadImageHandler = async () => {
         try {
-            if(imageIsLoading === true){
+            if (imageIsLoading === true) {
                 return;
             }
             setImageIsLoading(true);
@@ -368,27 +376,42 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 // cropping: true,
                 includeBase64: true,
                 mediaType: "photo",
-                multiple: false,
+                multiple: true,
+                maxFiles: 3 - images.length || 1
             };
-            const image = await ImagePicker.openPicker(options);
+            const newImages = await ImagePicker.openPicker(options);
             setImageIsLoading(false);
-            if(image?.width >= 1000 && image?.height >= 1000){
-            }else{
-                setImage({
-                    uri: '',
-                })
-                Alert.alert('Image Size',` Min Width 1000px and Min Height 1000px `)
-                return;
+            let temp = images;
+
+            for (let i = 0; i < newImages.length; i++) {
+                const img = newImages[i];
+                if (img?.width >= 1000 && img?.height >= 1000) {
+                } else {
+                    setImage({
+                        uri: '',
+                    })
+                    Alert.alert('Image Size', ` Min Width 1000px and Min Height 1000px `)
+                    return;
+                }
+                const upload = {
+                    attachment: img?.data,
+                    customer: customer?.id,
+                    product: product.id,
+                    uri: img.sourceURL,
+                };
+                temp.push(upload);
             }
-            const upload = {
-                attachment: image?.data,
-                customer: customer?.id,
-                product: product.id,
-                uri: image.sourceURL,
-            };
-            setImage({
-                ...upload
-            });
+            // const upload = {
+            //     attachment: image?.data,
+            //     customer: customer?.id,
+            //     product: product.id,
+            //     uri: image.sourceURL,
+            // };
+            // const newImages = images;
+            // newImages.push({
+            //     ...upload
+            // })
+            setImages([...temp]);
         } catch (error) {
             setImageIsLoading(false);
             console.log(error);
@@ -425,11 +448,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 showsVerticalScrollIndicator={false}
             >
                 {isLoading === true ?
-                        <></>
+                    <></>
                     :
                     <View>
                         {
-                        variantImages?.length > 0 &&
+                            variantImages?.length > 0 &&
                             <Gallery
                                 images={variantImages}
                                 borderColor={theme.colors.primary}
@@ -463,90 +486,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             >
                                 $ {product?.variants[selectedVariantIndex]?.price}
                             </Text>
-                            {
-                                product?.variants[selectedVariantIndex]?.inventory_quantity < 1 && product?.variants[selectedVariantIndex]?.inventory_policy !== "deny" ?
-                                <TouchableOpacity
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: 'center',
-                                    justifyContent: "center",
-                                    height: '100%',
-                                    padding: normalize(10),
-                                    borderRadius: normalize(5),
-                                    elevation: 2,
-                                    borderWidth: 1,
-                                    borderColor: theme.colors.notification
-                                }}
-                                disabled={true}
-                        
-                            >
-                    
-                                <Text
-                                    style={{
-                                        fontSize: theme.fontSize.paragraph,
-                                        marginTop: normalize(2),
-                                        marginLeft: normalize(5),
-                                        color: theme.colors.notification
-                                    }}
-                                >
-                                    OUT OF STOCK
-                                </Text>
-                            </TouchableOpacity>
-                            :
-                            <TouchableOpacity
-                                style={[{
-                                    flexDirection: "row",
-                                    alignItems: 'center',
-                                    justifyContent: "center",
-                                    backgroundColor: theme.colors.primary,
-                                    height: '100%',
-                                    padding: normalize(10),
-                                    borderRadius: normalize(5),
-                                    elevation: 2
-                                },
-                                cartIsLoading === true && {
-                                    backgroundColor: theme.colors.disabled
-                                }    
-                            ]}
-                                onPress={() => {
-                                    // navigation.navigate('BottomTab', {
-                                    //     screen: 'CartScreen'
-                                    // });
 
-                                    addToCartRef.current?.show();
-                                }}
-                                disabled={cartIsLoading}
-                            >
-                                {
-                                    cartIsLoading === true ? 
-                                    <ActivityIndicator color={theme.colors.disabledButton} /> : <Image
-                                    source={icons?.BAG_OUTLINE}
-                                    style={{
-                                        width: normalize(20),
-                                        height: normalize(20)
-                                    }}
-                                    resizeMode="center"
-                                />
-}
-                                <Text
-                                    style={[{
-                                        fontSize: theme.fontSize.paragraph,
-                                        marginTop: normalize(2),
-                                        marginLeft: normalize(5)
-                                    }
-                                    ,
-                                    cartIsLoading === true && 
-                                    {
-                                        color: theme.colors.disabledButton
-                                    }
-                                    ]}
-                                >
-                                    {
-                                        cartIsLoading === true ? `Loading...` : `CUSTOMIZE`
-                                    }
-                                </Text>
-                            </TouchableOpacity>
-                            }
                         </View>
                         {options.map((option, index) => {
                             return (
@@ -580,19 +520,29 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                                             } else {
                                                                 changeVariant(product.variants[selectedVariantIndex][`option1`], product.variants[selectedVariantIndex][`option2`], item);
                                                             }
+                                                        } else if (product.options.length === 2) {
+                                                            if (index + 1 === 1) {
+                                                                changeVariant(item, product.variants[selectedVariantIndex][`option2`]);
+                                                            } else if (index + 1 === 2) {
+                                                                changeVariant(product.variants[selectedVariantIndex][`option1`], item);
+                                                            }
+                                                        } else {
+                                                            changeVariant(item);
                                                         }
 
                                                     }}
                                                     style={[
                                                         {
-                                                            padding: normalize(6),
-                                                            marginVertical: normalize(7),
-                                                            marginRight: normalize(5),
+                                                            padding: normalize(10),
+                                                            marginVertical: normalize(10),
+                                                            marginRight: normalize(15),
                                                             borderRadius: normalize(2),
                                                             elevation: 1,
-                                                            borderColor: theme.colors.unfocused,
+                                                            borderColor: theme.colors.disabledButton,
                                                             borderWidth: 1,
-
+                                                            elevation: 2,
+                                                            shadowColor: theme.colors.secondary,
+                                                            shadowOpacity: .2
                                                         },
                                                         index !== 0 && !availableOptions[index]?.includes(item) && {
                                                             display: 'none'
@@ -615,7 +565,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                                             },
                                                             item === product.variants[selectedVariantIndex][`option${(index + 1) + ""}`] &&
                                                             {
-                                                                color: "white"
+                                                                color: theme.colors.white
                                                             }
                                                         ]}
                                                     >
@@ -638,7 +588,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             Product Description
                         </Text>
                         {product?.body_html?.replace(/<\/?[^>]+(>|$)/g, "").split(".").map((str, index) => {
-                            if (str.length > 0) {
+                            if (str.trim().length > 0) {
                                 return (
                                     <Text
                                         style={{
@@ -739,7 +689,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         }}
                     >
                         {
-                            !image?.uri && 
+                            images.length === 0 &&
                             <View
                                 style={{
                                     borderColor: theme.colors.secondary,
@@ -749,126 +699,155 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                     borderRadius: normalize(5)
                                 }}
                             >
-                            <Text
-                                style={{
-                                    fontSize: theme.fontSize.medium,
-                                    fontWeight: theme.fontWeight.normal,
-                                    lineHeight: theme.lineHeight.medium,
-                                    marginVertical: normalize(12),
-                                    textAlign: "center"
-                                }}
-                            >
-                                PHOTO GUIDE
-                            </Text>
-                        <Text
-                            style={{
-                                fontSize: theme.fontSize.paragraph,
-                                fontWeight: theme.fontWeight.medium,
-                                lineHeight: theme.lineHeight.medium
-                            }}
-                        >
-                            Natural Lighting
-                        </Text>
-                        <Text
-                            style={{
-                                fontSize: theme.fontSize.paragraph,
-                                fontWeight: theme.fontWeight.medium,
-                                lineHeight: theme.lineHeight.medium,
-                                color: theme.colors.primary,
-                                marginVertical: normalize(10)
-                            }}
-                        >
-                            Min Width 1000px and Min Height 1000px
-                        </Text>
-                        <Text
-                            style={{
-                                fontSize: theme.fontSize.paragraph,
-                                fontWeight: theme.fontWeight.medium,
-                                lineHeight: theme.lineHeight.medium
-                            }}
-                        >
-                            Not blurry
-                        </Text>
-                        <Text
-                            style={{
-                                fontSize: theme.fontSize.paragraph,
-                                fontWeight: theme.fontWeight.medium,
-                                lineHeight: theme.lineHeight.medium
-                            }}
-                        >
-                            Good Quality
-                        </Text>
-                        </View>
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.medium,
+                                        fontWeight: theme.fontWeight.normal,
+                                        lineHeight: theme.lineHeight.medium,
+                                        marginVertical: normalize(12),
+                                        textAlign: "center"
+                                    }}
+                                >
+                                    PHOTO GUIDE
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.paragraph,
+                                        fontWeight: theme.fontWeight.medium,
+                                        lineHeight: theme.lineHeight.medium
+                                    }}
+                                >
+                                    Natural Lighting
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.paragraph,
+                                        fontWeight: theme.fontWeight.medium,
+                                        lineHeight: theme.lineHeight.medium,
+                                        color: theme.colors.primary,
+                                        marginVertical: normalize(10)
+                                    }}
+                                >
+                                    Min Width 1000px and Min Height 1000px
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.paragraph,
+                                        fontWeight: theme.fontWeight.medium,
+                                        lineHeight: theme.lineHeight.medium
+                                    }}
+                                >
+                                    Not blurry
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.paragraph,
+                                        fontWeight: theme.fontWeight.medium,
+                                        lineHeight: theme.lineHeight.medium
+                                    }}
+                                >
+                                    Good Quality
+                                </Text>
+                            </View>
                         }
-                        {
-                            <TouchableOpacity
-                                style={{
-                                    backgroundColor: theme.colors.secondary,
-                                    borderRadius: normalize(7),
-                                    elevation: 4,
-                                    width: "90%",
-                                    alignSelf: "center",
-                                    marginVertical: normalize(15)
-                                }}
-                                
-                                disabled={true}
-                            >
-                                {image?.uri ?
-                                    <>
-                                        <LightBox navigator={navigator}>
-                                            <Image
-                                                source={{ uri: image?.uri }}
-                                                style={{
-                                                    height: Dimensions.get('screen').height / 2.7,
-                                                    width: '100%',
-                                                    padding: normalize(2),
-                                                    borderRadius: normalize(2),
-                                                }}
-                                            />
-                                        </LightBox>
-                                        
-                                        <TouchableOpacity
-                                            onPress={() => {
-                                                uploadImageHandler();
+                        <View
+                            style={{
+                                height: normalize(165),
+                                width: '92%',
+                                // alignSelf: "center",
+                                marginBottom: normalize(10)
+                            }}
+                        >
+                            <FlatList
+                                data={images}
+                                showsVerticalScrollIndicator={false}
+                                showsHorizontalScrollIndicator={false}
+                                horizontal
+                                keyExtractor={(item, index) => index}
+
+                                renderItem={({ item, index }) => {
+                                    return (
+                                        <View
+                                            style={{
+                                                height: '100%',
+                                                width: normalize(165),
+                                                marginHorizontal: normalize(6),
                                             }}
+                                            key={index}
                                         >
-                                            <Text
+                                            <LightBox navigator={navigator}>
+                                                <Image
+                                                    source={{ uri: item?.uri }}
+                                                    style={{
+                                                        height: '100%',
+                                                        padding: normalize(2),
+                                                        borderRadius: normalize(2),
+                                                        borderRadius: normalize(4),
+                                                        width: '100%'
+                                                    }}
+                                                />
+                                            </LightBox>
+                                            <TouchableOpacity
                                                 style={{
-                                                    color: theme.colors.white,
-                                                    textAlign: "center",
-                                                    marginVertical: normalize(10),
-                                                    lineHeight: theme.lineHeight.medium,
-                                                    fontSize: theme.fontSize.medium,
+                                                    zIndex: 1,
+                                                    position: "absolute",
+                                                    top: normalize(5),
+                                                    right: normalize(5),
+                                                    padding: normalize(5),
+                                                    borderRadius: normalize(20)
+                                                }}
+                                                onPress={() => {
+                                                    const newImages = images.filter((image, i) => index !== i);
+                                                    setImages([...newImages]);
                                                 }}
                                             >
-                                                Remove and Re-Upload
-                                            </Text>
-                                        </TouchableOpacity>
-                                    </>
-                                    :
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            uploadImageHandler();
-                                        }}
-                                    >
-                                        
-                                        <Text
-                                            style={{
-                                                fontSize: theme.fontSize.medium,
-                                                lineHeight: theme.lineHeight.medium,
-                                                fontWeight: theme.fontWeight.medium,
-                                                textAlign: "center",
-                                                color: theme.colors.white,
-                                                marginVertical: normalize(10)
-                                            }}
-                                        >
-                                            UPLOAD IMAGE
-                                        </Text>
-                                    </TouchableOpacity>
-                                }
+                                                <Icon
+                                                    name={"cross"}
+                                                    size={29}
+                                                    color={theme.colors.black}
+                                                    style={{
+                                                        backgroundColor: theme.colors.white,
+                                                        opacity: .5
+                                                    }}
+                                                />
+                                            </TouchableOpacity>
+                                        </View>
+                                    )
+                                }}
+                            />
+                        </View>
+                        {
+                            images.length < 3 &&
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    uploadImageHandler();
+                                }}
+                                style={{
+                                    backgroundColor: theme.colors.white,
+                                    width: '90%',
+                                    borderRadius: normalize(5),
+                                    borderWidth: 2,
+                                    borderColor: theme.colors.disabledButton
+                                }}
+                            >
+
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.medium,
+                                        lineHeight: theme.lineHeight.medium,
+                                        fontWeight: theme.fontWeight.medium,
+                                        textAlign: "center",
+                                        color: theme.colors.secondary,
+                                        marginVertical: normalize(10)
+                                    }}
+                                >
+                                    UPLOAD IMAGE
+                                </Text>
                             </TouchableOpacity>
                         }
-                        <StepperCounter max={product?.variants[selectedVariantIndex]?.inventory_quantity || 0} curr={selectedStock} setCurr={setSelectedStock} policy={product?.variants[selectedVariantIndex]?.inventory_policy} />
+                        <StepperCounter
+                            max={product?.variants[selectedVariantIndex]?.inventory_quantity || 0} curr={selectedStock} setCurr={setSelectedStock} policy={product?.variants[selectedVariantIndex]?.inventory_policy} />
                         <Text
                             style={{
                                 textAlign: "center",
@@ -907,7 +886,106 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         </TouchableOpacity>
                     </View>
                 </ActionSheet>
+
             </ScrollView>
+            <View
+                style={{
+                    position: "absolute",
+                    width: '100%',
+                    bottom: normalize(0),
+                    height: normalize(65),
+                    backgroundColor: theme.colors.white,
+                }}
+            >
+                {
+                    product?.variants[selectedVariantIndex]?.inventory_quantity < 1 && product?.variants[selectedVariantIndex]?.inventory_policy !== "deny" ?
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: "row",
+                                alignItems: 'center',
+                                justifyContent: "center",
+                                height: '100%',
+                                padding: normalize(10),
+                                borderRadius: normalize(5),
+                                elevation: 2,
+                                borderWidth: 1,
+                                borderColor: theme.colors.notification,
+
+                            }}
+                            disabled={true}
+
+                        >
+
+                            <Text
+                                style={{
+                                    fontSize: theme.fontSize.paragraph,
+                                    marginTop: normalize(2),
+                                    marginLeft: normalize(5),
+                                    color: theme.colors.notification
+                                }}
+                            >
+                                OUT OF STOCK
+                            </Text>
+                        </TouchableOpacity>
+                        :
+                        <TouchableOpacity
+                            style={[{
+                                flexDirection: "row",
+                                alignItems: 'center',
+                                justifyContent: "center",
+                                backgroundColor: "#E50774",
+                                height: '100%',
+                                padding: normalize(10),
+                                borderRadius: normalize(5),
+                                elevation: 2
+                            },
+                            cartIsLoading === true && {
+                                backgroundColor: theme.colors.disabled
+                            }
+                            ]}
+                            onPress={() => {
+                                // navigation.navigate('BottomTab', {
+                                //     screen: 'CartScreen'
+                                // });
+
+                                addToCartRef.current?.show();
+                            }}
+                            disabled={cartIsLoading}
+                        >
+                            {
+                                cartIsLoading === true ?
+                                    <ActivityIndicator color={theme.colors.disabledButton} /> :
+                                    // <Image
+                                    //     source={icons?.CUSTOMIZE}
+                                    //     style={{
+                                    //         width: normalize(25),
+                                    //         height: normalize(25)
+                                    //     }}
+                                    //     // resizeMode="contain"
+                                    // />
+                                    <></>
+                            }
+                            <Text
+                                style={[{
+                                    fontSize: theme.fontSize.subheading,
+                                    marginTop: normalize(2),
+                                    marginLeft: normalize(5),
+                                    color: theme.colors.white,
+                                    fontWeight: theme.fontWeight.bold
+                                }
+                                    ,
+                                cartIsLoading === true &&
+                                {
+                                    color: theme.colors.disabledButton
+                                }
+                                ]}
+                            >
+                                {
+                                    cartIsLoading === true ? `Loading...` : `PERSONALIZE IT`
+                                }
+                            </Text>
+                        </TouchableOpacity>
+                }</View>
         </SafeAreaView>
     )
 }

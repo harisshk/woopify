@@ -19,7 +19,7 @@ export const getAllCategories = async () => {
 
 export const getAllProductsByCategory = async (collectionId) => {
     try {
-        const response = await fetch(`${API_URL}/collections/${collectionId}/products.json`, {
+        const response = await fetch(`${API_URL}/products.json/?collection_id=${collectionId}&status=active&published_status=published`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

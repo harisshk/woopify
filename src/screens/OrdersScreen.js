@@ -252,26 +252,6 @@ function OrderScreen({ navigation, customer }) {
                                 >
                                     Order {item.name}
                                 </SubHeading>
-                                <Text
-                                    style={{
-                                        fontSize: theme.fontSize.paragraph,
-                                    }}
-                                >
-                                    {/* Products Added {item?.line_items?.length} */}
-                                </Text>
-                                {/* <View>
-                                    {item?.shipping_address &&
-                                        <Text
-                                            style={{
-                                                fontSize: theme.fontSize.paragraph,
-                                                marginTop: normalize(15)
-                                            }}
-                                        >
-                                            <SubHeading>Delivery  </SubHeading>
-                                            {item?.shipping_address?.address1}, {item?.shipping_address?.address2}, {item?.shipping_address?.city}, {item?.shipping_address?.province}, Zip Code {item?.shipping_address?.zip}.
-                                        </Text>
-                                    }
-                                </View> */}
                                 <View>
                                 <FlatList
                                     data={item.line_items }
