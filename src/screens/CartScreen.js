@@ -158,6 +158,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
             }}
         >
             <ActionSheet
+                headerAlwaysVisible={true}
                 ref={editActionRef}
                 drawUnderStatusBar={true}
                 containerStyle={{
@@ -213,6 +214,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
                 }}
                 extraScroll={true}
                 nestedScrollEnabled={true}
+                headerAlwaysVisible={true}
             >
                 <ScrollView
                     style={{
