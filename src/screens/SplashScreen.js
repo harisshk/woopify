@@ -60,8 +60,6 @@ const SplashScreen = ({ navigation, setCustomer, setCart }) => {
         style={{
           height: normalize(52),
           width: '100%',
-          shadowColor: theme.colors.primary,
-          shadowOpacity: 2
         }}
         resizeMode="contain"
       />

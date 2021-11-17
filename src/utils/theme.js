@@ -74,6 +74,7 @@ export const theme = {
         bottomTabBgColor: "#212121",
         bottomTabActiveBg: "#F8F8F8",
         inactiveTabIcons: "black",
+        customize: "#E50774"
     },
     fontSize: {
         medium: normalize(18),

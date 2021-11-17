@@ -32,7 +32,7 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { uploadImage } from '../services/asset';
 import StepperCounter from '../components/StepperCounter';
 import Footer from '../components/Footer';
-import { icons, images } from '../constant';
+import { icons, images as imageHelper } from '../constant';
 import LightBox from 'react-native-lightbox-v2';
 import Icon from 'react-native-vector-icons/Entypo';
 
@@ -108,8 +108,8 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
     }
 
     const addToCartListener = async (quantity) => {
-        if (images.length <= 2) {
-            Toast.show('Add 3 Images to continue.', Toast.SHORT);
+        if (images.length === 0) {
+            Toast.show('Add at-least Images to continue.', Toast.SHORT);
             addToCartRef?.current?.show();
             return;
         } else {
@@ -121,19 +121,19 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
         var data = {};
 
         if (images[0]?.uri) {
-            const response1 = await uploadImage(images[0]);
-            data1 = response1?.data;
-            const response2 = await uploadImage(images[1]);
-            data2 = response2?.data;
-            const response3 = await uploadImage(images[2]);
-            data3 = response3?.data;
+            const response = await uploadImage({
+                attachments : images,
+                product: product.id,
+                customer: customer.id
+            });
+            data = response?.data;
         } else {
             data = {
                 success: true,
                 noImage: true
             };
         }
-        if (data1?.success === true && data2.success === true && data3.success === true) {
+        if (data?.success === true) {
             if (data?.noImage === true) {
 
             } else {
@@ -182,7 +182,12 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     console.log(error);
                 });
             } else {
-                // const { asset } = data;
+                const { assets } = data;                const customKeys = await assets.map((asset, index) => {
+                    return {
+                        key: `Uploaded image ${index + 1}`,
+                        value: `${asset?.public_url}`
+                    }
+                });
                 let checkoutExists = await AsyncStorage.getItem('checkoutId');
 
                 if (checkoutExists === null) {
@@ -198,6 +203,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                 variantId: variantId,
                                 //variantId: product.variants[currVariantIndex < 0 ? 0 : currVariantIndex].id,
                                 quantity: quantity,
+                                customAttributes: customKeys
                             }
                         ];
                         client.checkout.addLineItems(checkout.id, lineItemsToAdd).then((checkout) => {
@@ -206,11 +212,13 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             }
                             setCart({ ...cart });
                             setCartIsLoading(false);
-                            navigation.navigate('BottomTab', {
-                                screen: 'CartScreen',
-
-                                params: { previous_screen: route?.name, params: route?.params }
-                            }, 'CartScreen');
+                            navigation.navigate('BottomTab', 
+                                {
+                                    screen: 'CartScreen',
+                                    params: { previous_screen: route?.name, params: route?.params }
+                                }, 
+                                'CartScreen'
+                            );
                             Toast.show('Added to Cart');
                         })
                         setCartIsLoading(false);
@@ -225,14 +233,15 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 const lineItemsToAdd = [{
                     variantId: variantId,
                     quantity: quantity,
-                    customAttributes: [
-                        // { key: "Your Photo", value: asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
-                        { key: "Uploaded image 1", value: data1.asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
-                        { key: "Uploaded image 2", value: data2.asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
-                        { key: "Uploaded image 3", value: data3.asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
-                        // { key: "_pplr_preview", value: 'Preview' },
-                        // { key: "", value: "" }
-                    ]
+                    customAttributes: customKeys
+                    // customAttributes: [
+                    //     // { key: "Your Photo", value: asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
+                    //     { key: "Uploaded image 1", value: data1.asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
+                    //     { key: "Uploaded image 2", value: data2.asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
+                    //     { key: "Uploaded image 3", value: data3.asset?.public_url || "https://cdn.shopify.com/s/files/1/0602/9036/7736/t/8/assets/hari_1.png?v=1635339823" },
+                    //     // { key: "_pplr_preview", value: 'Preview' },
+                    //     // { key: "", value: "" }
+                    // ]
                 }];
                 client.checkout.addLineItems(checkoutId, lineItemsToAdd).then((checkout) => {
                     const cart = {
@@ -241,10 +250,13 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     setCart({ ...cart });
                     setCartIsLoading(false);
                     setCartIsLoading(false);
-                    navigation.navigate('BottomTab', {
-                        screen: 'CartScreen',
-                        params: { previous_screen: route?.name, params: route?.params }
-                    }, 'CartScreen');
+                    navigation.navigate('BottomTab', 
+                        {
+                            screen: 'CartScreen',
+                            params: { previous_screen: route?.name, params: route?.params }
+                        }, 
+                        'CartScreen'
+                    );
                     Toast.show('Added to Cart');
                 }).catch(error => {
                     setCartIsLoading(false);
@@ -395,8 +407,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 }
                 const upload = {
                     attachment: img?.data,
-                    customer: customer?.id,
-                    product: product.id,
                     uri: img.sourceURL,
                 };
                 temp.push(upload);
@@ -529,7 +539,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                                         } else {
                                                             changeVariant(item);
                                                         }
-
                                                     }}
                                                     style={[
                                                         {
@@ -679,82 +688,53 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     containerStyle={{
                         height: Dimensions.get('screen').height / 1.2
                     }}
+                    headerAlwaysVisible={true}
+                    openAnimationSpeed={10}
+
                 >
                     <View
                         style={{
                             width: '100%',
                             alignItems: "center",
-                            justifyContent: "center",
                             height: '100%',
+                            justifyContent: "space-between"
                         }}
                     >
+                        {/* <Text
+                            style={{
+                                color: "#E50774",
+                                fontSize: theme.fontSize.subheading,
+                                lineHeight: theme.lineHeight.medium,
+                                fontWeight: theme.fontWeight.medium,
+                                marginBottom: normalize(10)
+                            }}
+                        >
+                            Personalize It
+                        </Text> */}
                         {
                             images.length === 0 &&
                             <View
                                 style={{
-                                    borderColor: theme.colors.secondary,
-                                    borderWidth: 1,
+                                    backgroundColor: theme.colors.disabledButton,
                                     width: '90%',
-                                    padding: normalize(10),
-                                    borderRadius: normalize(5)
+                                    alignSelf: "center",
+                                    height: normalize(350)
                                 }}
                             >
-                                <Text
+                                <Image
+                                    source={imageHelper.PHOTO_GUIDE}
                                     style={{
-                                        fontSize: theme.fontSize.medium,
-                                        fontWeight: theme.fontWeight.normal,
-                                        lineHeight: theme.lineHeight.medium,
-                                        marginVertical: normalize(12),
-                                        textAlign: "center"
+                                        height: '100%',
+                                        width: '100%',
                                     }}
-                                >
-                                    PHOTO GUIDE
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontSize: theme.fontSize.paragraph,
-                                        fontWeight: theme.fontWeight.medium,
-                                        lineHeight: theme.lineHeight.medium
-                                    }}
-                                >
-                                    Natural Lighting
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontSize: theme.fontSize.paragraph,
-                                        fontWeight: theme.fontWeight.medium,
-                                        lineHeight: theme.lineHeight.medium,
-                                        color: theme.colors.primary,
-                                        marginVertical: normalize(10)
-                                    }}
-                                >
-                                    Min Width 1000px and Min Height 1000px
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontSize: theme.fontSize.paragraph,
-                                        fontWeight: theme.fontWeight.medium,
-                                        lineHeight: theme.lineHeight.medium
-                                    }}
-                                >
-                                    Not blurry
-                                </Text>
-                                <Text
-                                    style={{
-                                        fontSize: theme.fontSize.paragraph,
-                                        fontWeight: theme.fontWeight.medium,
-                                        lineHeight: theme.lineHeight.medium
-                                    }}
-                                >
-                                    Good Quality
-                                </Text>
+                                    resizeMode="contain"
+                                />
                             </View>
                         }
                         <View
                             style={{
-                                height: normalize(165),
+                                height: images.length === 0 ? normalize(10) : normalize(225),
                                 width: '92%',
-                                // alignSelf: "center",
                                 marginBottom: normalize(10)
                             }}
                         >
@@ -770,7 +750,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                         <View
                                             style={{
                                                 height: '100%',
-                                                width: normalize(165),
+                                                width: normalize(225),
                                                 marginHorizontal: normalize(6),
                                             }}
                                             key={index}
@@ -815,75 +795,132 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                     )
                                 }}
                             />
+                           
                         </View>
                         {
-                            images.length < 3 &&
-
-                            <TouchableOpacity
-                                onPress={() => {
-                                    uploadImageHandler();
-                                }}
-                                style={{
-                                    backgroundColor: theme.colors.white,
-                                    width: '90%',
-                                    borderRadius: normalize(5),
-                                    borderWidth: 2,
-                                    borderColor: theme.colors.disabledButton
-                                }}
-                            >
-
-                                <Text
+                                images.length > 0 && 
+                                <View
                                     style={{
-                                        fontSize: theme.fontSize.medium,
-                                        lineHeight: theme.lineHeight.medium,
-                                        fontWeight: theme.fontWeight.medium,
-                                        textAlign: "center",
-                                        color: theme.colors.secondary,
-                                        marginVertical: normalize(10)
+                                        // paddingTop: normalize(10),
+                                        alignSelf: "flex-start",
+                                        width: "90%",
+                                        paddingHorizontal: '7%'
                                     }}
                                 >
-                                    UPLOAD IMAGE
-                                </Text>
-                            </TouchableOpacity>
-                        }
-                        <StepperCounter
-                            max={product?.variants[selectedVariantIndex]?.inventory_quantity || 0} curr={selectedStock} setCurr={setSelectedStock} policy={product?.variants[selectedVariantIndex]?.inventory_policy} />
-                        <Text
-                            style={{
-                                textAlign: "center",
-                                fontSize: theme.fontSize.medium,
-                                fontWeight: theme.fontWeight.thin,
-                                lineHeight: theme.lineHeight.medium,
-                                marginBottom: normalize(15),
+                                    <Text
+                                        style={{
+                                            fontSize: theme.fontSize.heading,
+                                            fontWeight: theme.fontWeight.normal,
+                                            lineHeight: theme.lineHeight.title,
+                                            color: theme.colors.secondary,
+                                        }}
+                                    >
+                                        {product?.title}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            fontSize: theme.fontSize.title,
+                                            fontWeight: theme.fontWeight.normal,
+                                            lineHeight: theme.lineHeight.title,
+                                            color: theme.colors.primary,
+                                        }}
+                                    >
+                                        $ {product?.variants[selectedVariantIndex]?.price}
+                                    </Text>
+                                    <Text
+                                        style={{
+                                            fontSize: theme.fontSize.subheading,
+                                            fontWeight: theme.fontWeight.normal,
+                                            lineHeight: theme.lineHeight.subheading,
+                                            color: theme.colors.secondary,
+                                        }}
+                                    >
+                                       {product?.variants[selectedVariantIndex]?.title}
+                                    </Text>
 
-                            }}
-                        >
-                            Choose Quantity
-                        </Text>
-                        <TouchableOpacity
-                            onPress={() => {
-                                // addToCartRef.current?.hide();
-                                addToCartListener(selectedStock);
-                            }}
+                                </View>
+                            }
+                        <View 
                             style={{
-                                backgroundColor: theme.colors.secondary,
-                                width: '90%',
-                                alignSelf: 'center',
-                                borderRadius: normalize(12)
+                                width: '100%',
+                                alignSelf: "center"
                             }}
                         >
-                            <SubHeading
+                            {
+                                images.length < 3 &&
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        uploadImageHandler();
+                                    }}
+                                    style={{
+                                        backgroundColor: theme.colors.white,
+                                        width: '90%',
+                                        borderRadius: normalize(5),
+                                        borderWidth: 2,
+                                        borderColor: theme.colors.customize,
+                                        backgroundColor: theme.colors.customize,
+                                        alignSelf: "center"
+                                    }}
+                                >
+                                    <Text
+                                        style={{
+                                            fontSize: theme.fontSize.medium,
+                                            lineHeight: theme.lineHeight.medium,
+                                            fontWeight: theme.fontWeight.bold,
+                                            textAlign: "center",
+                                            color: theme.colors.white,
+                                            marginVertical: normalize(10)
+                                        }}
+                                    >
+                                        UPLOAD IMAGE
+                                    </Text>
+                                </TouchableOpacity>
+                            }
+                            <StepperCounter
+                                max={product?.variants[selectedVariantIndex]?.inventory_quantity || 0} 
+                                curr={selectedStock} 
+                                setCurr={setSelectedStock} 
+                                policy={product?.variants[selectedVariantIndex]?.inventory_policy} 
+                            />
+                            <Text
                                 style={{
-                                    fontSize: theme.fontSize.medium,
-                                    fontWeight: theme.fontWeight.medium,
                                     textAlign: "center",
-                                    marginVertical: normalize(15),
-                                    color: theme.colors.white,
+                                    fontSize: theme.fontSize.medium,
+                                    fontWeight: theme.fontWeight.thin,
+                                    lineHeight: theme.lineHeight.medium,
+                                    marginBottom: normalize(15),
+
                                 }}
                             >
-                                ADD TO CART
-                            </SubHeading>
-                        </TouchableOpacity>
+                                Choose Quantity
+                            </Text>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    // addToCartRef.current?.hide();
+                                    addToCartListener(selectedStock);
+                                }}
+                                style={{
+                                    backgroundColor: theme.colors.secondary,
+                                    width: '90%',
+                                    alignSelf: 'center',
+                                    borderRadius: normalize(5),
+                                    marginBottom: normalize(15)
+                                }}
+                            >
+                                <SubHeading
+                                    style={{
+                                        fontSize: theme.fontSize.medium,
+                                        fontWeight: theme.fontWeight.medium,
+                                        textAlign: "center",
+                                        marginVertical: normalize(15),
+                                        color: theme.colors.white,
+                                    }}
+                                >
+                                    ADD TO CART
+                                </SubHeading>
+                            </TouchableOpacity>
+                            <View style={{ height: normalize(20) }} />
+                        </View>
                     </View>
                 </ActionSheet>
 
@@ -906,22 +943,22 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                 justifyContent: "center",
                                 height: '100%',
                                 padding: normalize(10),
-                                borderRadius: normalize(5),
                                 elevation: 2,
                                 borderWidth: 1,
-                                borderColor: theme.colors.notification,
-
+                                shadowColor: theme.colors.notification,
+                                shadowOpacity: .2,
+                                borderColor: theme.colors.disabledButton
                             }}
                             disabled={true}
 
                         >
-
                             <Text
                                 style={{
-                                    fontSize: theme.fontSize.paragraph,
+                                    fontSize: theme.fontSize.subheading,
                                     marginTop: normalize(2),
                                     marginLeft: normalize(5),
-                                    color: theme.colors.notification
+                                    color: theme.colors.notification,
+                                    fontWeight: theme.fontWeight.medium
                                 }}
                             >
                                 OUT OF STOCK
@@ -936,8 +973,9 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                 backgroundColor: "#E50774",
                                 height: '100%',
                                 padding: normalize(10),
-                                borderRadius: normalize(5),
-                                elevation: 2
+                                elevation: 2,
+                                borderWidth: 1,
+                                borderColor: theme.colors.disabledButton,
                             },
                             cartIsLoading === true && {
                                 backgroundColor: theme.colors.disabled
@@ -981,11 +1019,12 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                 ]}
                             >
                                 {
-                                    cartIsLoading === true ? `Loading...` : `PERSONALIZE IT`
+                                    cartIsLoading === true ? ` Loading...` : `PERSONALIZE  IT`
                                 }
                             </Text>
                         </TouchableOpacity>
-                }</View>
+                }
+            </View>
         </SafeAreaView>
     )
 }

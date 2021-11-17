@@ -152,7 +152,34 @@ function SearchScreen({ navigation }) {
                         Searching for products ...
                     </Text>
                 }
-                {products.length === 0 && isLoading === false &&
+                {
+                    query.length === 0 && 
+
+                    <View>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                fontSize: theme.fontSize.subheading,
+                                lineHeight: theme.lineHeight.medium,
+                                marginBottom: normalize(12)
+                            }}
+                        >
+                            Search for Best Gift Products.
+                            
+                        </Text>
+                        <Text
+                            style={{
+                                textAlign: "center",
+                                fontSize: theme.fontSize.heading,
+                                lineHeight: theme.lineHeight.subheading,
+                                color: theme.colors.focused
+                            }}
+                        >
+                            Pet Lover's Favorite
+                        </Text>
+                    </View>
+                }
+                {query.length !== 0 && products.length === 0 && isLoading === false &&
                     <Text
                         style={{
                             fontSize: theme.fontSize.medium,
