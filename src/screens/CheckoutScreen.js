@@ -14,7 +14,6 @@ function CheckoutScreen({ navigation, route }) {
 
     const handleURIChanges = async (data) => {
         try {
-            console.log(data);
             if (data?.url?.includes("cdn") || data?.url?.includes("jpeg") || data?.url?.includes("png") || data?.url?.includes("jpg")) {
                 setIsImagePreviewOn(true);
             }
@@ -99,7 +98,9 @@ function CheckoutScreen({ navigation, route }) {
                     setIsLoading(false)
                 }}
                 style={{
-                    flex: 1,
+                    // flex: 1,
+                    maxHeight: isLoading === true ? normalize(0) : '100%',
+                    width: '100%'
                 }}
                 originWhitelist={['*']}
                 source={{ uri: uri }}

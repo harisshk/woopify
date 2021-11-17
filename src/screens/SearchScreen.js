@@ -170,7 +170,7 @@ function SearchScreen({ navigation }) {
                         <Text
                             style={{
                                 textAlign: "center",
-                                fontSize: theme.fontSize.heading,
+                                fontSize: theme.fontSize.subheading,
                                 lineHeight: theme.lineHeight.subheading,
                                 color: theme.colors.focused
                             }}
