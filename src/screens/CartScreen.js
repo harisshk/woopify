@@ -1,23 +1,23 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useIsFocused } from '@react-navigation/native';
-import React, { 
-    createRef, 
-    useEffect, 
-    useState 
+import React, {
+    createRef,
+    useEffect,
+    useState
 } from 'react';
-import { 
-    ActivityIndicator, 
-    Alert, 
-    Dimensions, 
-    FlatList, 
-    Image, 
-    Linking, 
-    RefreshControl, 
-    SafeAreaView, 
-    ScrollView, 
-    Text, 
+import {
+    ActivityIndicator,
+    Alert,
+    Dimensions,
+    FlatList,
+    Image,
+    Linking,
+    RefreshControl,
+    SafeAreaView,
+    ScrollView,
+    Text,
     TouchableOpacity,
-    View 
+    View
 } from 'react-native';
 import normalize from 'react-native-normalize';
 import { client } from '../services';
@@ -235,7 +235,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
                         Choose Shipping Address
                     </Text>
                     <View>
-                        
+
                         <FlatList
                             style={{
                                 // height: '100%'
@@ -255,7 +255,26 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                             minHeight: normalize(120)
                                         }}
                                         onPress={() => {
-                                            shippingAddressHandler(item);
+                                            Alert.alert(
+                                                "Confirmation",
+                                                "Continue to checkout.",
+                                                [
+                                                    {
+                                                        text: "Cancel",
+                                                        onPress: () => console.log("Cancel Pressed"),
+                                                        style: "cancel"
+                                                    },
+                                                    {
+                                                        text: "Confirm",
+                                                        onPress: () => {
+                                                            shippingAddressHandler(item);
+                                                        },
+
+                                                    }
+
+                                                ]
+                                            );
+
                                         }}
                                         key={item.id}
                                     >
@@ -347,9 +366,9 @@ function CartScreen({ navigation, setCart, customer, route }) {
 
 
                         <TouchableOpacity
-                            onPress={()=>{
+                            onPress={() => {
                                 addressActionRef?.current?.hide();
-                                navigation.navigate('AddAddressScreen',{toUpdateAddress: false});
+                                navigation.navigate('AddAddressScreen', { toUpdateAddress: false });
                             }}
                             style={{
                                 padding: normalize(10),
@@ -405,10 +424,10 @@ function CartScreen({ navigation, setCart, customer, route }) {
                     </Text>
                     <TouchableOpacity
                         onPress={() => {
-                            try{
+                            try {
                                 navigation.navigate(route?.params?.previous_screen, route?.params?.params);
-                            }   
-                            catch(error){
+                            }
+                            catch (error) {
                                 navigation.goBack();
                             }
                         }}
@@ -430,7 +449,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
 
                 <View
                     style={{
-                        height:Dimensions.get('screen').height <= 650 ? height / 2.3 : height / 2.001,
+                        height: Dimensions.get('screen').height <= 650 ? height / 2.3 : height / 2.001,
                     }}
                 >
                     {isLoading === false && cartItem?.lineItems?.length === 0 &&
@@ -487,11 +506,11 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                                 marginRight: normalize(5),
                                                 borderRadius: normalize(10)
                                             }
-                                            
-                                        ]}
+
+                                            ]}
                                             resizeMode={"center"}
                                             source={{ uri: item.variant?.image?.src }}
-                                        /> 
+                                        />
                                         <View
                                             style={{
                                                 flex: 1,
@@ -581,16 +600,16 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                                 </TouchableOpacity>
                                             </View>
                                         </View>
-                                        <View 
-                                            style={{ 
-                                                flex: .4, 
-                                                alignSelf: 'center' 
+                                        <View
+                                            style={{
+                                                flex: .4,
+                                                alignSelf: 'center'
                                             }}
                                         >
-                                            <Text 
-                                                style={{ 
-                                                    textAlign: "right", 
-                                                    fontSize: theme.fontSize.medium 
+                                            <Text
+                                                style={{
+                                                    textAlign: "right",
+                                                    fontSize: theme.fontSize.medium
                                                 }}
                                             >
                                                 $ {item?.variant?.price}
@@ -613,7 +632,6 @@ function CartScreen({ navigation, setCart, customer, route }) {
                             paddingTop: normalize(13)
                         }}
                     >
-                        
                         <View
                             style={{
                                 flexDirection: "row",
@@ -641,53 +659,51 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                 marginVertical: normalize(8)
                             }}
                         >
-                        <Text
-                            style={{
-                                marginVertical: normalize(10),
-                                fontWeight: theme.fontWeight.medium,
-                                fontSize: theme.fontSize.paragraph
-                            }}
-                        >
-                            Taxes, shipping and discounts codes calculated at checkout
-                        </Text>
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                            }}
-                        >
-                            <CheckBox
-                                value={isDefault}
-                                onValueChange={() => {
-                                    setIsDefault((curr) => !curr);
-                                }} 
+                            <Text
                                 style={{
-                                    borderRadius: normalize(20),
-                                
-                                }}
-                                
-                                tintColor={theme.colors.secondary}
-                                onCheckColor={theme.colors.primary}
-                                onTintColor={theme.colors.primary}
-                            />
-                            <TouchableOpacity
-                                onPress={()=>{
-                                    Linking.openURL("https://petnpic.com/pages/terms-and-condition");
+                                    marginVertical: normalize(10),
+                                    fontWeight: theme.fontWeight.medium,
+                                    fontSize: theme.fontSize.paragraph
                                 }}
                             >
-                                <Text
+                                Taxes, shipping and discounts codes calculated at checkout
+                            </Text>
+                            <View
+                                style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <CheckBox
+                                    value={isDefault}
+                                    onValueChange={() => {
+                                        setIsDefault((curr) => !curr);
+                                    }}
                                     style={{
-                                        fontSize: theme.fontSize.medium,
-                                        lineHeight: theme.lineHeight.medium,
-                                        marginLeft: normalize(10),
-                                        textDecorationLine: "underline"
+                                        borderRadius: normalize(20),
+                                    }}
+                                    tintColor={theme.colors.secondary}
+                                    onCheckColor={theme.colors.primary}
+                                    onTintColor={theme.colors.primary}
+                                />
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        Linking.openURL("https://petnpic.com/pages/terms-and-condition");
                                     }}
                                 >
-                                    I agree with terms and conditions
-                                </Text>
-                            </TouchableOpacity>
-                            
-                        </View>
+                                    <Text
+                                        style={{
+                                            fontSize: theme.fontSize.medium,
+                                            lineHeight: theme.lineHeight.medium,
+                                            marginLeft: normalize(10),
+                                            textDecorationLine: "underline"
+                                        }}
+                                    >
+                                        I agree with terms and conditions
+                                    </Text>
+                                </TouchableOpacity>
+
+                            </View>
                         </View>
                         <TouchableOpacity
                             style={{
@@ -701,7 +717,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
                                 alignItems: "center",
                             }}
                             onPress={() => {
-                                if(isDefault === false){
+                                if (isDefault === false) {
                                     Alert.alert('Agree T&C', 'You must agree with the terms and conditions of sales to check out.')
                                     return;
                                 }

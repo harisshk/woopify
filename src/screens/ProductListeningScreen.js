@@ -402,9 +402,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 const img = newImages[i];
                 if (img?.width >= 1000 && img?.height >= 1000) {
                 } else {
-                    setImage({
-                        uri: '',
-                    })
                     Alert.alert('Image Size', ` Min Width 1000px and Min Height 1000px `)
                     return;
                 }
@@ -617,6 +614,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                 )
                             }
                         })}
+                        <View  
+                            style={{
+                                height: normalize(20)
+                            }} 
+                        />
                         {/* {product?.variants[selectedVariantIndex]?.inventory_quantity < 1
                             && product?.variants[selectedVariantIndex]?.inventory_policy !== "deny"
                             ? <TouchableOpacity
@@ -695,25 +697,16 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     openAnimationSpeed={10}
 
                 >
-                    <View
+                    <ScrollView
                         style={{
+                       }}
+                        contentContainerStyle={{
                             width: '100%',
                             alignItems: "center",
-                            height: '100%',
+                            // height: '100%',
                             justifyContent: "space-between"
-                        }}
+                       }}
                     >
-                        {/* <Text
-                            style={{
-                                color: "#E50774",
-                                fontSize: theme.fontSize.subheading,
-                                lineHeight: theme.lineHeight.medium,
-                                fontWeight: theme.fontWeight.medium,
-                                marginBottom: normalize(10)
-                            }}
-                        >
-                            Personalize It
-                        </Text> */}
                         {
                             images.length === 0 &&
                             <View
@@ -721,7 +714,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                     backgroundColor: theme.colors.disabledButton,
                                     width: '90%',
                                     alignSelf: "center",
-                                    height: normalize(350)
+                                    height: normalize(330)
                                 }}
                             >
                                 <Image
@@ -922,9 +915,10 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                     ADD TO CART
                                 </SubHeading>
                             </TouchableOpacity>
-                            <View style={{ height: normalize(20) }} />
+                            <View style={{ height: normalize(35) }} />
                         </View>
-                    </View>
+                        
+                    </ScrollView>
                 </ActionSheet>
 
             </ScrollView>
