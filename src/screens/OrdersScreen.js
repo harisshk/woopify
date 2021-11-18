@@ -8,7 +8,7 @@ import { theme } from '../utils/theme';
 import { Menu, Divider } from 'react-native-paper';
 import { connect } from 'react-redux';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
-import { icons } from '../constant';
+import Icon from 'react-native-vector-icons/AntDesign';
 
 
 function OrderScreen({ navigation, customer }) {
@@ -90,24 +90,37 @@ function OrderScreen({ navigation, customer }) {
                         <TouchableOpacity onPress={() => {
                             setStatusMenu(true);
                         }}
-                            style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.secondary, height: normalize(45), paddingHorizontal: normalize(15), borderRadius: normalize(4), elevation: 2 }}
+                            style={{ 
+                                flexDirection: "row", 
+                                justifyContent: "center", 
+                                alignItems: "center", 
+                                backgroundColor: theme.colors.white, 
+                                height: normalize(40), 
+                                paddingHorizontal: normalize(12), 
+                                borderRadius: normalize(4), 
+                                elevation: 1,
+                                borderWidth: 1,
+                                borderColor: theme.colors.disabledButton
+                            }}
                         >
-                            <Image 
-                                source={icons?.EXPAND_ARROW}
-                                style={{
-                                    height: normalize(15),
-                                    width: normalize(15), marginRight: normalize(10)
-                                }}
-                                resizeMode="contain"
-                            />
+                           
+                        
                             <Text
                                 style={{
-                                    color: theme.colors.primary,
+                                    color: theme.colors.black,
                                     textTransform: "uppercase",
                                     fontSize: theme.fontSize.paragraph,
-                                    fontWeight: theme.fontWeight.bold
+                                    fontWeight: theme.fontWeight.medium,
+                                    marginRight: normalize(10)
                                 }}
-                            >{status === "any" ? "All Orders" : status === "open" ? "Processing" : status === "closed" ? "Completed" : "Cancelled"}</Text>
+                            >
+                                {status === "any" ? "All Orders" : status === "open" ? "Processing" : status === "closed" ? "Completed" : "Cancelled"}
+                            </Text>
+                            <Icon
+                                name={"down"}
+                                color={theme.colors.black}
+                                size={20}
+                            />
 
                         </TouchableOpacity>
                     }>
@@ -217,15 +230,15 @@ function OrderScreen({ navigation, customer }) {
                                     // backgroundColor: "#bbbbfa",
                                     backgroundColor: theme.colors.white,
                                     padding: normalize(10),
-                                    borderRadius: normalize(10),
-                                    elevation: 2,
+                                    borderRadius: normalize(5),
+                                    elevation: 1,
                                     marginVertical: normalize(5),
                                     flexDirection: "row",
                                     flex: 1,
-                                    borderWidth: 2,
-                                    borderColor: theme.colors.white,
-                                    shadowOpacity: .1,
-                                    shadowColor: theme.colors.secondary
+                                    borderWidth: 1,
+                                    borderColor: theme.colors.disabledButton,
+                                    shadowOpacity: .021,
+                                    // shadowColor: theme.colors.secondary
                                 },
                                 index + 1 === orders.length && orders.length > 3 && {
                                     marginBottom: normalize(25)
@@ -298,8 +311,8 @@ function OrderScreen({ navigation, customer }) {
                                         },
                                         item.fulfillment_status === "fulfilled" ? {
                                             backgroundColor: "#1c6946"
-                                        } : item.fulfillment_status === "cancelled" ? {
-                                            backgroundColor: "#541010"
+                                        } : orders[0].fulfillments[0].status === "cancelled" ? {
+                                            backgroundColor: theme.colors.notification
 
                                         } : {
                                             backgroundColor: theme.colors.primary
@@ -307,7 +320,7 @@ function OrderScreen({ navigation, customer }) {
                                     ]}
                                     
                                 >
-                                    {item.fulfillment_status === "fulfilled" && "Delivered" || "Processing"}
+                                    {item.status === "fulfilled" && "Delivered" || item.fulfillments[0].status}
                                 </Text>
                             </TouchableOpacity>
                             <View
