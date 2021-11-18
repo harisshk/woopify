@@ -455,7 +455,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
 
                 <View
                     style={{
-                        height: Dimensions.get('screen').height <= 650 ? height / 2.3 : height / 2.001,
+                        height: Dimensions.get('screen').width >  Dimensions.get('screen').height ? normalize(95) : Dimensions.get('screen').height <= 650 ? height / 2.3 : height / 2.001,
                     }}
                 >
                     {isLoading === false && cartItem?.lineItems?.length === 0 &&
@@ -661,7 +661,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
                             elevation: 2,
                             borderTopWidth: 2,
                             borderTopColor: theme.colors.disabledButton,
-                            paddingTop: normalize(13)
+                            paddingTop: Dimensions.get('screen').width >  Dimensions.get('screen').height ? 0.4 : normalize(13)
                         }}
                     >
                         <View
@@ -688,12 +688,12 @@ function CartScreen({ navigation, setCart, customer, route }) {
                         </View>
                         <View
                             style={{
-                                marginVertical: normalize(8)
+                                marginVertical:  Dimensions.get('screen').width >  Dimensions.get('screen').height ? 1 : normalize(8)
                             }}
                         >
                             <Text
                                 style={{
-                                    marginVertical: normalize(10),
+                                    marginVertical:  Dimensions.get('screen').width >  Dimensions.get('screen').height ? normalize(3) :  normalize(10),
                                     fontWeight: theme.fontWeight.medium,
                                     fontSize: theme.fontSize.paragraph
                                 }}

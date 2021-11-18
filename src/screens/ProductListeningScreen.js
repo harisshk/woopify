@@ -635,12 +635,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 />
                 <ActionSheet
                     ref={addToCartRef}
-                    drawUnderStatusBar={true}
                     containerStyle={{
-                        height: Dimensions.get('screen').height / 1.2
+                        height: Dimensions.get('window').height / 1.2
                     }}
                     headerAlwaysVisible={true}
-                    openAnimationSpeed={10}
+                    gestureEnabled={true}
                 >
                     <ScrollView
                         style={{

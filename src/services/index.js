@@ -22,6 +22,6 @@ export const client = Client.buildClient({
 
 export const API_KEY = `1b42fe48a6f3d18bb652e1c24e124738`;
 
-export const API_ENDPOINT = `https://68b4-106-51-88-144.ngrok.io`;
+export const API_ENDPOINT = `https://shopify-connect-api.herokuapp.com`;
 
 export const THEME_ID = `128259850488`;

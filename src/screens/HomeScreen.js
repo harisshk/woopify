@@ -26,7 +26,7 @@ import ProductView01 from '../components/ProductView01';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
 import { client } from '../services';
 import Footer from '../components/Footer';
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get('screen');
 import NetInfo from "@react-native-community/netinfo";
 import { icons, images } from '../constant';
 import Carousel from 'react-native-banner-carousel';

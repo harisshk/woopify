@@ -226,7 +226,6 @@ function RegisterScreen({navigation, setCustomer}) {
                     last_name: last_name,
                     first_name: first_name,
                     email: input.email.value,
-                    phone: "+91" + phone,
                     verified_email: true,
                     password: password,
                     password_confirmation: password_confirmation,
@@ -619,6 +618,7 @@ function RegisterScreen({navigation, setCustomer}) {
                         >
                             REGISTER YOUR ACCOUNT</Text>
                     </TouchableOpacity>
+                    <View style={{height: normalize(24)}} />
                     {/* <Footer /> */}
                 </ScrollView>
             </KeyboardAvoidingView>
