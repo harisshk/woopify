@@ -29,7 +29,7 @@ import ActionSheet from 'react-native-actions-sheet';
 import SubHeading from '../components/SubHeading';
 import { setCart } from '../redux/action/cart';
 import { connect } from 'react-redux';
-import { getProductByVariant } from '../services/products';
+import { getProductByVariant, getProductInfo } from '../services/products';
 import base64 from 'react-native-base64';
 import StepperCounter from '../components/StepperCounter';
 import { icons } from '../constant';
@@ -166,8 +166,10 @@ function CartScreen({ navigation, setCart, customer, route }) {
         >
             <ActionSheet
                 headerAlwaysVisible={true}
+
                 ref={editActionRef}
                 drawUnderStatusBar={true}
+                gestureEnabled={true}
                 containerStyle={{
                     height: height / 2.2,
                     justifyContent: "space-around"
@@ -428,10 +430,12 @@ function CartScreen({ navigation, setCart, customer, route }) {
                     >
                         Your Cart
                     </Text>
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         onPress={() => {
                             try {
-                                navigation.navigate(route?.params?.previous_screen, route?.params?.params);
+                                navigation.goBack();
+                                // navigation.pop();
+                                // navigation.replace(route?.params?.previous_screen, route?.params?.params);
                             }
                             catch (error) {
                                 navigation.goBack();
@@ -450,7 +454,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
                         >
                             Back
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
 
                 <View

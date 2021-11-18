@@ -123,11 +123,10 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
         if (images[0]?.uri) {
             let assets = [];
             for (let i = 0; i < images.length; i++) {
-
                 var body = JSON.stringify({
                     "asset": {
                         "attachment": images[i].attachment,
-                        "key": `assets/${product.id}${customer.id}${i}${Math.floor(Math.random() * 200)}.png`,
+                        "key": `assets/${customer.email}-${product?.id}-${i}${Math.floor(Math.random() * 2500)}${Math.floor(Math.random() * 2500)}.png`,
                     }
                 });
 
@@ -172,13 +171,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         }
                         setCart({ ...cart });
                         setCartIsLoading(false);
-                        navigation.navigate('BottomTab',
-                            {
-                                screen: 'CartScreen',
-                                params: { previous_screen: route?.name, params: route?.params }
-                            },
-                            'CartScreen'
-                        );
+                        navigation.navigate('CartScreen');
                         Toast.show('Added to Cart');
                     })
                     setCartIsLoading(false);
