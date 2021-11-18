@@ -76,9 +76,9 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     newVariantImages = newVariantImages.insert(0, item);
                     selected = index;
                 } else if (selected != null && selected + 3 >= index) {
-                    newVariantImages = newVariantImages.insert(1, item);
+                    // newVariantImages = newVariantImages.insert(1, item);
                 }
-                else if (item.variant_ids.length === 0) {
+                if (item.variant_ids.length === 0) {
                     newVariantImages.push(item);
                 }
             });
@@ -291,9 +291,9 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             newVariantImages = newVariantImages.insert(0, item);
                             selected = index;
                         } else if (selected != null && selected + 3 >= index) {
-                            newVariantImages = newVariantImages.insert(1, item);
+                            // newVariantImages = newVariantImages.insert(1, item);
                         }
-                        else if (item.variant_ids.length === 0) {
+                        if (item.variant_ids.length === 0) {
                             newVariantImages.push(item);
                         }
                     });
@@ -327,9 +327,9 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             newVariantImages = newVariantImages.insert(0, item);
                             selected = index;
                         } else if (selected != null && selected + 3 >= index) {
-                            newVariantImages = newVariantImages.insert(1, item);
+                            // newVariantImages = newVariantImages.insert(1, item);
                         }
-                        else if (item.variant_ids.length === 0) {
+                        if (item.variant_ids.length === 0) {
                             newVariantImages.push(item);
                         }
                     });
@@ -362,9 +362,9 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             newVariantImages = newVariantImages.insert(0, item);
                             selected = index;
                         } else if (selected != null && selected + 3 >= index) {
-                            newVariantImages = newVariantImages.insert(1, item);
+                            // newVariantImages = newVariantImages.insert(1, item);
                         }
-                        else if (item.variant_ids.length === 0) {
+                        if (item.variant_ids.length === 0) {
                             newVariantImages.push(item);
                         }
                     });
