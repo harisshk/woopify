@@ -110,7 +110,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
 
     const addToCartListener = async (quantity) => {
         if (images.length === 0) {
-            Toast.show('Add at-least Images to continue.', Toast.SHORT);
+            Toast.show('Add Minimum 1 Image to continue.', Toast.SHORT);
             addToCartRef?.current?.show();
             return;
         } else {
