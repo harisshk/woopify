@@ -15,6 +15,8 @@ import {
     Image,
     Alert,
     FlatList,
+    Modal,
+    StyleSheet
 } from 'react-native';
 import base64 from 'react-native-base64';
 import { Gallery } from 'react-native-gallery-view';
@@ -120,15 +122,15 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
         setCartIsLoading(true);
         if (images[0]?.uri) {
             let assets = [];
-            for(let i = 0; i < images.length; i++){
-                
+            for (let i = 0; i < images.length; i++) {
+
                 var body = JSON.stringify({
                     "asset": {
                         "attachment": images[i].attachment,
                         "key": `assets/${product.id}${customer.id}${i}${Math.floor(Math.random() * 200)}.png`,
                     }
                 });
-                
+
                 var config = {
                     method: 'put',
                     url: `https://1b42fe48a6f3d18bb652e1c24e124738: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@petinpic.myshopify.com/admin/api/2021-10/themes/${THEME_ID}/assets.json`,
@@ -138,13 +140,13 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     data: body
                 };
 
-                try{
+                try {
                     const response = await requestHandler(config);
                     assets.push({
                         key: `Uploaded image ${i + 1}`,
                         value: `${response?.data?.asset?.public_url}`
                     });
-                }catch(error){
+                } catch (error) {
                     console.log(error);
                     setIsLoading(false);
                     Toast.show('Error in uploading image to the shopify cdn.');
@@ -154,7 +156,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
             let checkoutExists = await AsyncStorage.getItem('checkoutId');
 
             if (checkoutExists === null) {
-                client.checkout.create({email: customer.email}).then(async (checkout) => {
+                client.checkout.create({ email: customer.email }).then(async (checkout) => {
                     await AsyncStorage.setItem('checkoutId', JSON.stringify(checkout.id));
                     const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
                     const lineItemsToAdd = [
@@ -170,11 +172,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         }
                         setCart({ ...cart });
                         setCartIsLoading(false);
-                        navigation.navigate('BottomTab', 
+                        navigation.navigate('BottomTab',
                             {
                                 screen: 'CartScreen',
                                 params: { previous_screen: route?.name, params: route?.params }
-                            }, 
+                            },
                             'CartScreen'
                         );
                         Toast.show('Added to Cart');
@@ -197,11 +199,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 setCart({ ...cart });
                 setCartIsLoading(false);
                 setCartIsLoading(false);
-                navigation.navigate('BottomTab', 
+                navigation.navigate('BottomTab',
                     {
                         screen: 'CartScreen',
                         params: { previous_screen: route?.name, params: route?.params }
-                    }, 
+                    },
                     'CartScreen'
                 );
                 Toast.show('Added to Cart');
@@ -212,7 +214,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
             });
         } else {
             // data = {
-            //     success: true,c
+            //     success: true,
             //     noImage: true
             // };
         }
@@ -275,70 +277,69 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
 
 
     }
+
+    const findingImagesForGallery = async (allImages, currVariantId) => {
+        let newVariantImages = [];
+        // let selected = null;
+        await allImages.map((item, index) => {
+            if (item.variant_ids.includes(currVariantId)) {
+                newVariantImages = newVariantImages.insert(0, item);
+                selected = index;
+            }
+            else if (item.variant_ids.length === 0) {
+                newVariantImages.push(item);
+            }
+
+            // Removed currently.
+            // else if (selected != null && selected + 3 >= index) {
+            //     // newVariantImages = newVariantImages.insert(1, item);
+            // }
+        });
+        setVariantImages([...newVariantImages]);
+        setIsLoading(false);
+    }
+
     const changeVariant = async (option1 = null, option2 = null, option3 = null) => {
+        setIsLoading(true);
+
         for (let i = 0; i < product?.variants?.length; i++) {
             const variant = product.variants[i];
             if (option1 !== null && option2 === null && option3 === null) {
+                /**
+                 * For products having 1 variant only. 
+                 */
                 if (variant.option1 === option1) {
-                    setIsLoading(true);
                     setSelectedVariantIndex(i);
                     const allImages = product.images;
-                    const currVariant = variant;
-                    let newVariantImages = [];
-                    let selected = null;
-                    await allImages.map((item, index) => {
-                        if (item.variant_ids.includes(currVariant.id)) {
-                            newVariantImages = newVariantImages.insert(0, item);
-                            selected = index;
-                        } else if (selected != null && selected + 3 >= index) {
-                            // newVariantImages = newVariantImages.insert(1, item);
-                        }
-                        if (item.variant_ids.length === 0) {
-                            newVariantImages.push(item);
-                        }
-                    });
-                    setVariantImages([...newVariantImages]);
-                    setIsLoading(false);
+                    const currVariantId = variant.id;
+                    findingImagesForGallery(allImages, currVariantId);
                     return;
                 }
             } else if (option1 !== null && option2 !== null && option3 === null) {
+                /**
+                 * For products having 2 variants.
+                 */
                 if (variant.option1 === option1 && variant.option2 === option2) {
                     const optionAvailable = [[]];
                     const option2 = [];
-                    const option3 = [];
                     for (let i = 0; i < product.variants.length; i++) {
                         if (product.variants[i].option1 === option1) {
                             option2.push(product.variants[i].option2);
-                            option3.push(product.variants[i].option3);
                         }
                     }
                     optionAvailable.push(option2);
-                    optionAvailable.push(option3);
                     setAvailableOptions([...optionAvailable]);
-
-                    setIsLoading(true);
                     setSelectedVariantIndex(i);
                     const allImages = product.images;
-                    const currVariant = variant;
-                    let newVariantImages = [];
-                    let selected = null;
-                    await allImages.map((item, index) => {
-                        if (item.variant_ids.includes(currVariant.id)) {
-                            newVariantImages = newVariantImages.insert(0, item);
-                            selected = index;
-                        } else if (selected != null && selected + 3 >= index) {
-                            // newVariantImages = newVariantImages.insert(1, item);
-                        }
-                        if (item.variant_ids.length === 0) {
-                            newVariantImages.push(item);
-                        }
-                    });
-                    setVariantImages([...newVariantImages]);
-                    setIsLoading(false);
+                    const currVariantId = variant.id;
+                    findingImagesForGallery(allImages, currVariantId);
                     return;
                 }
             } else {
                 if (variant.option1 === option1 && variant.option2 === option2 && variant.option3 === option3) {
+                    /**
+                     * For products having 3 variants.
+                     */
                     const optionAvailable = [[]];
                     const option2 = [];
                     const option3 = [];
@@ -351,30 +352,17 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     optionAvailable.push(option2);
                     optionAvailable.push(option3);
                     setAvailableOptions([...optionAvailable]);
-                    setIsLoading(true);
                     setSelectedVariantIndex(i);
                     const allImages = product.images;
-                    const currVariant = variant;
-                    let newVariantImages = [];
-                    let selected = null;
-                    await allImages.map((item, index) => {
-                        if (item.variant_ids.includes(currVariant.id)) {
-                            newVariantImages = newVariantImages.insert(0, item);
-                            selected = index;
-                        } else if (selected != null && selected + 3 >= index) {
-                            // newVariantImages = newVariantImages.insert(1, item);
-                        }
-                        if (item.variant_ids.length === 0) {
-                            newVariantImages.push(item);
-                        }
-                    });
-                    setVariantImages([...newVariantImages]);
-                    setIsLoading(false);
+                    const currVariantId = variant.id;
+                    findingImagesForGallery(allImages, currVariantId);
                     return;
                 }
             }
 
         }
+
+        setIsLoading(false);
     }
 
     const [availableOptions, setAvailableOptions] = useState([]);
@@ -411,16 +399,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 };
                 temp.push(upload);
             }
-            // const upload = {
-            //     attachment: image?.data,
-            //     customer: customer?.id,
-            //     product: product.id,
-            //     uri: image.sourceURL,
-            // };
-            // const newImages = images;
-            // newImages.push({
-            //     ...upload
-            // })
             setImages([...temp]);
         } catch (error) {
             setImageIsLoading(false);
@@ -429,13 +407,31 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
         }
     }
 
+    const variantsHandler = (item, index) => {
+        if (product?.options.length === 3) {
+            if (index + 1 === 1) {
+                changeVariant(item, product.variants[selectedVariantIndex][`option2`], product.variants[selectedVariantIndex][`option3`]);
+            } else if (index + 1 === 2) {
+                changeVariant(product.variants[selectedVariantIndex][`option1`], item, product.variants[selectedVariantIndex][`option3`]);
+            } else {
+                changeVariant(product.variants[selectedVariantIndex][`option1`], product.variants[selectedVariantIndex][`option2`], item);
+            }
+        } else if (product.options.length === 2) {
+            if (index + 1 === 1) {
+                changeVariant(item, product.variants[selectedVariantIndex][`option2`]);
+            } else if (index + 1 === 2) {
+                changeVariant(product.variants[selectedVariantIndex][`option1`], item);
+            }
+        } else {
+            changeVariant(item);
+        }
+    }
+
     useEffect(() => {
 
         getProductInfoHelper();
-
         // unmount
         return () => {
-
         };
     }, []);
 
@@ -450,6 +446,33 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 navigation={navigation}
                 title={'Product Details'}
             />
+            <Modal
+                transparent
+                animationType={"none"}
+                visible={isLoading}
+                onRequestClose={() => null}
+                style={{
+                    elevation: 1,
+                    borderColor: "red",
+                    borderWidth: 2,
+                    backgroundColor: "red"
+                }}
+
+            >
+                <View
+                    style={[
+                        styles.modalBackground,
+                        { backgroundColor: theme.colors.disabledButton, opacity: .5 }
+                    ]}
+                >
+                    <View style={styles.activityIndicatorWrapper}>
+                        <ActivityIndicator animating={isLoading} color={theme.colors.primary} size={20} />
+                        <Text style={styles.title} numberOfLines={1}>
+                            Loading...
+                        </Text>
+                    </View>
+                </View>
+            </Modal>
             <ScrollView
                 style={{
                     flex: 1,
@@ -522,23 +545,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                             return (
                                                 <TouchableOpacity
                                                     onPress={() => {
-                                                        if (product?.options.length === 3) {
-                                                            if (index + 1 === 1) {
-                                                                changeVariant(item, product.variants[selectedVariantIndex][`option2`], product.variants[selectedVariantIndex][`option3`]);
-                                                            } else if (index + 1 === 2) {
-                                                                changeVariant(product.variants[selectedVariantIndex][`option1`], item, product.variants[selectedVariantIndex][`option3`]);
-                                                            } else {
-                                                                changeVariant(product.variants[selectedVariantIndex][`option1`], product.variants[selectedVariantIndex][`option2`], item);
-                                                            }
-                                                        } else if (product.options.length === 2) {
-                                                            if (index + 1 === 1) {
-                                                                changeVariant(item, product.variants[selectedVariantIndex][`option2`]);
-                                                            } else if (index + 1 === 2) {
-                                                                changeVariant(product.variants[selectedVariantIndex][`option1`], item);
-                                                            }
-                                                        } else {
-                                                            changeVariant(item);
-                                                        }
+                                                        variantsHandler(item, index);
                                                     }}
                                                     style={[
                                                         {
@@ -614,72 +621,11 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                 )
                             }
                         })}
-                        <View  
+                        <View
                             style={{
                                 height: normalize(35)
-                            }} 
+                            }}
                         />
-                        {/* {product?.variants[selectedVariantIndex]?.inventory_quantity < 1
-                            && product?.variants[selectedVariantIndex]?.inventory_policy !== "deny"
-                            ? <TouchableOpacity
-                                disabled={true}
-                                style={{
-                                    height: normalize(55),
-                                    width: '85%',
-                                    alignSelf: "center",
-                                    backgroundColor: theme.colors.white,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    borderRadius: normalize(12),
-                                    marginTop: normalize(15)
-                                }}
-                            >
-                                {cartIsLoading ?
-                                    <ActivityIndicator color={theme.colors.white} />
-                                    :
-                                    <Text
-                                        style={{
-                                            color: theme.colors.notification,
-                                            fontSize: theme.fontSize.medium,
-                                            fontWeight: theme.fontWeight.medium
-                                        }}
-                                    >
-                                        OUT OF STOCK
-                                    </Text>
-                                }
-                            </TouchableOpacity> :
-                            <TouchableOpacity
-                                disabled={cartIsLoading}
-                                style={{
-                                    height: normalize(55),
-                                    width: '100%',
-                                    alignSelf: "center",
-                                    backgroundColor: theme.colors.secondary,
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    borderRadius: normalize(6),
-                                    marginVertical: normalize(15)
-                                }}
-                                onPress={() => {
-                                    addToCartRef.current?.show();
-                                }}
-                            >
-                                {cartIsLoading ?
-                                    <ActivityIndicator color={theme.colors.white} />
-                                    :
-                                    <Text
-                                        style={{
-                                            color: theme.colors.white,
-                                            fontSize: theme.fontSize.medium,
-                                            fontWeight: theme.fontWeight.medium,
-                                            lineHeight: theme.lineHeight.medium
-                                        }}
-                                    >
-                                        Customize 
-                                    </Text>
-                                }
-                            </TouchableOpacity>
-                        } */}
                     </View>
                 }
                 <View
@@ -695,17 +641,15 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     }}
                     headerAlwaysVisible={true}
                     openAnimationSpeed={10}
-
                 >
                     <ScrollView
                         style={{
-                       }}
+                        }}
                         contentContainerStyle={{
                             width: '100%',
                             alignItems: "center",
-                            // height: '100%',
                             justifyContent: "space-between"
-                       }}
+                        }}
                     >
                         {
                             images.length === 0 &&
@@ -791,52 +735,51 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                     )
                                 }}
                             />
-                           
+
                         </View>
                         {
-                                images.length > 0 && 
-                                <View
+                            images.length > 0 &&
+                            <View
+                                style={{
+                                    alignSelf: "flex-start",
+                                    width: "90%",
+                                    paddingHorizontal: '7%'
+                                }}
+                            >
+                                <Text
                                     style={{
-                                        // paddingTop: normalize(10),
-                                        alignSelf: "flex-start",
-                                        width: "90%",
-                                        paddingHorizontal: '7%'
+                                        fontSize: theme.fontSize.heading,
+                                        fontWeight: theme.fontWeight.normal,
+                                        lineHeight: theme.lineHeight.title,
+                                        color: theme.colors.secondary,
                                     }}
                                 >
-                                    <Text
-                                        style={{
-                                            fontSize: theme.fontSize.heading,
-                                            fontWeight: theme.fontWeight.normal,
-                                            lineHeight: theme.lineHeight.title,
-                                            color: theme.colors.secondary,
-                                        }}
-                                    >
-                                        {product?.title}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: theme.fontSize.title,
-                                            fontWeight: theme.fontWeight.normal,
-                                            lineHeight: theme.lineHeight.title,
-                                            color: theme.colors.primary,
-                                        }}
-                                    >
-                                        $ {product?.variants[selectedVariantIndex]?.price}
-                                    </Text>
-                                    <Text
-                                        style={{
-                                            fontSize: theme.fontSize.subheading,
-                                            fontWeight: theme.fontWeight.normal,
-                                            lineHeight: theme.lineHeight.subheading,
-                                            color: theme.colors.secondary,
-                                        }}
-                                    >
-                                       {product?.variants[selectedVariantIndex]?.title}
-                                    </Text>
+                                    {product?.title}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.title,
+                                        fontWeight: theme.fontWeight.normal,
+                                        lineHeight: theme.lineHeight.title,
+                                        color: theme.colors.primary,
+                                    }}
+                                >
+                                    $ {product?.variants[selectedVariantIndex]?.price}
+                                </Text>
+                                <Text
+                                    style={{
+                                        fontSize: theme.fontSize.subheading,
+                                        fontWeight: theme.fontWeight.normal,
+                                        lineHeight: theme.lineHeight.subheading,
+                                        color: theme.colors.secondary,
+                                    }}
+                                >
+                                    {product?.variants[selectedVariantIndex]?.title}
+                                </Text>
 
-                                </View>
-                            }
-                        <View 
+                            </View>
+                        }
+                        <View
                             style={{
                                 width: '100%',
                                 alignSelf: "center"
@@ -873,10 +816,10 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                 </TouchableOpacity>
                             }
                             <StepperCounter
-                                max={product?.variants[selectedVariantIndex]?.inventory_quantity || 0} 
-                                curr={selectedStock} 
-                                setCurr={setSelectedStock} 
-                                policy={product?.variants[selectedVariantIndex]?.inventory_policy} 
+                                max={product?.variants[selectedVariantIndex]?.inventory_quantity || 0}
+                                curr={selectedStock}
+                                setCurr={setSelectedStock}
+                                policy={product?.variants[selectedVariantIndex]?.inventory_policy}
                             />
                             <Text
                                 style={{
@@ -917,7 +860,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             </TouchableOpacity>
                             <View style={{ height: normalize(35) }} />
                         </View>
-                        
+
                     </ScrollView>
                 </ActionSheet>
 
@@ -979,25 +922,14 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             }
                             ]}
                             onPress={() => {
-                                // navigation.navigate('BottomTab', {
-                                //     screen: 'CartScreen'
-                                // });
-
                                 addToCartRef.current?.show();
                             }}
                             disabled={cartIsLoading}
                         >
                             {
                                 cartIsLoading === true ?
-                                    <ActivityIndicator color={theme.colors.disabledButton} /> :
-                                    // <Image
-                                    //     source={icons?.CUSTOMIZE}
-                                    //     style={{
-                                    //         width: normalize(25),
-                                    //         height: normalize(25)
-                                    //     }}
-                                    //     // resizeMode="contain"
-                                    // />
+                                    <ActivityIndicator color={theme.colors.disabledButton} /> 
+                                    :
                                     <></>
                             }
                             <Text
@@ -1039,5 +971,28 @@ const mapStateToProps = state => {
 const mapDispatchToProps = (dispatch) => ({
     setCart: (customer) => dispatch(setCart(customer)),
 });
+
+
+const styles = StyleSheet.create({
+    modalBackground: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center"
+    },
+    activityIndicatorWrapper: {
+        height: 100,
+        width: 100,
+        borderRadius: normalize(5),
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 2,
+    },
+    title: {
+        position: "absolute",
+        paddingTop: 60,
+        fontSize: normalize(17),
+    }
+});
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductListeningScreen)

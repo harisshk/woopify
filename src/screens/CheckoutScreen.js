@@ -1,7 +1,13 @@
-import React, { createRef, useState } from 'react'
-import { SafeAreaView, View, ActivityIndicator, TouchableOpacity, Text } from 'react-native'
+import React, { createRef, useState } from 'react';
+import { 
+    SafeAreaView, 
+    View, 
+    ActivityIndicator, 
+    TouchableOpacity, 
+    Text, 
+} from 'react-native';
 import normalize from 'react-native-normalize';
-import WebView from 'react-native-webview'
+import WebView from 'react-native-webview';
 import { CustomHeader } from '../components/CustomHeader';
 import { theme } from '../utils/theme';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -35,6 +41,7 @@ function CheckoutScreen({ navigation, route }) {
                 navigation={navigation}
                 title={'Checkout'}
             />
+            
             {isImagePreviewOn === true && isLoading === false &&
                 <TouchableOpacity
                     onPress={() => {

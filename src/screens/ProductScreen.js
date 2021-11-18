@@ -701,16 +701,6 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
                     ref={scrollRef}
                     showsVerticalScrollIndicator={false}
                 >
-                    {
-                        variantImages.length > 0 && variantIsLoading === false &&
-                        <></>
-                        // <Gallery
-                        //     images={variantImages}
-                        //     activeIndex={0}
-                        //     navigator={navigator}
-                        //     borderColor={theme.colors.primary}
-                        // />
-                    }
                     <View
                         style={{
                             flexDirection: "row",
@@ -728,9 +718,7 @@ function ProductScreen({ navigation, route, navigator, setCart, cart }) {
                         >
                             {product?.title}
                         </Text>
-                        {/**
-                        * Variants and Option for Color
-                        */}
+        
                         {listOfColors && isColorVariantPresent === true && variantIsLoading === false && optionsType === "double" &&
                             <TouchableOpacity
                                 style={{

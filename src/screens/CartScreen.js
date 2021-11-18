@@ -17,7 +17,9 @@ import {
     ScrollView,
     Text,
     TouchableOpacity,
-    View
+    View,
+    StyleSheet, 
+    Modal 
 } from 'react-native';
 import normalize from 'react-native-normalize';
 import { client } from '../services';
@@ -48,21 +50,25 @@ function CartScreen({ navigation, setCart, customer, route }) {
     const [isDefault, setIsDefault] = useState(false);
 
     const [refreshing, setRefreshing] = useState(true);
+    
     const onRefresh = () => {
         setRefreshing(true);
         getCartItem();
         setRefreshing(false);
     }
     const updateQuantity = async () => {
+        editActionRef.current?.setModalVisible(false);
+        setIsLoading(true);
         if (checkoutId !== null) {
             try {
                 const lineItemsToUpdate = [
                     { id: editItem.id, quantity: parseInt(selectedStock) }
                 ];
                 setEditCartLoading(true);
-                let checkout = await client.checkout.updateLineItems(checkoutId, lineItemsToUpdate)
+                let checkout = await client.checkout.updateLineItems(checkoutId, lineItemsToUpdate);
+                setIsLoading(false);
                 let data = Object.assign({}, { checkout: checkout });
-                setCartItem({ ...data.checkout });
+                setCartItem({ ...data.checkout });           
                 setEditCartLoading(false);
             } catch (error) {
                 setEditCartLoading(false);
@@ -76,7 +82,7 @@ function CartScreen({ navigation, setCart, customer, route }) {
         const lineItemIdsToRemove = [
             item.id
         ];
-        setEditCartLoading(true);
+        setIsLoading(true);
         try {
             let checkout = await client.checkout.removeLineItems(checkoutId, lineItemIdsToRemove);
             let data = Object.assign({}, { checkout: checkout });
@@ -85,14 +91,15 @@ function CartScreen({ navigation, setCart, customer, route }) {
             }
             setCart({ ...cart });
             setCartItem({ ...data.checkout });
-            setEditCartLoading(false);
+            setIsLoading(false);
         } catch (error) {
             console.log(error);
             console.log('-----------------------------------------Line 54-----------------------------------')
-            setEditCartLoading(false);
+            setIsLoading(false);
             Alert.alert('Error', 'Something went wrong')
         }
     }
+
 
     useEffect(async () => {
         getCartItem();
@@ -182,7 +189,6 @@ function CartScreen({ navigation, setCart, customer, route }) {
                     <TouchableOpacity
                         onPress={() => {
                             updateQuantity(parseInt(selectedStock));
-                            editActionRef.current?.setModalVisible(false);
                         }}
                         style={{
                             backgroundColor: theme.colors.primary,
@@ -622,7 +628,33 @@ function CartScreen({ navigation, setCart, customer, route }) {
                         />
                     </View>
                 </View>
-
+                <Modal
+                    transparent
+                    animationType={"none"}
+                    visible={editCartLoading || isLoading}
+                    onRequestClose={() => null}
+                    style={{
+                        elevation: 1,
+                        borderColor: "red",
+                        borderWidth:2,
+                        backgroundColor: "red"
+                    }}
+                    
+                >
+                    <View
+                        style={[
+                            styles.modalBackground,
+                            { backgroundColor: theme.colors.disabledButton, opacity: .5}
+                        ]}
+                    >
+                        <View style={styles.activityIndicatorWrapper}>
+                            <ActivityIndicator animating={editCartLoading || isLoading} color={theme.colors.primary} size={20} />
+                            <Text style={styles.title} numberOfLines={1}>
+                                Loading...
+                            </Text>
+                        </View>
+                    </View>
+                </Modal>
                 {isLoading === false && cartItem?.lineItems.length > 0 &&
                     <View
                         style={{
@@ -752,5 +784,25 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => ({
     setCart: cart => dispatch(setCart(cart))
 });
+const styles = StyleSheet.create({
+    modalBackground: {
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center"
+    },
+    activityIndicatorWrapper: {
+        height: 100,
+        width: 100,
+        borderRadius: normalize(5),
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 2,
+    },
+    title: {
+      position: "absolute",
+      paddingTop: 60,
+      fontSize: normalize(17),
+    }
+  });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartScreen);
