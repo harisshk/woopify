@@ -616,7 +616,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         })}
                         <View  
                             style={{
-                                height: normalize(20)
+                                height: normalize(35)
                             }} 
                         />
                         {/* {product?.variants[selectedVariantIndex]?.inventory_quantity < 1
