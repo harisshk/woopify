@@ -22,7 +22,7 @@ export const verifyEmail = async (body) => {
         const response = await axios.post(`${API_ENDPOINT}/api/customer/verify/email`, body);
         return response;
     } catch (error) {
-        console.log(error);
+        console.log(error.response);
         console.log('-------------------customer Line 25------------------------');
         return error?.response || null;
     }
