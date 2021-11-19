@@ -165,7 +165,12 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     Toast.show('Error in uploading image to the shopify cdn.');
                     return;
                 }
+
+                if(i === images.length - 1){
+                    addToCartRef?.current?.hide();
+                }
             }
+
             addToCartRef?.current?.hide();
 
             let checkoutExists = await AsyncStorage.getItem('checkoutId');
