@@ -5,11 +5,14 @@ import {
     ActivityIndicator, 
     TouchableOpacity, 
     Text, 
+    Image,
+    Alert
 } from 'react-native';
 import normalize from 'react-native-normalize';
 import WebView from 'react-native-webview';
 import { CustomHeader } from '../components/CustomHeader';
 import { theme } from '../utils/theme';
+import { icons } from '../constant';
 import Icon from 'react-native-vector-icons/Entypo';
 
 function CheckoutScreen({ navigation, route }) {
@@ -37,10 +40,75 @@ function CheckoutScreen({ navigation, route }) {
                 backgroundColor: theme.colors.background
             }}
         >
-            <CustomHeader
+            {/* <CustomHeader
                 navigation={navigation}
                 title={'Checkout'}
-            />
+            /> */}
+            <View
+                style={{
+                    padding: normalize(5),
+                    flexDirection: "row",
+                    alignItems: "center",
+                }}
+            >
+                <TouchableOpacity
+                    style={{
+                        padding: normalize(13),
+                        alignSelf: "flex-end"
+                    }}
+                    onPress={() => {
+                        if(isImagePreviewOn === true){
+                            try {
+                                setIsImagePreviewOn(false);
+                                webViewRef?.current?.goBack();
+                            } catch (error) {
+                                
+                            }
+                        } else{
+                            Alert.alert(
+                                "Confirmation",
+                                "Cancel Checkout Process and go back.",
+                                [
+                                    {
+                                        text: "Cancel",
+                                        onPress: () => console.log("Cancel Pressed"),
+                                        style: "cancel"
+                                    },
+                                    {
+                                        text: "Confirm",
+                                        onPress: () => {
+                                            navigation.goBack();
+                                        },
+
+                                    }
+
+                                ]
+                            );
+                            
+                        }
+                    }}
+                >
+                    <Image
+                        source={icons?.BACK}
+                        resizeMode="contain"
+                        style={{
+                            width: normalize(25),
+                            height: normalize(25),
+                            alignSelf: "flex-end"
+                        }}
+                    />
+                </TouchableOpacity>
+                <Text
+                    style={{
+                        fontSize: theme.fontSize.medium,
+                        fontWeight: theme.fontWeight.medium,
+                        lineHeight: theme.lineHeight.medium,
+                        marginLeft: normalize(10)
+                    }}
+                >
+                    {isImagePreviewOn ? `Image Preview` : `Checkout`}
+                </Text>
+            </View>
             
             {isImagePreviewOn === true && isLoading === false &&
                 <TouchableOpacity
