@@ -117,7 +117,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
 
     const addToCartListener = async (quantity) => {
         if (images.length === 0) {
-            Toast.show('Add Minimum 1 Image to continue.', Toast.SHORT);
+            Toast.showWithGravity('Add Minimum 1 Image to continue.', Toast.SHORT, Toast.TOP);
             addToCartRef?.current?.show();
             return;
         } else {
@@ -820,7 +820,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                             marginVertical: normalize(10)
                                         }}
                                     >
-                                        UPLOAD IMAGE
+                                        CHOOSE IMAGE
                                     </Text>
                                 </TouchableOpacity>
                             }
@@ -883,7 +883,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                     <Text
                                         style={{
                                             textAlign: "center",
-                                            fontSize: theme.fontWeight.medium,
+                                            fontSize: theme.fontSize.medium,
                                             lineHeight: theme.lineHeight.medium
                                         }}
                                     >

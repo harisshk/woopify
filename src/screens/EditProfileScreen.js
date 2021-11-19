@@ -111,18 +111,18 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                 Toast.show('Last Name Field is Missing');
                 return;
             };
-            if (!phone) {
-                setInput({
-                    ...input,
-                    phone: {
-                        ...input.phone,
-                        error: 'Phone Number Field is Missing'
-                    },
-                    isLoading: false,
-                });
-                Toast.show('Phone Number Field is Missing');
-                return;
-            }
+            // if (!phone) {
+            //     setInput({
+            //         ...input,
+            //         phone: {
+            //             ...input.phone,
+            //             error: 'Phone Number Field is Missing'
+            //         },
+            //         isLoading: false,
+            //     });
+            //     Toast.show('Phone Number Field is Missing');
+            //     return;
+            // }
             const body = {
                 customer: {
                     first_name: first_name,
@@ -283,7 +283,7 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                                 error={input.last_name.error}
                                 maxLength={35}
                             />
-                            <View
+                            {/* <View
                                 style={{
                                     flexDirection: "row",
                                     alignItems: "center",
@@ -355,7 +355,7 @@ function EditProfileScreen({ navigation, customer, setCustomer }) {
                                     error={input.phone.error}
                                     maxLength={10}
                                 />
-                            </View>
+                            </View> */}
                             <TouchableOpacity
                                 style={[
                                     input.isChanged === false || input.isLoading === true ? {
