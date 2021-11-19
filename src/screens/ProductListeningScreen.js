@@ -19,6 +19,7 @@ import {
     StyleSheet
 } from 'react-native';
 import base64 from 'react-native-base64';
+import { ProgressBar } from 'react-native-paper';
 import { Gallery } from 'react-native-gallery-view';
 import normalize from 'react-native-normalize';
 import { connect } from 'react-redux';
@@ -53,6 +54,10 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
     const [cartIsLoading, setCartIsLoading] = useState(false);
     const [selectedStock, setSelectedStock] = useState(1);
     const addToCartRef = createRef();
+    const [assetImageLoader, setAssetImageLoader] = useState({
+        isLoading: false,
+        percentage: 0
+    })
 
     const getProductInfoHelper = async () => {
 
@@ -116,13 +121,16 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
             addToCartRef?.current?.show();
             return;
         } else {
-            addToCartRef?.current?.hide();
+            // addToCartRef?.current?.hide();
         }
-
+        setAssetImageLoader({
+            ...assetImageLoader,
+            isLoading: true
+        })
         setCartIsLoading(true);
         if (images[0]?.uri) {
             let assets = [];
-            for (let i = 0; i < images.length; i++) {
+            for (let i = 0; i < images.length; i++) {                                                                                                                                                                           
                 var body = JSON.stringify({
                     "asset": {
                         "attachment": images[i].attachment,
@@ -132,7 +140,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
 
                 var config = {
                     method: 'put',
-                    url: `https://1b42fe48a6f3d18bb652e1c24e124738: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@petinpic.myshopify.com/admin/api/2021-10/themes/${THEME_ID}/assets.json`,
+                    url: `https://${API_KEY}:${ACCESS_PASSWORD}@${store}.myshopify.com/admin/api/2021-10/themes/${THEME_ID}/assets.json`,
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -145,6 +153,12 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         key: `Uploaded image ${i + 1}`,
                         value: `${response?.data?.asset?.public_url}`
                     });
+                    setAssetImageLoader({
+                        isLoading: true,
+                        percentage: Math.ceil((100 * (i+1)) / images.length)
+                    });
+                    if(Math.ceil((100 * (i+1)) / images.length) >= 99){
+                    }
                 } catch (error) {
                     console.log(error);
                     setIsLoading(false);
@@ -152,6 +166,8 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     return;
                 }
             }
+            addToCartRef?.current?.hide();
+
             let checkoutExists = await AsyncStorage.getItem('checkoutId');
 
             if (checkoutExists === null) {
@@ -390,6 +406,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     attachment: img?.data,
                     uri: img.sourceURL,
                 };
+                
                 temp.push(upload);
             }
             setImages([...temp]);
@@ -830,14 +847,50 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                     // addToCartRef.current?.hide();
                                     addToCartListener(selectedStock);
                                 }}
-                                style={{
+                                style={
+                                    assetImageLoader.isLoading === false ?
+                                    {
                                     backgroundColor: theme.colors.secondary,
                                     width: '90%',
                                     alignSelf: 'center',
                                     borderRadius: normalize(5),
                                     marginBottom: normalize(15)
-                                }}
+                                    }:{
+
+                                    }
+                                }
+                                disabled={assetImageLoader.isLoading || Math.ceil(assetImageLoader.percentage) >= 100}
                             >
+                            {
+                                assetImageLoader.isLoading === true ? 
+                                <View
+                                    style={{
+                                        width: "90%",
+                                        alignSelf: "center"
+                                    }}
+                                >
+                                    <ProgressBar 
+                                        progress={assetImageLoader.percentage/100} 
+                                        color={theme.colors.primary} 
+                                        style={{
+                                            // backgroundColor: theme.colors.disabled,
+                                            // padding: normalize(10),
+                                            borderWidth: .4,
+                                            marginBottom: 10
+                                        }}
+                                        
+                                    />
+                                    <Text
+                                        style={{
+                                            textAlign: "center",
+                                            fontSize: theme.fontWeight.medium,
+                                            lineHeight: theme.lineHeight.medium
+                                        }}
+                                    >
+                                        Uploading Images {assetImageLoader.percentage}%
+                                    </Text>
+                                    </View>
+                                :
                                 <SubHeading
                                     style={{
                                         fontSize: theme.fontSize.medium,
@@ -849,6 +902,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                 >
                                     ADD TO CART
                                 </SubHeading>
+                            }
                             </TouchableOpacity>
                             <View style={{ height: normalize(35) }} />
                         </View>

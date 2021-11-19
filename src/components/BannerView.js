@@ -1,6 +1,8 @@
 import React from 'react'
-import { View, Image, Text, TouchableOpacity } from 'react-native'
-import normalize from 'react-native-normalize'
+import { View, Text, TouchableOpacity } from 'react-native'
+import normalize from 'react-native-normalize';
+import Image from 'react-native-image-progress';
+import { ProgressBar } from 'react-native-paper';
 import { theme } from '../utils/theme'
 
 function BannerView({
@@ -20,6 +22,21 @@ function BannerView({
                     height: height,
                     width: width
                 }}
+                indicator={()=>{
+                    return (
+                        <View 
+                            style={{
+                                height: '100%', 
+                                width: '100%', 
+                                backgroundColor: theme.colors.disabled, 
+                                alignSelf: "center", 
+                                justifyContent: "center"
+                            }}
+                        >
+                            <ProgressBar progress={0.5} color={theme.colors.disabledButton} />
+                        </View>
+                    )
+                }} 
             />
             <View
                 style={{
