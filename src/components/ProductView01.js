@@ -23,20 +23,13 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
             }}
             style={{
                 width: '49%',
-                // margin: normalize(5),
-                // justifyContent: "center",
-                // padding: normalize(10),
                 alignSelf: "center",
                 height: normalize(260),
                 borderRadius: normalize(2),
-                elevation: 2,
-                // borderWidth: 2,
-                // borderColor: "#e3e3e3",
+                elevation: .3,
                 marginVertical: normalize(2),
                 padding: normalize(12),
                 shadowColor: theme.colors.primary,
-                
-                // backgroundColor: "red"
             }}
         >
             <Image

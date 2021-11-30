@@ -226,70 +226,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 console.log('----------------Line 114-----------------');
                 console.log(error);
             });
-        } else {
-            // data = {
-            //     success: true,
-            //     noImage: true
-            // };
-        }
-        // if (data?.success === true) {
-        //     if (data?.noImage === true) {
-
-        //     } else {
-        //         Toast.showWithGravity('Image Uploaded Successfully...', Toast.SHORT, Toast.TOP);
-        //     }
-        //     if (data?.noImage === true) {
-        //         let checkoutExists = await AsyncStorage.getItem('checkoutId');
-        //         if (checkoutExists === null) {
-        //             const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
-        //             const lineItemsToAdd = [
-        //                 {
-        //                     variantId: variantId,
-        //                     quantity: quantity,
-        //                 }
-        //             ];
-        //             client.checkout.create({ email: customer?.email, lineItems: lineItemsToAdd }).then(async (checkout) => {
-        //                 await AsyncStorage.setItem('checkoutId', JSON.stringify(checkout.id));
-        //                 setCartIsLoading(false);
-        //                 return;
-        //             });
-        //         }
-        //         const checkoutId = JSON.parse(checkoutExists);
-        //         /**
-        //          * Rest API Id to StoreFront API ID
-        //          */
-        //         const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
-        //         const lineItemsToAdd = [{
-        //             variantId: variantId,
-        //             quantity: quantity,
-        //         }];
-
-        //         client.checkout.addLineItems(checkoutId, lineItemsToAdd).then((checkout) => {
-        //             const cart = {
-        //                 cart: { count: checkout?.lineItems?.length }
-        //             }
-        //             setCart({ ...cart });
-        //             setCartIsLoading(false);
-        //             navigation.navigate('BottomTab', {
-        //                 screen: 'CartScreen',
-        //                 params: { previous_screen: route?.name, params: route?.params }
-        //             }, 'CartScreen');
-        //             Toast.show('Added to Cart');
-        //         }).catch(error => {
-        //             setCartIsLoading(false);
-        //             console.log('----------------Line 114-----------------');
-        //             console.log(error);
-        //         });
-        //     } else {
-        //         const { assets } = data;                
-        //     };
-        // } else {
-        //     Toast.show('Something went wrong ...', Toast.SHORT);
-        //     setCartIsLoading(false);
-        //     return;
-        // }
-
-
+        } 
     }
 
     const findingImagesForGallery = async (allImages, currVariantId) => {
@@ -654,7 +591,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         height: Dimensions.get('window').height / 1.2
                     }}
                     headerAlwaysVisible={true}
-                    gestureEnabled={true}
+                    // gestureEnabled={true}
                 >
                     <ScrollView
                         style={{
