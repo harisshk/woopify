@@ -1,7 +1,8 @@
 import React, { 
   useEffect, 
   useState, 
-  useRef 
+  useRef,
+  createElement
 } from 'react';
 import { 
   View, 
@@ -31,6 +32,7 @@ import NetInfo from "@react-native-community/netinfo";
 import { icons, images } from '../constant';
 import Carousel from 'react-native-banner-carousel';
 import BannerView from '../components/BannerView';
+import mock1 from '../book.json'
 
 
 
@@ -87,6 +89,8 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
       console.log('----------Error Line 60 Home Screen----------');
       return;
     }
+    console.log('----------Error Line 60 Home Screen----------',data);
+
     const { custom_collections } = data;
     setCategories({ categories: custom_collections });
   }
@@ -120,7 +124,34 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
   };
 
+  const propsReducer = (propsData) => {
+    var style = {...propsData?.style}
+    if(typeof(style?.height)=== 'number'){
+      style = {...style, height:normalize(style?.height)}
+    }
+    if(typeof(style?.width)=== 'number'){
+      style = {...style, width:normalize(style?.width)}
+    }
+  }
+  const renderComponent = (config) => {
+    // console.log(createElement(
+    //   mapComponents[config?.component], { ...config?.props }, config.value && typeof (config.value) === "string"
+    //   ? config.value : ""
+    // ))
+    propsReducer(config?.props)
+    return createElement(
+      mapComponents[config?.component], { ...config?.props }, config.value && typeof (config.value) === "string"
+      ? config.value : config?.child?.length > 0 ? config?.child.map((child) => renderComponent(child)):null
+    )
 
+  }
+  const mapComponents = {
+    text: Text,
+    view: View,
+    scrollView: ScrollView,
+    carousel: Carousel,
+    image: Image,
+  }
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
       if (state.isConnected === false) {
@@ -180,29 +211,10 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         }}
 
       >
-        <Carousel
-          autoplay
-          autoplayTimeout={5000}
-          loop
-          index={0}
-          pageSize={width}
-        >
-          {
-            banners.map((image, index) => {
-              return (
-                <BannerView
-                  key={index + ""}
-                  item={image?.src}
-                  text1={image?.text1}
-                  text2={image?.text2}
-                  navigation={navigation}
-                  screen={image?.screen}
-                />
-              )
-            })
-          }
-
-        </Carousel>
+       {(mock1).map((mockElement) => {
+        // console.log(mockElement)
+        return renderComponent(mockElement)
+      })}
         <Image
           source={images?.HELPER_1}
           style={{
