@@ -20,7 +20,7 @@ import {
 } from 'react-native';
 import base64 from 'react-native-base64';
 import { ProgressBar } from 'react-native-paper';
-import { Gallery } from 'react-native-gallery-view';
+import { Gallery } from '../components/ImageSlider/index';
 import normalize from 'react-native-normalize';
 import { connect } from 'react-redux';
 import { CustomHeader } from '../components/CustomHeader';

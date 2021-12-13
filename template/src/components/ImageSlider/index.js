@@ -7,7 +7,7 @@ import Lightbox from 'react-native-lightbox';
 
 
 export const Gallery = ({ navigator, activeIndex, images, color = "black" }) => {
-    const [currIndex, setCurrentIndex] = useState(activeIndex);
+    const [currIndex, setCurrentIndex] = useState(activeIndex || 0);
     const [isLoading, setIsLoading] = useState(true);
     return (
         <View>
