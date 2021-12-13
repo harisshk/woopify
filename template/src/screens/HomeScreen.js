@@ -215,7 +215,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         // console.log(mockElement)
         return renderComponent(mockElement)
       })}
-        <Image
+        {/* <Image
           source={images?.HELPER_1}
           style={{
             height: normalize(200),
@@ -223,7 +223,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             backgroundColor: theme.colors.backgroundColor,
           }}
           resizeMode="contain"
-        />
+        /> */}
         <Text
           style={{
             fontSize: theme.fontSize.subheading,
