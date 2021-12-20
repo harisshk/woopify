@@ -1,4 +1,4 @@
 module.exports = {
-    placeholderName: "shopify",
+    placeholderName: "projectName",
     templateDir: "./template",
 }
