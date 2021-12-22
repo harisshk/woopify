@@ -25,16 +25,17 @@ import { getAllProducts } from '../services/products';
 import SubHeading from '../components/SubHeading';
 import ProductView01 from '../components/ProductView01';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
-import { client } from '../services';
 import Footer from '../components/Footer';
 const { width } = Dimensions.get('screen');
 import NetInfo from "@react-native-community/netinfo";
 import { icons, images } from '../constant';
 import Carousel from 'react-native-banner-carousel';
 import BannerView from '../components/BannerView';
-import mock1 from '../book.json'
+import mock1 from '../renderData.json'
 
-
+import { CATEGORY_ROUNDED, CATEGORY_VISIBLE, client } from '../services';
+import CategoryNormalView from '../components/CategoryNormalView';
+import CategoryRoundedView from '../components/CategoryRoundedView';
 
 const HomeScreen = ({ categories, setCategories, navigation, products, setProducts, cart }) => {
   const [refreshing, setRefreshing] = useState(false);
@@ -151,6 +152,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     scrollView: ScrollView,
     carousel: Carousel,
     image: Image,
+    productView: ProductView01
   }
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
@@ -215,6 +217,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         // console.log(mockElement)
         return renderComponent(mockElement)
       })}
+      
         {/* <Image
           source={images?.HELPER_1}
           style={{
@@ -224,35 +227,41 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           }}
           resizeMode="contain"
         /> */}
-        <Text
-          style={{
-            fontSize: theme.fontSize.subheading,
-            lineHeight: theme.lineHeight.heading,
-            textAlign: "center"
-          }}
-        >
-          Specially Curated Collection
-        </Text>
-        <View
-          style={{
-            height: normalize(5),
-            backgroundColor: theme.colors.primary,
-            width: normalize(50),
-            alignSelf: "center",
-            marginTop: normalize(10)
-          }}
-        />
-        
         {
-          categories.map(item => {
-            return(
-              <CategoryHomeScreen
-              key={item.id}
-              item={item}
-              navigation={navigation}
+          CATEGORY_VISIBLE === true && categories.length > 0 && 
+          <>
+            <Text
+              style={{
+                fontSize: theme.fontSize.subheading,
+                lineHeight: theme.lineHeight.heading,
+                textAlign: "center",
+                marginTop:20
+              }}
+            >
+              Specially Curated Collection
+            </Text>
+            <View
+               style={{
+                height: normalize(5),
+                backgroundColor: theme.colors.primary,
+                width: normalize(50),
+                alignSelf: "center",
+                marginVertical: normalize(10)
+              }}
             />
-            )
-          })
+        </>
+        }        
+        {
+          CATEGORY_VISIBLE === true &&
+            CATEGORY_ROUNDED === false ?
+              <CategoryNormalView
+                navigation={navigation}
+                categories={categories}
+              /> :
+              <CategoryRoundedView
+                navigation={navigation}
+                categories={categories}
+              />
         }
 
         <Text
