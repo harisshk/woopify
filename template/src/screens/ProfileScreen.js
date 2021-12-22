@@ -253,6 +253,7 @@ const Profile = ({ navigation, customer, cart, route }) => {
             borderBottomWidth: 2,
             paddingBottom: normalize(15),
             borderRadius: normalize(12),
+            elevation: 2
           }}
 
         >

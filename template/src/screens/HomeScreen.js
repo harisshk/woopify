@@ -1,18 +1,18 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
+import React, { 
+  useEffect, 
+  useState, 
+  useRef ,
   createElement
 } from 'react';
-import {
-  View,
-  Text,
-  SafeAreaView,
-  Image,
-  TouchableOpacity,
-  Dimensions,
-  ScrollView,
-  RefreshControl,
+import { 
+  View, 
+  Text, 
+  SafeAreaView, 
+  Image, 
+  TouchableOpacity, 
+  Dimensions, 
+  ScrollView, 
+  RefreshControl, 
 } from 'react-native';
 import { connect } from 'react-redux';
 import { setCategories } from '../redux/action/categories';
@@ -20,22 +20,23 @@ import { setProducts } from '../redux/action/products'
 import { getAllCategories } from '../services/categories';
 import { theme } from '../utils/theme';
 import normalize from 'react-native-normalize';
-import CategoryHomeScreen from '../components/CategoryHomeScreen';
 import { getAllProducts } from '../services/products';
 import SubHeading from '../components/SubHeading';
 import ProductView01 from '../components/ProductView01';
 import SkeletonContent from 'react-native-skeleton-content-nonexpo';
-import Footer from '../components/Footer';
+import { CATEGORY_ROUNDED, CATEGORY_VISIBLE, client } from '../services';
 const { width } = Dimensions.get('screen');
 import NetInfo from "@react-native-community/netinfo";
 import { icons, images } from '../constant';
 import Carousel from 'react-native-banner-carousel';
 import BannerView from '../components/BannerView';
-import mock1 from '../renderData.json'
-
-import { CATEGORY_ROUNDED, CATEGORY_VISIBLE, client } from '../services';
 import CategoryNormalView from '../components/CategoryNormalView';
 import CategoryRoundedView from '../components/CategoryRoundedView';
+import Client from 'shopify-buy';
+import mock1 from '../renderData.json'
+
+
+
 
 const HomeScreen = ({ categories, setCategories, navigation, products, setProducts, cart }) => {
   const [refreshing, setRefreshing] = useState(false);
@@ -83,17 +84,15 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
    */
   const getCategoriesHelper = async () => {
     setCategoryIsLoading(true);
-    const data = await getAllCategories();
+    const data = await client.collection.fetchAllWithProducts();
     setCategoryIsLoading(false);
     if (data?.error) {
       console.log(data.error)
       console.log('----------Error Line 60 Home Screen----------');
       return;
     }
-    console.log('----------Error Line 60 Home Screen----------', data);
-
-    const { custom_collections } = data;
-    setCategories({ categories: custom_collections });
+    // const { custom_collections } = data;
+    setCategories({ categories: data });
   }
 
   const getProductsHelper = async () => {
@@ -105,8 +104,9 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     } else {
       setIsLoadingMore(true);
     }
-    const data = await getAllProducts();
-    setProducts(data);
+    // const data = await getAllProducts();
+    const data = await client.product.fetchAll();
+    setProducts({ products: data });
     setIsEnd(true);
     setIsLoadingMore(false);
     setProductIsLoading(false);
@@ -134,6 +134,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
       style = { ...style, width: normalize(style?.width) }
     }
   }
+
   const renderComponent = (config) => {
     // console.log(createElement(
     //   mapComponents[config?.component], { ...config?.props }, config.value && typeof (config.value) === "string"
@@ -154,8 +155,10 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     image: Image,
     productView: ProductView01
   }
+
+
   useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
+    NetInfo.addEventListener(state => {
       if (state.isConnected === false) {
         navigation.navigate('NetworkIssueScreen');
       }
@@ -172,10 +175,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     >
       <View
         style={{
-          // flex:1
-          elevation: 1,
-          // shadowColor: theme.colors.primary,
-          // shadowOpacity: 1
+          elevation: 1
         }}
       >
 
@@ -213,7 +213,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         }}
 
       >
-        {(mock1).map((mockElement) => {
+       {(mock1).map((mockElement) => {
           // console.log(mockElement)
           return renderComponent(mockElement)
         })}
@@ -227,6 +227,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           }}
           resizeMode="contain"
         /> */}
+
         {
           CATEGORY_VISIBLE === true && categories.length > 0 && 
           <>
@@ -296,6 +297,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
           {products.map((product, index) =>
             index <= 5 && 
             <ProductView01
+              isFromCategory={true}
               key={product.id}
               item={product}
               navigation={navigation}

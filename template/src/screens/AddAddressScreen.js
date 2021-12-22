@@ -630,9 +630,7 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                             {input.country.error}
                     </Text>
                     </View>
-                    
-                </ScrollView>
-                {customer?.default_address?.id !== address?.id && 
+                    {customer?.default_address?.id !== address?.id && 
                         <TouchableOpacity
                             style={{
                                 marginVertical: normalize(15),
@@ -680,6 +678,8 @@ function AddAddressScreen({ navigation, customer, setCustomer, route }) {
                             </Text>
                         </TouchableOpacity>
                     }
+                </ScrollView>
+               
                     
                 <TouchableOpacity
                         disabled={input.isLoading}

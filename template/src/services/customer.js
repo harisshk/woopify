@@ -20,6 +20,7 @@ export const getCustomerById = async (customerId) => {
 export const verifyEmail = async (body) => {
     try {
         const response = await axios.post(`${API_ENDPOINT}/api/customer/verify/email`, body);
+        console.log(response)
         return response;
     } catch (error) {
         console.log(error.response);
