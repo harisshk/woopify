@@ -38,6 +38,7 @@ const TabBarCustomButton = (props) => {
                     justifyContent: "center",
                     alignItems: "center",
                     borderRadius: normalize(12),
+                    elevation: 2,
                 }}
                 activeOpacity={1}
                 onPress={onPress}

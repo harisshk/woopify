@@ -27,6 +27,7 @@ export const CATEGORY_VISIBLE = true;
 
 export const CATEGORY_ROUNDED = true;
 
-export const CUSTOMIZABLE_CART = false;
+export const CUSTOMIZABLE_CART = true;
 
 export const PREVIEW_KEY = "asset";
+
