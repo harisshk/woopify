@@ -1,18 +1,18 @@
-import React, { 
-  useEffect, 
-  useState, 
+import React, {
+  useEffect,
+  useState,
   useRef,
   createElement
 } from 'react';
-import { 
-  View, 
-  Text, 
-  SafeAreaView, 
-  Image, 
-  TouchableOpacity, 
-  Dimensions, 
-  ScrollView, 
-  RefreshControl, 
+import {
+  View,
+  Text,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+  ScrollView,
+  RefreshControl,
 } from 'react-native';
 import { connect } from 'react-redux';
 import { setCategories } from '../redux/action/categories';
@@ -90,7 +90,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
       console.log('----------Error Line 60 Home Screen----------');
       return;
     }
-    console.log('----------Error Line 60 Home Screen----------',data);
+    console.log('----------Error Line 60 Home Screen----------', data);
 
     const { custom_collections } = data;
     setCategories({ categories: custom_collections });
@@ -126,12 +126,12 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
   };
 
   const propsReducer = (propsData) => {
-    var style = {...propsData?.style}
-    if(typeof(style?.height)=== 'number'){
-      style = {...style, height:normalize(style?.height)}
+    var style = { ...propsData?.style }
+    if (typeof (style?.height) === 'number') {
+      style = { ...style, height: normalize(style?.height) }
     }
-    if(typeof(style?.width)=== 'number'){
-      style = {...style, width:normalize(style?.width)}
+    if (typeof (style?.width) === 'number') {
+      style = { ...style, width: normalize(style?.width) }
     }
   }
   const renderComponent = (config) => {
@@ -142,7 +142,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
     propsReducer(config?.props)
     return createElement(
       mapComponents[config?.component], { ...config?.props }, config.value && typeof (config.value) === "string"
-      ? config.value : config?.child?.length > 0 ? config?.child.map((child) => renderComponent(child)):null
+      ? config.value : config?.child?.length > 0 ? config?.child.map((child) => renderComponent(child)) : null
     )
 
   }
@@ -213,11 +213,11 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
         }}
 
       >
-       {(mock1).map((mockElement) => {
-        // console.log(mockElement)
-        return renderComponent(mockElement)
-      })}
-      
+        {(mock1).map((mockElement) => {
+          // console.log(mockElement)
+          return renderComponent(mockElement)
+        })}
+
         {/* <Image
           source={images?.HELPER_1}
           style={{
@@ -234,8 +234,7 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
               style={{
                 fontSize: theme.fontSize.subheading,
                 lineHeight: theme.lineHeight.heading,
-                textAlign: "center",
-                marginTop:20
+                textAlign: "center"
               }}
             >
               Specially Curated Collection
@@ -250,9 +249,11 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
               }}
             />
         </>
-        }        
+        }
+        
+        
         {
-          CATEGORY_VISIBLE === true &&
+          (CATEGORY_VISIBLE === true) ?
             CATEGORY_ROUNDED === false ?
               <CategoryNormalView
                 navigation={navigation}
@@ -262,8 +263,9 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
                 navigation={navigation}
                 categories={categories}
               />
+            :
+            <></>
         }
-
         <Text
           style={{
             fontSize: theme.fontSize.subheading,

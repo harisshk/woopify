@@ -4,7 +4,11 @@ import normalize from 'react-native-normalize';
 import { getProductInfo } from '../services/products';
 import { theme } from '../utils/theme';
 import Toast from 'react-native-simple-toast';
-import { PRODUCT_VIEW, PRODUCT_VIEW_HEADING_NUMBER_LINES } from '../services';
+import base64 from 'react-native-base64';
+import { 
+    PRODUCT_VIEW, 
+    PRODUCT_VIEW_HEADING_NUMBER_LINES 
+} from '../services';
 
 
 function ProductView01({ item, navigation, isFromCategory = false }) {
@@ -13,9 +17,13 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
             onPress={async() => {
                 if (true === isFromCategory) {
                     try{
-                        const data = await getProductInfo(item.id);
+                        const productString = await base64.decode(item.id);
+                        const productStringArr = productString.split("/");
+                        const productId = productStringArr[productStringArr.length - 1];
+                        const data = await getProductInfo(productId);
                         navigation.navigate('ProductListeningScreen', { product: data?.product });
                     }catch(error){
+                        console.log("error", error);
                         Toast.show('Something went wrong');
                     }
                     return;

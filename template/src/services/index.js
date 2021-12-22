@@ -23,6 +23,10 @@ export const PRODUCT_VIEW = 2;
 
 export const PRODUCT_VIEW_HEADING_NUMBER_LINES = 3;
 
-export const CATEGORY_VISIBLE = false;
+export const CATEGORY_VISIBLE = true;
 
 export const CATEGORY_ROUNDED = true;
+
+export const CUSTOMIZABLE_CART = false;
+
+export const PREVIEW_KEY = "asset";
