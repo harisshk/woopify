@@ -4,6 +4,7 @@ import normalize from 'react-native-normalize';
 import { getProductInfo } from '../services/products';
 import { theme } from '../utils/theme';
 import Toast from 'react-native-simple-toast';
+import { PRODUCT_VIEW, PRODUCT_VIEW_HEADING_NUMBER_LINES } from '../services';
 
 
 function ProductView01({ item, navigation, isFromCategory = false }) {
@@ -22,14 +23,21 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                 navigation.navigate('ProductListeningScreen', { product: item });
             }}
             style={{
-                width: '49%',
+                width: ((Math.round(100 / PRODUCT_VIEW))-1 )+"%",
+                // margin: normalize(5),
+                // justifyContent: "center",
+                // padding: normalize(10),
                 alignSelf: "center",
                 height: normalize(260),
                 borderRadius: normalize(2),
-                elevation: .3,
+                elevation: 2,
+                // borderWidth: 2,
+                // borderColor: "#e3e3e3",
                 marginVertical: normalize(2),
                 padding: normalize(12),
                 shadowColor: theme.colors.primary,
+                
+                // backgroundColor: "red"
             }}
         >
             <Image
@@ -53,7 +61,7 @@ function ProductView01({ item, navigation, isFromCategory = false }) {
                     color: theme.colors.black,
                     fontSize: theme.fontSize.medium,
                 }}
-                numberOfLines={2}
+                numberOfLines={PRODUCT_VIEW_HEADING_NUMBER_LINES}
             >
                 {item.title}
             </Text>
