@@ -28,7 +28,7 @@ import SubHeading from '../components/SubHeading';
 import { getProductInfo } from '../services/products';
 import { theme } from '../utils/theme';
 import ActionSheet from 'react-native-actions-sheet';
-import { ACCESS_PASSWORD, API_KEY, AWS_URL, client, store, THEME_ID } from '../services';
+import { ACCESS_PASSWORD, API_KEY, AWS_URL, client, CUSTOMIZABLE_CART, store, THEME_ID } from '../services';
 import Toast from 'react-native-simple-toast';
 import { setCart } from '../redux/action/cart';
 import ImagePicker from 'react-native-image-crop-picker';
@@ -116,65 +116,72 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
     }
 
     const addToCartListener = async (quantity) => {
-        if (images.length === 0) {
+
+        if (CUSTOMIZABLE_CART === true && images.length === 0) {
             Toast.showWithGravity('Add Minimum 1 Image to continue.', Toast.SHORT, Toast.TOP);
             addToCartRef?.current?.show();
             return;
         } else {
             // addToCartRef?.current?.hide();
         }
-        setAssetImageLoader({
-            ...assetImageLoader,
-            isLoading: true
-        })
+        if(CUSTOMIZABLE_CART === true){
+            setAssetImageLoader({
+                ...assetImageLoader,
+                isLoading: true
+            })
+        }else{
+            setCartIsLoading(true);
+            addToCartRef?.current?.hide();
+        }
         setCartIsLoading(true);
-        if (images[0]?.uri) {
+        
+        if (CUSTOMIZABLE_CART === false || images[0]?.uri) {
             let assets = [];
-            for (let i = 0; i < images.length; i++) {                                                                                                                                                                           
-                var body = JSON.stringify({
-                    "asset": {
-                        "attachment": images[i].attachment,
-                        "key": `assets/${customer.email}-${product?.id}-${i}${Math.floor(Math.random() * 2500)}${Math.floor(Math.random() * 2500)}.png`,
-                    }
-                });
-
-                var config = {
-                    method: 'put',
-                    url: `https://${API_KEY}:${ACCESS_PASSWORD}@${store}.myshopify.com/admin/api/2021-10/themes/${THEME_ID}/assets.json`,
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    data: body
-                };
-
-                try {
-                    const response = await requestHandler(config);
-                    assets.push({
-                        key: `Uploaded image ${i + 1}`,
-                        value: `${response?.data?.asset?.public_url}`
+            if(CUSTOMIZABLE_CART === true){
+                for (let i = 0; i < images.length; i++) {                                                                                                                                                                           
+                    var body = JSON.stringify({
+                        "asset": {
+                            "attachment": images[i].attachment,
+                            "key": `assets/${customer.email}-${product?.id}-${i}${Math.floor(Math.random() * 2500)}${Math.floor(Math.random() * 2500)}.png`,
+                        }
                     });
-                    setAssetImageLoader({
-                        isLoading: true,
-                        percentage: Math.ceil((100 * (i+1)) / images.length)
-                    });
-                    if(Math.ceil((100 * (i+1)) / images.length) >= 99){
+    
+                    var config = {
+                        method: 'put',
+                        url: `https://${API_KEY}:${ACCESS_PASSWORD}@${store}.myshopify.com/admin/api/2021-10/themes/${THEME_ID}/assets.json`,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        data: body
+                    };
+    
+                    try {
+                        const response = await requestHandler(config);
+                        assets.push({
+                            key: `Uploaded image ${i + 1}`,
+                            value: `${response?.data?.asset?.public_url}`
+                        });
+                        setAssetImageLoader({
+                            isLoading: true,
+                            percentage: Math.ceil((100 * (i+1)) / images.length)
+                        });
+                        if(Math.ceil((100 * (i+1)) / images.length) >= 99){
+                        }
+                    } catch (error) {
+                        console.log(error);
+                        setIsLoading(false);
+                        Toast.show('Error in uploading image to the shopify cdn.');
+                        return;
                     }
-                } catch (error) {
-                    console.log(error);
-                    setIsLoading(false);
-                    Toast.show('Error in uploading image to the shopify cdn.');
-                    return;
-                }
-
-                if(i === images.length - 1){
-                    addToCartRef?.current?.hide();
+    
+                    if(i === images.length - 1){
+                        addToCartRef?.current?.hide();
+                        addToCartRef?.current?.hide();
+                    }
                 }
             }
-
-            addToCartRef?.current?.hide();
-
             let checkoutExists = await AsyncStorage.getItem('checkoutId');
-
+            
             if (checkoutExists === null) {
                 client.checkout.create({ email: customer.email }).then(async (checkout) => {
                     await AsyncStorage.setItem('checkoutId', JSON.stringify(checkout.id));
@@ -183,21 +190,31 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         {
                             variantId: variantId,
                             quantity: quantity,
-                            customAttributes: assets
+                            // customAttributes: assets
                         }
                     ];
                     client.checkout.addLineItems(checkout.id, lineItemsToAdd).then((checkout) => {
                         const cart = {
                             cart: { count: checkout?.lineItems?.length }
                         }
+                        addToCartRef?.current?.hide();
                         setCart({ ...cart });
                         setCartIsLoading(false);
+                        setAssetImageLoader({
+                            ...assetImageLoader,
+                            isLoading: false
+                        })
+                        addToCartRef?.current?.hide();
                         navigation.navigate('CartScreen');
                         Toast.show('Added to Cart');
                     })
+                    addToCartRef?.current?.hide();
                     setCartIsLoading(false);
+                    addToCartRef?.current?.hide();
                     return;
                 });
+                addToCartRef?.current?.hide();
+
             }
             const checkoutId = JSON.parse(checkoutExists);
             const variantId = base64.encode(product.variants[selectedVariantIndex < 0 ? 0 : selectedVariantIndex].admin_graphql_api_id + "");
@@ -206,20 +223,19 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 quantity: quantity,
                 customAttributes: assets
             }];
-            client.checkout.addLineItems(checkoutId, lineItemsToAdd).then((checkout) => {
+            client.checkout.addLineItems((checkoutId+""), lineItemsToAdd).then((checkout) => {
                 const cart = {
                     cart: { count: checkout?.lineItems?.length }
                 }
                 setCart({ ...cart });
                 setCartIsLoading(false);
-                setCartIsLoading(false);
-                navigation.navigate('BottomTab',
-                    {
-                        screen: 'CartScreen',
-                        params: { previous_screen: route?.name, params: route?.params }
-                    },
-                    'CartScreen'
-                );
+                setAssetImageLoader({
+                    ...assetImageLoader,
+                    isLoading: false,
+                })
+                navigation.navigate('CartScreen');
+                addToCartRef?.current?.setModelVisible(false);
+                addToCartRef?.current?.hide(false);
                 Toast.show('Added to Cart');
             }).catch(error => {
                 setCartIsLoading(false);
@@ -322,6 +338,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
 
     const uploadImageHandler = async () => {
         try {
+
             if (imageIsLoading === true) {
                 return;
             }
@@ -437,9 +454,9 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     :
                     <View>
                         {
-                            variantImages?.length > 0 &&
+                            isLoading === false && variantImages?.length > 0 &&
                             <Gallery
-                                images={variantImages}
+                                images={variantImages || []}
                                 borderColor={theme.colors.primary}
                             />
                         }
@@ -591,7 +608,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         height: Dimensions.get('window').height / 1.2
                     }}
                     headerAlwaysVisible={true}
-                    // gestureEnabled={true}
+                    gestureEnabled={true}
                 >
                     <ScrollView
                         style={{
@@ -603,7 +620,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         }}
                     >
                         {
-                            images.length === 0 &&
+                            CUSTOMIZABLE_CART === true && images.length === 0 &&
                             <View
                                 style={{
                                     backgroundColor: theme.colors.disabledButton,
@@ -689,7 +706,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
 
                         </View>
                         {
-                            images.length > 0 &&
+                            (CUSTOMIZABLE_CART === false || images.length > 0 )&&
                             <View
                                 style={{
                                     alignSelf: "flex-start",
@@ -730,6 +747,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
 
                             </View>
                         }
+                        
                         <View
                             style={{
                                 width: '100%',
@@ -737,7 +755,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             }}
                         >
                             {
-                                images.length < 3 &&
+                                CUSTOMIZABLE_CART === true && images.length < 3 &&
                                 <TouchableOpacity
                                     onPress={() => {
                                         uploadImageHandler();
@@ -766,12 +784,16 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                     </Text>
                                 </TouchableOpacity>
                             }
-                            <StepperCounter
+                            {
+                                assetImageLoader.isLoading === false && <StepperCounter
                                 max={product?.variants[selectedVariantIndex]?.inventory_quantity || 0}
                                 curr={selectedStock}
                                 setCurr={setSelectedStock}
                                 policy={product?.variants[selectedVariantIndex]?.inventory_policy}
                             />
+                            
+                            }
+                            
                             <Text
                                 style={{
                                     textAlign: "center",
@@ -782,7 +804,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
 
                                 }}
                             >
-                                Choose Quantity
+                                {assetImageLoader.isLoading === true ? "" : `Choose Quantity`}
                             </Text>
                             <TouchableOpacity
                                 onPress={() => {
@@ -811,6 +833,29 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                         alignSelf: "center"
                                     }}
                                 >
+                                    {assetImageLoader.percentage/100 >= 98 ?
+                                    <TouchableOpacity
+                                        style={{
+                                            backgroundColor: theme.colors.white,
+                                            borderColor: theme.colors.secondary,
+                                            width: "90%",
+                                            alignSelf: "center"
+                                        }}
+                                        onPress={()=>{
+                                            addToCartRef?.current?.hide()
+                                        }}
+                                    >
+                                        <Text
+                                            style={{
+                                                color: theme.colors.secondary,
+                                                fontSize: theme.fontSize.medium,
+                                                lineHeight: theme.lineHeight.medium
+                                            }}
+                                        >
+                                            Close
+                                        </Text>
+                                    </TouchableOpacity>
+                                    :<>
                                     <ProgressBar 
                                         progress={assetImageLoader.percentage/100} 
                                         color={theme.colors.primary} 
@@ -818,7 +863,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                             // backgroundColor: theme.colors.disabled,
                                             // padding: normalize(10),
                                             borderWidth: .4,
-                                            marginBottom: 10
+                                            marginBottom: normalize(10)
                                         }}
                                         
                                     />
@@ -831,6 +876,8 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                     >
                                         Uploading Images {assetImageLoader.percentage}%
                                     </Text>
+                                    </>
+}
                                     </View>
                                 :
                                 <SubHeading
@@ -845,6 +892,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                     ADD TO CART
                                 </SubHeading>
                             }
+
                             </TouchableOpacity>
                             <View style={{ height: normalize(35) }} />
                         </View>
@@ -936,7 +984,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                                 ]}
                             >
                                 {
-                                    cartIsLoading === true ? ` Loading...` : `PERSONALIZE  IT`
+                                    cartIsLoading === true ? ` Loading...` : CUSTOMIZABLE_CART === true ? `PERSONALIZE  IT` : `ADD TO CART`
                                 }
                             </Text>
                         </TouchableOpacity>
