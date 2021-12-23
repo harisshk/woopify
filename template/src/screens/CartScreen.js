@@ -114,7 +114,6 @@ function CartScreen({ navigation, setCart, customer, route }) {
             setCheckoutId(JSON.parse(temp));
             const checkout = await client.checkout.fetch(JSON.parse(temp));
             const data = Object.assign({}, { checkout: checkout })
-            console.log(data.checkout.lineItems,'_ass')
             setCartItem({ ...data.checkout });
             setIsLoading(false);
             setRefreshing(false);
