@@ -53,11 +53,16 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
     const [variantImages, setVariantImages] = useState([]);
     const [cartIsLoading, setCartIsLoading] = useState(false);
     const [selectedStock, setSelectedStock] = useState(1);
+    const [hideActionSheet, setHideActionSheet] = useState(false);
     const addToCartRef = createRef();
     const [assetImageLoader, setAssetImageLoader] = useState({
         isLoading: false,
         percentage: 0
-    })
+    });
+
+    useEffect(()=>{
+        addToCartRef.current.hide();
+    },[hideActionSheet]);
 
     const getProductInfoHelper = async () => {
 
@@ -131,7 +136,8 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
             })
         }else{
             setCartIsLoading(true);
-            addToCartRef?.current?.hide();
+            setHideActionSheet(!hideActionSheet);
+            addToCartRef.current?.setModalVisible(false);
         }
         setCartIsLoading(true);
         
@@ -175,8 +181,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     }
     
                     if(i === images.length - 1){
-                        addToCartRef?.current?.hide();
-                        addToCartRef?.current?.hide();
+                        addToCartRef.current?.setModalVisible(false);
                     }
                 }
             }
@@ -197,14 +202,13 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                         const cart = {
                             cart: { count: checkout?.lineItems?.length }
                         }
-                        addToCartRef?.current?.hide();
+                        setHideActionSheet(!hideActionSheet);
                         setCart({ ...cart });
                         setCartIsLoading(false);
                         setAssetImageLoader({
                             ...assetImageLoader,
                             isLoading: false
                         })
-                        addToCartRef?.current?.hide();
                         navigation.navigate('CartScreen');
                         Toast.show('Added to Cart');
                     })
@@ -213,7 +217,6 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                     addToCartRef?.current?.hide();
                     return;
                 });
-                addToCartRef?.current?.hide();
 
             }
             const checkoutId = JSON.parse(checkoutExists);
@@ -227,16 +230,15 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                 const cart = {
                     cart: { count: checkout?.lineItems?.length }
                 }
+                setHideActionSheet(!hideActionSheet);
                 setCart({ ...cart });
                 setCartIsLoading(false);
                 setAssetImageLoader({
                     ...assetImageLoader,
                     isLoading: false,
                 })
-                navigation.navigate('CartScreen');
-                addToCartRef?.current?.setModelVisible(false);
-                addToCartRef?.current?.hide(false);
                 Toast.show('Added to Cart');
+                navigation.navigate('CartScreen');
             }).catch(error => {
                 setCartIsLoading(false);
                 console.log('----------------Line 114-----------------');
