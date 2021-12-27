@@ -267,6 +267,15 @@ const HomeScreen = ({ categories, setCategories, navigation, products, setProduc
             :
             <></>
         }
+        {images?.HELPER_1 !== "" && <Image
+          source={images?.HELPER_1}
+          style={{
+            height: normalize(200),
+            width: '100%',
+            backgroundColor: theme.colors.backgroundColor,
+          }}
+          resizeMode="contain"
+        />}
         <Text
           style={{
             fontSize: theme.fontSize.subheading,
