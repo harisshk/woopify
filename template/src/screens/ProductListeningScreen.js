@@ -492,7 +492,7 @@ export const ProductListeningScreen = ({ navigation, route, setCart, customer, n
                             </Text>
 
                         </View>
-                        {options.map((option, index) => {
+                        {options[0]?.name !=="Title" && options.map((option, index) => {
                             return (
                                 <View
                                     key={index + option?.name}
